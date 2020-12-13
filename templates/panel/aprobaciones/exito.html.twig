@@ -1,0 +1,15 @@
+{% block body %}
+	
+	<div class="modal-header">
+		<h5 class="modal-title" id="agregaModalLabel"><i class="fas fa-exclamation-circle"></i> Solicitud aprobada!!!</h5>
+	</div>
+	<div class="modal-body">
+	<p>Solicitud N° {{rendicion.numero}}</p>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-danger" onclick="javascript:cerrarCrear('{{ruta_index}}')">Cerrar</button>
+	</div>
+	
+
+
+{% endblock %}

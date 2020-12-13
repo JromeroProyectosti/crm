@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Contrato{% endblock %}
+
+{% block body %}
+
+    {{ include('contrato/_form.html.twig', {'button_label': 'Modificar'}) }}
+
+    <a href="{{ path('contrato_index') }}">back to list</a>
+
+    {{ include('contrato/_delete_form.html.twig') }}
+{% endblock %}

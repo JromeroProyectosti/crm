@@ -1,0 +1,93 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mis Datos{% endblock %}
+
+{% block body %}
+
+<br>
+<br>
+
+<div class="row">
+    <div class="col-md-6 col-sm-12">
+        <div class="card">
+    
+            <div class="card-body">
+                <form action="{{path('mis_datos_modificar')}}" method="post">
+                <div id="mensaje" class="row">{{mensaje|default('')|raw}}</div>
+                <div class="row">
+                    
+                    <div class="col-md-4 col-sm-12">
+                        <small class="text-muted" for="inputNombre">Usuario</small>
+                        <p>{{misdatos.username}}</p>
+                        
+                    </div>
+                    <div class="col-md-4 col-sm-12">
+                        <small class="text-muted" for="inputNombre">Cargo</small>
+                        <p>{{misdatos.usuarioTipo.nombre}}</p>
+                    </div>
+                    
+                    <div class="col-md-6 col-sm-12">
+                        <small class="text-muted" for="inputNombre">Nombre</small>
+                        <input type="text" class="form-control" name="nombre" aria-describedby="nombreHelp" value="{{misdatos.nombre}}" required>
+                        
+                    </div>
+                    <div class="col-md-6 col-sm-12">
+                        <small class="text-muted" for="inputCorreo">Correo</small>
+                        <input type="email" class="form-control" name="correo" aria-describedby="correoHelp" value="{{misdatos.correo}}" required>
+                        <small id="correoHelp" class="form-text text-muted">El correo servirá para envio de alertas!</small>
+                    </div>
+                    <div class="mx-auto">
+                        <button type="submit" class="btn btn-primary">Modificar datos</button>
+                    </div>
+                </div>
+                
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-sm-12">
+        <div class="card">
+    
+            <div class="card-body">
+                <form action="{{path('mis_datos_password')}}" method="post" onsubmit="return validaPassword()">
+                    <div class="row">
+                        <div id="error">{{error|default('')|raw}}</div>
+                        <div class="col-md-6 col-sm-12">
+                            <small class="text-muted" for="inputNombre">Nueva Password</small>
+                            <input type="password" class="form-control" name="password" id="password" aria-describedby="nombreHelp" value="" required>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <small class="text-muted" for="inputNombre">Repetir Password</small>
+                            <input type="password" class="form-control" name="rePassword" id="rePassword" aria-describedby="nombreHelp" value="" required>
+                            
+                        </div>
+                        <div class="mx-auto"><button type="submit" class="btn btn-primary">Cambiar Password</button></div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function validaPassword(){
+
+        if($("#password").val()==""){
+            
+            return false;
+        }
+        if($("#password").val()!=$("#rePassword").val()){
+            $("#error").html(
+               "<div class='alert alert-danger alert-dismissible fade show' role='alert'>"+
+               "<strong>Error</strong> Los passwords deben ser iguales!!!"+
+               "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>"+
+               "<span aria-hidden='true'>&times;</span></button></div>"
+            );
+            return false;
+        }
+        return true;
+    }
+</script>
+
+{% endblock %}
+

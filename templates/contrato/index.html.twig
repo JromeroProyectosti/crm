@@ -1,0 +1,95 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Contrato index{% endblock %}
+
+{% block body %}
+    <div class="card">
+        <div class="card-header">
+            <form action="" method="post">
+                <div class="row">
+                    <div class="col-sm-12 col-md-3">
+                        <select name="bCompania" class="form-control">
+                            <option value="0">Todos</option>
+                            {% for compania in companias %}
+                                <option value="{{compania.id}}"
+                                {% if bCompania==compania.id %}
+                                    selected
+                                {% endif %}
+                                >{{compania.nombre}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-sm-12 col-md-3">
+                        <input type="text" class="form-control" name="bFiltro" placeholder="Nombre/Email/Telefono" value="">
+                    </div>
+                    <div class="col-sm-12 col-md-3">
+                        <button class="btn btn-primary"><i class="fas fa-search"></i></button>
+                    </div>
+                    <div class="col-sm-12 col-md-3">
+                        
+                    </div>
+    
+                </div>
+                </form>
+        </div>
+        <div class="card-body table-responsive p-0" style="height: 500px;">
+        
+            <table class="table table-head-fixed text-nowrap table-striped table-sm">
+                <thead>
+                    <tr>
+                        <th>{{ knp_pagination_sortable(contratos, 'Compañia', 'agenda.cuenta') }} {% if contratos.isSorted('agenda.cuenta') %} <i class="fas fa-sort"></i>{% endif %}</th>
+                        <th>{{ knp_pagination_sortable(contratos, 'Folio', 'id') }} {% if contratos.isSorted('id') %} <i class="fas fa-sort"></i>{% endif %}</th>
+                        <th>{{ knp_pagination_sortable(contratos, 'Cliente', 'nombre') }} {% if contratos.isSorted('nombre') %} <i class="fas fa-sort"></i>{% endif %}</th>
+                        <th>{{ knp_pagination_sortable(contratos, 'Agendadora', 'agenda.agendador') }} {% if contratos.isSorted('agenda.agendador') %} <i class="fas fa-sort"></i>{% endif %}</th>
+                        <th>{{ knp_pagination_sortable(contratos, 'Abogado', 'agenda.abogado') }} {% if contratos.isSorted('agenda.abogado') %} <i class="fas fa-sort"></i>{% endif %}</th>
+                        <th>{{ knp_pagination_sortable(contratos, 'Sucursal', 'sucursal') }} {% if contratos.isSorted('sucursal') %} <i class="fas fa-sort"></i>{% endif %}</th>
+                        <th>{{ knp_pagination_sortable(contratos, 'Fecha Contrato', 'fechaCreacion') }} {% if contratos.isSorted('fechaCreacion') %} <i class="fas fa-sort"></i>{% endif %}</th>
+                        {% if sesion.getSesion.usuarioTipo.id in [1,4,8] %}
+                        <th>Acciones</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                {% for contrato in contratos %}
+                    <tr>
+                        <td>{{contrato.agenda.cuenta.nombre}}</td>
+                        <td>{{ contrato.id }}</td>
+                        <td>{{ contrato.nombre }}</td>
+                        <td>{{ contrato.agenda.agendador.nombre }}</td>
+                        <td>{{ contrato.agenda.abogado.nombre }}</td>
+                        <td>{{ contrato.sucursal}}</td>
+                        <td>{{ contrato.fechaCreacion|date('d-m-Y H:i') }}</td>
+                        {% if sesion.getSesion.usuarioTipo.id in [1,4,6,8] %}
+                        <td>
+                            
+                                
+                            
+                                <a href="{{ path('contrato_pdf', {'id': contrato.id}) }}" class="btn btn-success btn-sm"><i class="fas fa-file-pdf"></i></a>
+                                <a href="{{ path('contrato_show', {'id': contrato.id}) }}" class="btn btn-primary btn-sm"><i class="fas fa-eye"></i></a>
+                                <a href="{{ path('contrato_edit', {'id': contrato.id}) }}" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
+                           
+                        </td>
+                        {% endif %}
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="16">No hay contratos</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer">
+            <div class="card-footer clearfix">
+                {# display navigation #}
+           <div class="navigation">
+               {{ knp_pagination_render(contratos,'@KnpPaginator/Pagination/twitter_bootstrap_v4_pagination.html.twig',{},{
+               'position': 'centered',
+               'rounded': true,
+               }) }}
+           </div>
+       </div>
+            
+        </div>
+    </div>
+{% endblock %}

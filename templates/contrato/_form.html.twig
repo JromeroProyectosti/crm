@@ -1,0 +1,297 @@
+{{ form_start(form) }}
+<div class="card">
+    <div class="card-body table-responsive pad">
+       
+        <h4>Datos Cliente</h4>
+        <div class="row">
+            <div class="col-sm-12 col-md-3">
+                <small class="text-muted">Nombre</small><br>
+                {{form_row(form.nombre,{'label':false,'attr':{'class':'form-'}})}}
+                
+            </div>
+            <div class="col-sm-12 col-md-3">
+                <small class="text-muted">Rut</small><br>
+                {{form_row(form.rut,{'label':false,'attr':{'class':'form-control'}})}}
+                
+            </div>
+            <div class="col-sm-12 col-md-3">
+                <small class="text-muted">Email</small><br>
+                {{form_row(form.email,{'label':false,'attr':{'class':'form-control'}})}}
+                
+            </div>
+            <div class="col-sm-12 col-md-3">
+                <small class="text-muted">Dirección</small><br>
+                {{form_row(form.direccion,{'label':false,'attr':{'class':'form-control'}})}}
+                
+            </div>
+            <div class="col-sm-12 col-md-3">
+                <small class="text-muted">Nacionalidad</small><br>
+                {{form_row(form.pais,{'label':false,'attr':{'class':'form-control'}})}}
+                
+            </div>
+            <div class="col-sm-12 col-md-3">
+                <small class="text-muted">Ciudad</small><br>
+                {{form_row(form.ciudad,{'label':false,'attr':{'class':'form-control'}})}}
+                
+            </div>
+            <div class="col-sm-12 col-md-3">
+                <small class="text-muted">Comuna</small><br>
+                {{form_row(form.comuna,{'label':false,'attr':{'class':'form-control'}})}}
+                
+            </div>
+            <div class="col-sm-12 col-md-3">
+                <small class="text-muted">Telefono</small><br>
+                {{form_row(form.telefono,{'label':false,'attr':{'class':'form-control'}})}}
+                
+            </div>
+            <div class="col-sm-12 col-md-3">
+                <small class="text-muted">Telefono Recado</small><br>
+                {{form_row(form.telefonoRecado,{'label':false,'attr':{'class':'form-control'}})}}
+                
+            </div>
+            <div class="col-sm-12 col-md-3">
+                <small class="text-muted">Estado Civil</small><br>
+                {{form_row(form.estadoCivil,{'label':false,'attr':{'class':'form-control'}})}}
+                
+            </div>
+            <div class="col-sm-12 col-md-3">
+                <small class="text-muted">Vivienda</small>
+                {{form_row(form.vivienda,{'label':false,'attr':{'class':'form-control'}})}}
+            </div>
+            <div class="col-sm-12 col-md-3">
+                <small class="text-muted">Vehiculo</small>
+                {{form_row(form.vehiculo,{'label':false,'attr':{'class':'form-control'}})}}
+            </div>
+            <div class="col-sm-12 col-md-3">
+                <small class="text-muted">Situacion Laboral</small><br>
+                {{form_row(form.situacionLaboral,{'label':false,'attr':{'class':'form-control'}})}}
+                
+            </div>
+           
+            <div class="col-sm-12 col-md-3">
+                <small class="text-muted">Clave única</small>
+                {{form_row(form.claveUnica,{'label':false,'attr':{'class':'form-control'}})}}
+            </div>
+            <div class="col-sm-12 col-md-3">
+                <small class="text-muted">Reunión</small>
+                {{form_row(form.reunion,{'label':false,'attr':{'class':'form-control'}})}}
+            </div>
+        </div>
+
+        <h4>Datos Contrato</h4>
+        <div class="row">
+
+            <div class="col-sm-12 col-md-4">
+                <small class="text-muted">Estrategia Juridica</small>
+                {{form_row(form.estrategiaJuridica,{'label':false,'attr':{'class':'form-control'}})}}
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <small class="text-muted">Escritura</small>
+                {{form_row(form.escritura,{'label':false,'attr':{'class':'form-control'}})}}
+            </div>
+            <div class="col-sm-12 col-md-3">
+                <small class="text-muted">Monto nivel de deuda</small>
+                {{form_row(form.montoNivelDeuda,{'label':false,'attr':{'class':'form-control'}})}}
+            </div>
+            <div class="col-sm-12 col-md-3">
+                <small class="text-muted">Monto contrato</small>
+                {{form_row(form.MontoContrato,{'label':false,'attr':{'class':'form-control monto-contrato'}})}}
+            </div>
+            <div class="col-sm-12 col-md-1">
+                <small class="text-muted">Cuotas</small>
+                {{form_row(form.cuotas,{'label':false,'attr':{'class':'form-control cuotas'}})}}
+            </div>
+           
+            <div class="col-sm-12 col-md-3">
+                <small class="text-muted">Valor cuota</small>
+                {{form_row(form.valorCuota,{'label':false,'attr':{'class':'form-control valor-cuota'}})}}
+            </div>
+            <div class="col-sm-12 col-md-3">
+                <small class="text-muted">Sucursal</small>
+                <select name="cboSucursal" id="sucursal" required class="form-control">
+                    <option value=""></option>
+                    {% for sucursal in sucursales %}
+                        <option value="{{sucursal.id}}"
+                        {% if contrato.sucursal.id is defined %}
+                            
+                        
+                        {% if sucursal.id == contrato.sucursal.id %}
+                        selected
+                        {% endif %}
+                        {% endif %}
+                        >{{sucursal.nombre}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-sm-12 col-md-3">
+                <small class="text-muted">Tramitador</small>
+                <select name="cboTramitador" id="tramitador" required class="form-control">
+                    <option value=""></option>
+                    {% for tramitador in tramitadores %}
+                        <option value="{{tramitador.id}}"
+                        {% if tramitador.id == contrato.tramitador.id %}
+                            selected
+                        {% endif %}
+                        >{{tramitador.nombre}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        
+            <div class="col-sm-12 col-md-12">
+                <small class="text-muted">Dias de Pago</small>
+                <br>
+                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                   
+                    {% for diasPago in diasPagos %}
+                    <label class="btn btn-success 
+                    {% if contrato.diaPago == diasPago.dias %}
+                    active
+                    {% endif %}
+                    ">
+                        <input type="radio" name="chkDiasPago" id="chkDiasPago{{diasPago.dias}}" autocomplete="off"
+                        {% if contrato.diaPago == diasPago.dias %}
+                            checked
+                        {% endif %}
+                        value="{{diasPago.dias}}">{{diasPago.nombre}}
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-3">
+                <small class="text-muted">Primer Pago</small>
+                <input type="text" name="txtFechaPago" class="form-control primer-pago" value="{{contrato.fechaPrimerPago|date('Y-m')}}">
+            </div>
+        </div>
+        <hr>
+        <div class="card">
+            <div class="card-header">
+                
+                <div class="row">
+                    
+                    <div class="col-sm-12 col-md-3">
+                        <input type="text" name="nombreRol" class="form-control nombre-rol" placeholder="Nombre de rol">
+                    </div>    
+                    <div class="col-sm-12 col-md-3">
+                        <input type="text" name="institucionAcreedora" class="form-control institucion" placeholder="Institucion Acreedora" >
+                    </div>   
+                    <div class="col-sm-12 col-md-3">
+                        
+                        <select name="juzgado" class="form-control juzgado">
+                            <option value="">  </option>
+                            {% for juzgado in juzgados %}
+                                <option value="{{juzgado.id}}">{{juzgado.nombre}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>   
+                    <div class="col-sm-12 col-md-1">
+                        <button type="button" class="btn btn-primary btn-agregar" onclick="javascript:agregarRol()"><i class="fas fa-plus"></i></button>
+                    </div>
+                    
+            
+                </div>
+         
+            </div>
+            <div class="card-body" id="contratoRoles">
+        
+            </div>
+        </div>
+        <button class="btn btn-primary">{{ button_label|default('Guardar') }}</button>
+    </div>
+</div>
+{{ form_end(form) }}
+<div class="row" id="juzgado">
+    
+</div>
+
+ 
+
+<script>
+    $('.cuotas').change(function(){
+        recalcula();
+    });
+    $('.monto-contrato').change(function(){
+        recalcula();
+    });
+    $('.interes').change(function(){
+        recalcula();
+    });
+    function recalcula(){
+        var montoContrato=parseInt($('.monto-contrato').val());
+        var cuotas=parseInt($('.cuotas').val());
+        var interes=0;
+        var valorCuota=(montoContrato+(montoContrato/100*interes))/cuotas;
+        $('.valor-cuota').val(valorCuota);
+    }
+    $(".format-rut").inputmask({
+        mask: "9[9.999.999]-[9|K|k]",
+    });
+    $(".monto-contrato").inputmask({
+        mask: "9",
+        repeat:20,
+    });
+    
+    $(document).ready(function(){
+        $('#controles').modal('show');
+        $.ajax({
+            url:"{{path('contrato_new_rol',{'id':contrato.id})}}",
+            type: "get",
+            dataType: "html",
+            cache: false,
+            contentType: false,
+            processData: false,
+            async: true,
+            success:function(data){
+                $("#contratoRoles").html(data);
+                $('.nombre-rol').val("");
+                $('.institucion').val("");
+                $('.juzgado').val("");
+            }
+    
+        });
+
+        $('.primer-pago').daterangepicker({
+            "singleDatePicker": true,
+            "drops": "up",
+            "defaultDate": "{{contrato.fechaPrimerPago|date('Y-m')}}",
+            "locale": {
+                "format": "YYYY-MM",
+                "applyLabel": "Apply",
+                "cancelLabel": "Cancel",
+            }
+        }, function(start, end, label) {
+        });
+        
+    });
+    function agregarRol(){
+        $.ajax({
+            url:"{{path('contrato_new_rol',{'id':contrato.id})}}",
+            type: "get",
+            data:"nombre="+$('.nombre-rol').val()+"&institucion="+$('.institucion').val()+"&juzgado="+$('.juzgado').val(),
+            dataType: "html",
+            cache: false,
+            contentType: false,
+            processData: false,
+            async: true,
+            success:function(data){
+                $("#contratoRoles").html(data);
+            }
+    
+        });
+    }
+    function eliminarRol(id){
+        $.ajax({
+            url:"/contrato/"+id+"/del_rol",
+            type: "DELETE",
+            dataType: "html",
+            cache: false,
+            contentType: false,
+            processData: false,
+            async: true,
+            success:function(data){
+                $("#contratoRoles").html(data);
+            }
+    
+        });
+    }
+</script>
+

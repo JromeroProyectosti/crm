@@ -1,0 +1,41 @@
+{% block body %}
+	<div class="modal-header">
+		<h5 class="modal-title" id="agregaModalLabel">Aprobar {{ rendicion.tipo.nombre }} N° {{ rendicion.numero }} </h5>
+	</div>
+	<div class="modal-body">
+        <form id="form" method="post">
+            <input type="hidden" name="aprueba" value="1">  
+            <div class="row">
+		        <div class="col-sm-6 col-md-4 ">
+                    <small class="text_mute">Jefe que aprueba</small>
+                </div>
+                <div class="col-sm-6 col-md-8 ">
+                    <label >{{jefe.nombre}}</label>
+                </div>
+                <div class="col-sm-6 col-md-4 ">
+                    <small class="text_mute">Fecha Aprobación</small>
+                    
+                </div>
+                <div class="col-sm-6 col-md-8 ">
+                    <label >{{rendicion.fechaAprec|date("Y-m-d")}}</label>
+                </div>
+                <div class="col-sm-12 col-md-12 ">
+                    <small class="text_mute">Observación</small>
+                    
+                </div>
+                <div class="col-sm-12 col-md-12 ">
+                    <label >{{rendicion.observacionAprecJefe}}</label>
+                </div>
+                 <div class="col-sm-12 col-md-12 ">
+                    <small class="text-mute">Observación</small>
+                    <textarea name="observacion" class="form-control"></textarea>
+                </div>
+            </div>
+            <h></h>
+            <div class="float-rigth">
+                <button type="button" class="btn btn-primary" onclick="javascript:grabarCrear('{{ruta_new}}')">{{ button_label|default('Aprobar Solicitud') }}</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+            </div>
+        </form>
+	</div>
+{% endblock %}

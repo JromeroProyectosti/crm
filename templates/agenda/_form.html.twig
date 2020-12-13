@@ -1,0 +1,90 @@
+{{ form_start(form,{'attr':{'onsubmit':'return validarut()'}}) }}
+    
+
+    <div class="row">
+        <div class="col-sm-6 col-md-3">
+            <small class="text-muted">Nombre Cliente</small>
+            {{form_row(form.nombreCliente,{'label':false,'attr':{'class':'form-control','required':true}})}}
+        </div>
+        <div class="col-sm-6 col-md-3">
+            <small class="text-muted">Rut Cliente</small>
+            {{form_row(form.rutCliente,{'label':false,'attr':{'class':'form-control format-rut'}})}}
+        </div>
+       
+        <div class="col-sm-6 col-md-3">
+            <small class="text-muted">Email Cliente</small>
+            {{form_row(form.emailCliente,{'label':false,'attr':{'class':'form-control','required':true}})}}
+        </div>
+        <div class="col-sm-6 col-md-3">
+            <small class="text-muted">Telefono Cliente</small>
+            {{form_row(form.telefonoCliente,{'label':false,'attr':{'class':'form-control','required':true}})}}
+        </div>
+        <div class="col-sm-6 col-md-3">
+            <small class="text-muted">Telefono Recado Cliente</small>
+            {{form_row(form.telefonoRecadoCliente,{'label':false,'attr':{'class':'form-control'}})}}
+        </div>
+        <div class="col-sm-6 col-md-3">
+            <small class="text-muted">Ciudad Cliente</small>
+            {{form_row(form.ciudadCliente,{'label':false,'attr':{'class':'form-control'}})}}
+        </div>
+        <div class="col-sm-6 col-md-3">
+            <small class="text-muted">Campaña</small>
+            {{form_row(form.campania,{'label':false,'attr':{'class':'form-control'}})}}
+        </div>
+        <div class="col-sm-6 col-md-3">
+            <small class="text-muted">Compañia</small>
+            <select name="cboCuenta" class="form-control" onchange="javascript:agendadores(this.value)" required>
+                <option value=""></option>
+   
+                {% for cuenta in cuentas %}
+                    <option value="{{cuenta.id}}">{{cuenta.nombre}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-sm-6 col-md-3" id="agendadores">
+            
+            
+        </div>
+    </div>
+    <button class="btn btn-primary">{{ button_label|default('Cargar') }}</button>
+{{ form_end(form) }}
+
+<script>
+
+    $(".format-rut").rut();
+    function agendadores(id){
+        
+            
+       
+        if(id>0){
+            $.ajax({
+                url:"/agenda/"+id+"/agendadores",
+                type: "post",
+                dataType: "html",
+                cache: false,
+                contentType: false,
+                processData: false,
+                async: true,
+                success:function(data){
+                    $("#agendadores").html(data);
+                }
+        
+            });
+        }else{
+            $("#agendadores").html('');
+        }
+        
+        
+    }
+    
+    function validarut(){
+
+        if($(".format-rut").val()=="") return true;
+        if($.validateRut($(".format-rut").val())) {
+            return true;
+        }
+        alert("Rut no valido");
+        $(".format-rut").focus();
+        return false;
+    }
+</script>

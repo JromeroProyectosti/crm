@@ -1,0 +1,20 @@
+{% for agendador in agendadores %}
+    
+<div class="row">
+    <div class="col-2">
+
+    <p>{{agendador[0].agendador.nombre}}</p>
+    </div>
+    <div class="col-9">
+        <div class="progress mb-3">
+            <div class="progress-bar bg-success" role="progressbar" aria-valuenow="{{agendador.valor/total}}" aria-valuemin="0"
+            aria-valuemax="100" style="width: {{agendador.valor/total*100}}%">
+                <span class="sr-only">40% Complete (success)</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-1">
+        <p>{{agendador.valor}}</p>
+    </div>
+</div>
+{% endfor %}

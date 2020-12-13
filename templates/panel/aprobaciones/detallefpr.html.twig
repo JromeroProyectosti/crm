@@ -1,0 +1,173 @@
+{% block body %}
+	<div class="modal-header">
+		<h5 class="modal-title" id="agregaModalLabel">Validar {{ rendicion.tipo.nombre }} N° {{ rendicion.numero }} </h5>
+	</div>
+	<div class="modal-body">
+		<div class="row">
+            <div class="col-12">
+                <small class="text-muted">Observación</small><br>
+                <label>{{rendicion.observacion}}</label>
+            </div>
+                        
+            <div class="col-md-3 col-sm-12">
+                <small class="text-muted">Fecha registro</small><br>
+                <label>{{rendicion.fechaRegistro ? rendicion.fechaRegistro|date('Y-m-d H:i:s') : ''}}</label>
+            </div>
+            <div class="col-md-3 col-sm-12">
+                <small class="text-muted">Fecha inicio</small><br>
+                <label>{{rendicion.fechaInicio ? rendicion.fechaInicio|date('Y-m-d H:i:s') : ''}}</label>
+            </div>
+            <div class="col-md-3 col-sm-12">
+                <small class="text-muted">Fecha fin</small><br>
+                <label>{{rendicion.fechaFin ? rendicion.fechaFin|date('Y-m-d H:i:s') : ''}}</label>
+            </div>
+            <div class="col-md-3 col-sm-12">
+                <small class="text-muted">Estado</small><br>
+                <label>{{rendicion.estado}}</label>
+            </div>
+            <div class="col-md-3 col-sm-12">
+                <small class="text-muted">Monto</small><br>
+                <label>${{rendicion.monto|number_format}}</label>
+            </div>
+
+        </div>
+		<form id="form">
+			<div class="table-responsive">
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>
+							
+							</th>
+							<th>
+								Boleta
+							</th>
+							<th>
+								Concepto
+							</th>
+							<th>
+								Descripción
+							</th>
+							<th>
+								Monto
+							</th>
+							
+						</tr>
+					</thead>
+					<tbody>
+						{% set total=0 %}
+						{% set i=0 %}
+						{% for detalle in rendicion.rendicionDetalles %}
+						{% set total = total + detalle.monto %}
+						<tr>
+							<td><input type="checkbox" value="{{detalle.id}}" id="linea" checked>
+								<input type="hidden" value="{{detalle.id}}" name="detalle[]" id="detalle{{detalle.id}}">
+								<input type="hidden" value="1" name="aprobado[]" id="aprobado{{detalle.id}}">
+							</td>
+
+							<td>{{detalle.boleta}}</td>
+							<td>{{detalle.concepto}}</td>
+							<td>{{detalle.descripcion}}</td>
+							<td>
+							{{detalle.monto|number_format}}
+							<input type="hidden" value="{{detalle.monto}}" id="monto{{detalle.id}}">
+							</td>
+							
+						</tr>
+						<tr>
+							<td colspan="5">
+								<input type="text" name="observacion[]" class="form-control" placeholder="Observación">	
+							</td>
+						</tr>
+							{% set i=i+1 %}
+
+						{% endfor %}
+					</tbody>
+					<tfoot>
+						<tr>
+							<td colspan="3">
+							</td>
+							<td>
+								<small>
+								Total Gastos
+								</small>
+							</td>
+							<td class="bg-success" id="neto">
+								${{total|number_format}}
+							</td>
+						</tr>
+						<tr>
+						<td colspan="3">
+							</td>
+							<td >
+								<small>
+								Total Solicitado
+								</small>
+							</td>
+							<td class="bg-success" id="solicitado">
+								${{rendicion.monto|number_format}}
+							</td>
+						</tr>
+						<tr>
+						<td colspan="3">
+							</td>
+							<td> <small id="leyenda-total">
+								{% set resta=rendicion.monto-total %}
+
+								{% if resta>=0 %}
+								Devolver
+								{% else %}
+								{% set resta=resta*-1 %}
+								Pagar
+								{% endif %}
+								</small>
+							</td>
+							<td class="bg-success" id="total">
+
+								${{resta|number_format}}
+								
+							</td>
+						</tr>
+					</tfoot>
+				</table>
+			</div>
+		</form>
+       
+
+    </div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-primary" onclick="javascript:grabarCrear('{{ruta_new}}?aprueba=1')">{{ button_label|default('Validar Solicitud') }}</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+	</div>
+
+	<script>
+		$("input[id=linea]").click(function(){
+			var total=0;
+			
+			$("input[id=linea]").each(function (index) {  
+				
+                    if($(this).is(':checked'))
+					{
+						$("#aprobado"+$(this).val()).val(1);
+						total += eval($("#monto"+$(this).val()).val());
+                          
+					}else{
+						$("#aprobado"+$(this).val()).val(0);
+					}
+			});
+			
+			$("#neto").html("$"+numeral(total).format('0,0'));
+			if(({{rendicion.monto}}-total)>=0){
+				$("#total").html("$"+numeral({{rendicion.monto}}-total).format('0,0'));
+				$("#leyenda-total").html("Devolver");
+			}else{
+				$("#total").html("$"+numeral(({{rendicion.monto}}-total)*-1).format('0,0'));
+				$("#leyenda-total").html("Pagar");
+			}
+			
+
+
+		});
+			
+	</script>
+{% endblock %}

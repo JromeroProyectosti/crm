@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Finalizar{% endblock %}
+
+{% block body %}
+
+    {{ include('contrato/_form.html.twig', {'button_label': 'Finalizar'}) }}
+
+    {{ include('contrato/_delete_form.html.twig') }}
+
+    <!-- Modal -->
+ <div class="modal fade" id="controles" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header bg-warning">
+            <h1>Ya falta menos</h1>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <p> finalizar revisa los datos del contrato. Al presionar en <strong>"Guardar" </strong>esto generará un usuario cliente...</p>
+        </div>
+       <div class="modal-body"><button type="button" class="btn btn-danger" data-dismiss="modal" aria-label="Close">Cerrar</button></div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
