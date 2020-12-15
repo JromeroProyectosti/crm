@@ -137,7 +137,6 @@
                 <th>{{ knp_pagination_sortable(agendas, 'Nombre', 'nombreCliente') }} {% if agendas.isSorted('nombreCliente') %} <i class="fas fa-sort"></i>{% endif %}</th>
                 <th>{{ knp_pagination_sortable(agendas, 'Email', 'emailCliente') }} {% if agendas.isSorted('emailCliente') %} <i class="fas fa-sort"></i>{% endif %}</th>
                 <th>Telefono</th>
-                <th>Ciudad</th>
                 <th>Fecha Carga</th>
                 <th>Fecha Asignado</th>
             
@@ -157,7 +156,6 @@
                 <td>{{ agenda.nombreCliente }}</td>
                 <td><a href="mailto:{{ agenda.emailCliente }}">{{ agenda.emailCliente }}</a></td>
                 <td><a href="https://api.whatsapp.com/send?phone={{ agenda.telefonoCliente }}&text=" target="_blank">{{ agenda.telefonoCliente }}</a></td>
-                <td>{{ agenda.ciudadCliente }}</td>
                 <td>{{ agenda.fechaCarga ? agenda.fechaCarga|date('d-m-Y H:i') : '' }}</td>
                 <td>{{ agenda.fechaAsignado ? agenda.fechaAsignado|date('d-m-Y H:i') : '' }}</td>
                 

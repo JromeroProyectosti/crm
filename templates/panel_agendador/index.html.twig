@@ -131,11 +131,13 @@
                 <th>{{ knp_pagination_sortable(agendas, 'Status', 'status') }} {% if agendas.isSorted('status') %} <i class="fas fa-sort"></i>{% endif %}</th>
                 <th>Gestionar</th>
                <th>{{ knp_pagination_sortable(agendas, 'Agendador', 'agendador.nombre') }} {% if agendas.isSorted('agendador.nombre') %} <i class="fas fa-sort"></i>{% endif %}</th>
-                <th>{{ knp_pagination_sortable(agendas, 'Nombre', 'nombreCliente') }} {% if agendas.isSorted('nombreCliente') %} <i class="fas fa-sort"></i>{% endif %}</th>
+               <th>{{ knp_pagination_sortable(agendas, 'Reunión', 'reunion') }} {% if agendas.isSorted('reunion') %} <i class="fas fa-sort"></i>{% endif %}</th>
+               <th>{{ knp_pagination_sortable(agendas, 'Abogado', 'abogado.nombre') }} {% if agendas.isSorted('abogado.nombre') %} <i class="fas fa-sort"></i>{% endif %}</th>
+               <th>{{ knp_pagination_sortable(agendas, 'Nombre', 'nombreCliente') }} {% if agendas.isSorted('nombreCliente') %} <i class="fas fa-sort"></i>{% endif %}</th>
                 <th>{{ knp_pagination_sortable(agendas, 'Email', 'emailCliente') }} {% if agendas.isSorted('emailCliente') %} <i class="fas fa-sort"></i>{% endif %}</th>
                 <th>Telefono</th>
                 <th>Fecha Carga</th>
-                
+                <th>Fecha Asignado</th>
             </tr>
         </thead>
         <tbody>
@@ -147,13 +149,14 @@
                 <td>{{ agenda.status }}</td>
                 <td align="center"><a href="{{path('panel_agendador_new',{'id':agenda.id})}}" class="btn"><i class="far fa-paper-plane"></i></a></td>
    
-                <td>{{ agenda.agendador.nombre }}</td>
-               
+                <td>{{ agenda.agendador.nombre|default('') }}</td>
+                <td>{{ agenda.reunion|default('') }}</td>
+                <td>{{ agenda.abogado.nombre|default('') }}</td>
                 <td>{{ agenda.nombreCliente }}</td>
                 <td><a href="mailto:{{ agenda.emailCliente }}">{{ agenda.emailCliente }}</a></td>
                 <td><a href="https://api.whatsapp.com/send?phone={{ agenda.telefonoCliente }}&text=" target="_blank">{{ agenda.telefonoCliente }}</a></td>
                   <td>{{ agenda.fechaCarga ? agenda.fechaCarga|date('d-m-Y H:i') : '' }}</td>
-               
+                  <td>{{ agenda.fechaAsignado ? agenda.fechaAsignado|date('d-m-Y H:i') : '' }}</td>
                <!-- <td>
                     <div class="btn-group" role="group" aria-label="Basic example">
                     <a href="{{ path('agenda_show', {'id': agenda.id}) }}" class="btn btn-primary"><i class="fas fa-eye"></i></a>

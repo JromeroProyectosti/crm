@@ -7,11 +7,15 @@ use App\Entity\Empresa;
 use App\Entity\UsuarioCuenta;
 use App\Entity\Cuenta;
 use App\Entity\UsuarioStatus;
+use App\Entity\Privilegio;
+use App\Entity\PrivilegioTipousuario;
 use App\Form\UsuarioType;
 use App\Repository\UsuarioRepository;
 use App\Repository\UsuarioTipoRepository;
 use App\Repository\ModuloPerRepository;
 use App\Repository\UsuarioTipoDocumentoRepository;
+use App\Repository\PrivilegioTipousuarioRepository;
+use App\Repository\PrivilegioRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -53,8 +57,13 @@ class JefeProcesosController extends AbstractController
     /**
      * @Route("/new", name="jefe_procesos_new", methods={"GET","POST"})
      */
-    public function new(Request $request,UserPasswordEncoderInterface $encoder,UsuarioTipoRepository $usuarioTipoRepository,ModuloPerRepository $moduloPerRepository,
-    UsuarioTipoDocumentoRepository $tipoDocumento): Response
+    public function new(Request $request,
+                        UserPasswordEncoderInterface $encoder,
+                        UsuarioTipoRepository $usuarioTipoRepository,
+                        ModuloPerRepository $moduloPerRepository,
+                        PrivilegioTipousuarioRepository $privilegioTipousuarioRepository,
+                        PrivilegioRepository $privilegioRepository,
+                        UsuarioTipoDocumentoRepository $tipoDocumento): Response
     {
         $this->denyAccessUnlessGranted('create','jefe_procesos');
         $user=$this->getUser();
@@ -128,6 +137,23 @@ class JefeProcesosController extends AbstractController
                 $usuario->setEmpresaActual($cuenta->getEmpresa()->getId());
                 $entityManager->persist($usuario);
                 $entityManager->flush();
+            }
+
+            $privilegioTipousuarios=$privilegioTipousuarioRepository->findBy(['tipousuario'=>$usuario->getUsuarioTipo()->getId()]);
+            foreach($privilegioTipousuarios as $privilegioTipousuario){
+                $privilegio=$privilegioRepository->findBy(["moduloPer"=>$privilegioTipousuario->getModuloPer()->getId(),"usuario"=>$usuario->getId()]);
+                if(!$privilegio){
+    
+                    $privilegioNew=new Privilegio();
+                    $privilegioNew->setUsuario($usuario);
+                    $privilegioNew->setModuloPer($privilegioTipousuario->getModuloPer());
+                    $privilegioNew->setAccion($privilegioTipousuario->getAccion());
+    
+                    $entityManager = $this->getDoctrine()->getManager();
+                    $entityManager->persist($privilegioNew);
+                    $entityManager->flush();
+    
+                }
             }
 
             return $this->redirectToRoute('jefe_procesos_index');

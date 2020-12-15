@@ -7,7 +7,11 @@ use App\Entity\Empresa;
 use App\Entity\UsuarioCuenta;
 use App\Entity\Cuenta;
 use App\Entity\UsuarioStatus;
+use App\Entity\Privilegio;
+use App\Entity\PrivilegioTipousuario;
 use App\Form\UsuarioType;
+use App\Repository\PrivilegioTipousuarioRepository;
+use App\Repository\PrivilegioRepository;
 use App\Repository\UsuarioRepository;
 use App\Repository\UsuarioTipoRepository;
 use App\Repository\ModuloPerRepository;
@@ -58,6 +62,8 @@ class AgendadoresController extends AbstractController
                         UserPasswordEncoderInterface $encoder,
                         UsuarioTipoRepository $usuarioTipoRepository,
                         ModuloPerRepository $moduloPerRepository,
+                        PrivilegioTipousuarioRepository $privilegioTipousuarioRepository,
+                        PrivilegioRepository $privilegioRepository,
                         UsuarioTipoDocumentoRepository $tipoDocumento): Response
     {
         $this->denyAccessUnlessGranted('create','agendadores');
@@ -136,6 +142,22 @@ class AgendadoresController extends AbstractController
                 $entityManager->flush();
             }
             
+            $privilegioTipousuarios=$privilegioTipousuarioRepository->findBy(['tipousuario'=>$usuario->getUsuarioTipo()->getId()]);
+            foreach($privilegioTipousuarios as $privilegioTipousuario){
+                $privilegio=$privilegioRepository->findBy(["moduloPer"=>$privilegioTipousuario->getModuloPer()->getId(),"usuario"=>$usuario->getId()]);
+                if(!$privilegio){
+    
+                    $privilegioNew=new Privilegio();
+                    $privilegioNew->setUsuario($usuario);
+                    $privilegioNew->setModuloPer($privilegioTipousuario->getModuloPer());
+                    $privilegioNew->setAccion($privilegioTipousuario->getAccion());
+    
+                    $entityManager = $this->getDoctrine()->getManager();
+                    $entityManager->persist($privilegioNew);
+                    $entityManager->flush();
+    
+                }
+            }
    
 
             return $this->redirectToRoute('agendadores_index');

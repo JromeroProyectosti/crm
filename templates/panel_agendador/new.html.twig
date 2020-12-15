@@ -22,23 +22,23 @@
                     </div>
                     <div class="col-sm-12 col-md-6">
                         <small class="text-muted">Nombre Cliente</small>
-                        {{ form_row(form.nombreCliente,{'label':false,'attr':{'class':'form-control'}})}}
+                        {{ form_row(form.nombreCliente,{'label':false,'attr':{'class':'form-control','autocomplete':"ÑÖcompletes"}})}}
                     </div>
                     <div class="col-sm-6 col-md-3">
                         <small class="text-muted">Rut Cliente</small>
-                        {{form_row(form.rutCliente,{'label':false,'attr':{'class':'form-control format-rut'}})}}
+                        {{form_row(form.rutCliente,{'label':false,'attr':{'class':'form-control format-rut','autocomplete':"ÑÖcompletes"}})}}
                     </div>
                     <div class="col-sm-12 col-md-3">
                         <small class="text-muted">Telefono Cliente</small>
-                        {{ form_row(form.telefonoCliente,{'label':false,'attr':{'class':'form-control'}})}}
+                        {{ form_row(form.telefonoCliente,{'label':false,'attr':{'class':'form-control','autocomplete':"ÑÖcompletes"}})}}
                     </div>
                     <div class="col-sm-6 col-md-3">
                         <small class="text-muted">Telefono Recado Cliente</small>
-                        {{form_row(form.telefonoRecadoCliente,{'label':false,'attr':{'class':'form-control'}})}}
+                        {{form_row(form.telefonoRecadoCliente,{'label':false,'attr':{'class':'form-control','autocomplete':"ÑÖcompletes"}})}}
                     </div>
                     <div class="col-sm-12 col-md-6">
                         <small class="text-muted">Correo Cliente</small>
-                        {{ form_row(form.emailCliente,{'label':false,'attr':{'class':'form-control'}})}}
+                        {{ form_row(form.emailCliente,{'label':false,'attr':{'class':'form-control','autocomplete':"ÑÖcompletes"}})}}
                     </div>
                     
                     
@@ -60,10 +60,8 @@
                                 <input type="radio" name="chkStatus" id="chkStatus" autocomplete="off" 
                                 {% if status.id==agenda.status.id %}
                                 checked
-                                {% else %}
-                                onclick="javascript:getAbogados(this.value);"
                                 {% endif %}
-                                value="{{status.id}}"> {{status.nombre}}
+                                value="{{status.id}}" onclick="javascript:getAbogados(this.value);"> {{status.nombre}}
                             </label>
                             
                             {% endfor %}
@@ -265,14 +263,16 @@
         $(".format-rut").rut();
 
         function validarut(){
-
+            $('button').attr("disabled", true);
             if($(".format-rut").val()=="") return true;
             if($.validateRut($(".format-rut").val())) {
                 return true;
             }
             alert("Rut no valido");
             $(".format-rut").focus();
+            $('button').attr("disabled", false);
             return false;
+            
         }
     </script>
 

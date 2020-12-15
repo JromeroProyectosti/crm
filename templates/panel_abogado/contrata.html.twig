@@ -5,39 +5,39 @@
 <div class="row">
     <div class="col-sm-12 col-md-3">
         <small class="text-muted">Nombre</small>
-		{{form_row(form.nombre,{'label':false,'attr':{'class':'form-control'}})}}
+		{{form_row(form.nombre,{'label':false,'attr':{'class':'form-control','autocomplete':"ÑÖcompletes"}})}}
     </div>
     <div class="col-sm-12 col-md-3">
         <small class="text-muted">Rut</small>
-		{{form_row(form.rut,{'label':false,'attr':{'class':'form-control format-rut'}})}}
+		{{form_row(form.rut,{'label':false,'attr':{'class':'form-control format-rut','autocomplete':"ÑÖcompletes"}})}}
     </div>
     <div class="col-sm-12 col-md-3">
         <small class="text-muted">Email</small>
-		{{form_row(form.email,{'label':false,'attr':{'class':'form-control'}})}}
+		{{form_row(form.email,{'label':false,'attr':{'class':'form-control','autocomplete':"ÑÖcompletes"}})}}
     </div>
     <div class="col-sm-12 col-md-3">
         <small class="text-muted">Dirección</small>
-		{{form_row(form.direccion,{'label':false,'attr':{'class':'form-control'}})}}
+		{{form_row(form.direccion,{'label':false,'attr':{'class':'form-control','autocomplete':"ÑÖcompletes"}})}}
     </div>
     <div class="col-sm-12 col-md-3">
         <small class="text-muted">Nacionalidad</small>
-		{{form_row(form.pais,{'label':false,'attr':{'class':'form-control','required':true}})}}
+		{{form_row(form.pais,{'label':false,'attr':{'class':'form-control','required':true,'autocomplete':"ÑÖcompletes"}})}}
     </div>
     <div class="col-sm-12 col-md-3">
         <small class="text-muted">Ciudad</small>
-		{{form_row(form.ciudad,{'label':false,'attr':{'class':'form-control'}})}}
+		{{form_row(form.ciudad,{'label':false,'attr':{'class':'form-control','autocomplete':"ÑÖcompletes"}})}}
     </div>
     <div class="col-sm-12 col-md-3">
         <small class="text-muted">Comuna</small>
-		{{form_row(form.comuna,{'label':false,'attr':{'class':'form-control'}})}}
+		{{form_row(form.comuna,{'label':false,'attr':{'class':'form-control','autocomplete':"ÑÖcompletes"}})}}
     </div>
     <div class="col-sm-12 col-md-3">
         <small class="text-muted">Telefono</small>
-		{{form_row(form.telefono,{'label':false,'attr':{'class':'form-control'}})}}
+		{{form_row(form.telefono,{'label':false,'attr':{'class':'form-control','autocomplete':"ÑÖcompletes"}})}}
     </div>
     <div class="col-sm-12 col-md-3">
         <small class="text-muted">Telefono recado</small>
-		{{form_row(form.telefonoRecado,{'label':false,'attr':{'class':'form-control'}})}}
+		{{form_row(form.telefonoRecado,{'label':false,'attr':{'class':'form-control','autocomplete':"ÑÖcompletes"}})}}
     </div>
     <div class="col-sm-12 col-md-3">
         <small class="text-muted">Estado Civil</small>
@@ -57,7 +57,7 @@
     </div>
     <div class="col-sm-12 col-md-3">
         <small class="text-muted">Clave única</small>
-		{{form_row(form.claveUnica,{'label':false,'attr':{'class':'form-control'}})}}
+		{{form_row(form.claveUnica,{'label':false,'attr':{'class':'form-control','autocomplete':"ÑÖcompletes"}})}}
     </div>
     <div class="col-sm-12 col-md-3">
         <small class="text-muted">Reunion</small>
@@ -79,20 +79,20 @@
     </div>
     <div class="col-sm-12 col-md-3">
         <small class="text-muted">Monto nivel de deuda</small>
-		{{form_row(form.montoNivelDeuda,{'label':false,'attr':{'class':'form-control'}})}}
+		{{form_row(form.montoNivelDeuda,{'label':false,'attr':{'class':'form-control','autocomplete':"ÑÖcompletes"}})}}
     </div>
     <div class="col-sm-12 col-md-3">
         <small class="text-muted">Monto contrato</small>
-		{{form_row(form.MontoContrato,{'label':false,'attr':{'class':'form-control monto-contrato','required':true}})}}
+		{{form_row(form.MontoContrato,{'label':false,'attr':{'class':'form-control monto-contrato','required':true,'autocomplete':"ÑÖcompletes"}})}}
     </div>
     <div class="col-sm-12 col-md-3">
         <small class="text-muted">Cuotas</small>
-		{{form_row(form.cuotas,{'label':false,'attr':{'class':'form-control cuotas'}})}}
+		{{form_row(form.cuotas,{'label':false,'attr':{'class':'form-control cuotas','autocomplete':"ÑÖcompletes"}})}}
     </div>
     
     <div class="col-sm-12 col-md-3">
         <small class="text-muted">Valor cuota</small>
-		{{form_row(form.valorCuota,{'label':false,'attr':{'class':'form-control valor-cuota','required':true}})}}
+		{{form_row(form.valorCuota,{'label':false,'attr':{'class':'form-control valor-cuota','required':true,'autocomplete':"ÑÖcompletes"}})}}
     </div>
     <div class="col-sm-12 col-md-3">
         <small class="text-muted">Sucursal</small>
@@ -291,15 +291,17 @@
         });
     }
     function validarut(){
-
+        $('button').attr("disabled", true);
         if($("#Institucion").val()==0){
             alert("Debe ingresar almenos una Insitution Acreedora");
             $(".nombre-rol").focus();
+            $('button').attr("disabled", false);
             return false;
         }
         if($(".monto-contrato").val()<=0){
             alert("Debe ingresar un monto");
             $(".monto-contrato").focus();
+            $('button').attr("disabled", false);
             return false;
         }
         if($.validateRut($(".format-rut").val())) {
@@ -307,6 +309,7 @@
         }
         alert("Rut no valido");
         $(".format-rut").focus();
+        $('button').attr("disabled", false);
         return false;
     }
 </script>
