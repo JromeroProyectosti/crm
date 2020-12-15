@@ -13,7 +13,7 @@ class DashboardController extends AbstractController
      */
     public function index(): Response
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_REMEMBERED');
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         
         return $this->render('dashboard/index.html.twig', [
             'controller_name' => 'DashboardController',
