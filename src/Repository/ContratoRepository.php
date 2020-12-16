@@ -18,7 +18,7 @@ class ContratoRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Contrato::class);
     }
-    public function findByPers($usuario=null,$empresa=null,$compania=null,$filtro=null,$agendador=null)
+    public function findByPers($usuario=null,$empresa=null,$compania=null,$filtro=null,$agendador=null, $otros=null)
     {
         echo $usuario;
 
@@ -43,6 +43,11 @@ class ContratoRepository extends ServiceEntityRepository
         }
         if(!is_null($compania)){
             $query->andWhere('a.cuenta = '.$compania);
+        }
+        if(!is_null($otros)){ 
+            $query->andWhere($otros)
+         ;
+
         }
         return $query
             ->orderBy('c.id', 'ASC')

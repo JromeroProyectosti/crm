@@ -41,23 +41,31 @@ class ContratoController extends AbstractController
         $filtro=null;
 
         $compania=null;
-        if(null !== $request->request->get('bFiltro') &&  $request->request->get('bFiltro')!=''){
+        if(null !== $request->request->get('bFiltro') && $request->request->get('bFiltro')!=''){
             $filtro=$request->request->get('bFiltro');
         }
-        if(null !== $request->request->get('bCompania')&&$request->query->get('bCompania')!=0){
+        if(null !== $request->request->get('bCompania') && $request->query->get('bCompania')!=0){
             $compania=$request->request->get('bCompania');
         }
-        
+        if(null !== $request->query->get('bFecha')){
+            $aux_fecha=explode(" - ",$request->query->get('bFecha'));
+            $dateInicio=$aux_fecha[0];
+            $dateFin=$aux_fecha[1];
+        }else{
+            $dateInicio=date('Y-m-d',mktime(0,0,0,date('m'),date('d'),date('Y'))-60*60*24*30);
+            $dateFin=date('Y-m-d');
+        }
+        $fecha="c.fechaCreacion between '$dateInicio' and '$dateFin 23:59:59'" ;
       
         switch($user->getUsuarioTipo()->getId()){
             case 3:
             case 4:
             case 1:
-                $query=$contratoRepository->findByPers(null,$user->getEmpresaActual(),$compania,$filtro);
+                $query=$contratoRepository->findByPers(null,$user->getEmpresaActual(),$compania,$filtro,null,$fecha);
                 $companias=$cuentaRepository->findByPers(null,$user->getEmpresaActual());
             break;
             default:
-                $query=$contratoRepository->findByPers($user->getId(),null,$compania,$filtro);
+                $query=$contratoRepository->findByPers($user->getId(),null,$compania,$filtro,null,$fecha);
                 $companias=$cuentaRepository->findByPers($user->getId());
                 
             break;
@@ -74,6 +82,8 @@ class ContratoController extends AbstractController
             'bFiltro'=>$filtro,
             'companias'=>$companias,
             'bCompania'=>$compania,
+            'dateInicio'=>$dateInicio,
+            'dateFin'=>$dateFin,
             'pagina'=>$pagina->getNombre(),
         ]);
     }
