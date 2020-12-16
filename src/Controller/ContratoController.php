@@ -44,9 +44,10 @@ class ContratoController extends AbstractController
         if(null !== $request->request->get('bFiltro') &&  $request->request->get('bFiltro')!=''){
             $filtro=$request->request->get('bFiltro');
         }
-        if(null !== $request->request->get('bCompania')){
+        if(null !== $request->request->get('bCompania')&&$request->query->get('bCompania')!=0){
             $compania=$request->request->get('bCompania');
         }
+        
       
         switch($user->getUsuarioTipo()->getId()){
             case 3:
