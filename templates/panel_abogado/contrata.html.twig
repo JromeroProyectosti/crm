@@ -284,6 +284,10 @@
             contentType: false,
             processData: false,
             async: true,
+            beforeSend: function(){
+                $("#contratoRoles").html(' <div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i></div>');
+                
+            },
             success:function(data){
                 $("#contratoRoles").html(data);
             }

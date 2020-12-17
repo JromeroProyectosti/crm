@@ -316,7 +316,9 @@ class PanelAbogadoController extends AbstractController
             $contrato->setFechaPrimerPago(new \DateTime(date($request->request->get('txtFechaPago')."-1 00:00:00")));
             $entityManager = $this->getDoctrine()->getManager();
 
-            
+            $agenda->setNombreCliente($contrato->getNombre());
+            $agenda->setTelefonoCliente($contrato->getTelefono());
+            $agenda->setEmailCliente($contrato->getEmail());
 
             $entityManager->persist($contrato);
             $entityManager->flush();

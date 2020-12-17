@@ -220,6 +220,10 @@
                     contentType: false,
                     processData: false,
                     async: true,
+                    beforeSend: function(){
+                        $("#contrato").html(' <div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i><div class="text-bold pt-2">Loading...</div></div>');
+                        
+                    },
                     success:function(data){
                         $("#contrato").html(data);
                         $("#abogado").html("");
@@ -236,6 +240,10 @@
                     contentType: false,
                     processData: false,
                     async: true,
+                    beforeSend: function(){
+                        $("#abogado").html(' <div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i><div class="text-bold pt-2">Loading...</div></div>');
+                        
+                    },
                     success:function(data){
                         $("#abogado").html(data);
                         $("#contrato").html("");
@@ -252,6 +260,10 @@
                     contentType: false,
                     processData: false,
                     async: true,
+                    beforeSend: function(){
+                        $("#contrato").html(' <div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i><div class="text-bold pt-2">Loading...</div></div>');
+                        
+                    },
                     success:function(data){
                         $("#contrato").html(data);
                         $("#abogado").html("");
@@ -270,6 +282,10 @@
             contentType: false,
             processData: false,
             async: true,
+            beforeSend: function(){
+                $("#contrato").html(' <div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i><div class="text-bold pt-2">Loading...</div></div>');
+                
+            },
             success:function(data){
                 $("#abogado").html(data);
                 $("#contrato").html("");

@@ -193,18 +193,28 @@ class PanelAgendadorController extends AbstractController
                 $horario_inicio=explode(":",$horario_inicio->format("G:i"));
                 $horario_fin=explode(":",$horario_fin->format("G:i"));
             
-                for($i=intval($horario_inicio[0]);$i<=intval($horario_fin[0]);$i++){
-                    if($i==intval($horario_inicio[0]) && $horario_inicio[1]=="30"){
-                        $horario[]="$i:30";
-                        continue;
+                if(strtotime($fecha)>=strtotime(date('Y-m-d'))){
+                    for($i=intval($horario_inicio[0]);$i<=intval($horario_fin[0]);$i++){
+
+                        if($i==intval($horario_inicio[0]) && $horario_inicio[1]=="30"){
+                            if(strtotime(date('Y-m-d H:i:00'))<strtotime($fecha." $i:30:00"))
+                                $horario[]="$i:30";
+         
+                            continue;
+                        }
+                        if($i==intval($horario_fin[0]) && intval($horario_fin[1])==00){
+                            if(strtotime(date('Y-m-d H:i:00'))<strtotime($fecha." $i:00:00"))
+                                $horario[]="$i:00";
+                            continue;
+                        }
+                        if(strtotime(date('Y-m-d H:i:00'))<strtotime($fecha." $i:00:00"))
+                            $horario[]="$i:00";
+                        if(strtotime(date('Y-m-d H:i:00'))<strtotime($fecha." $i:30:00"))
+                            $horario[]="$i:30";
+                        
                     }
-                    if($i==intval($horario_fin[0]) && intval($horario_fin[1])==00){
-                        $horario[]="$i:00";
-                        continue;
-                    }
-                    $horario[]="$i:00";
-                    $horario[]="$i:30";
-                    
+                }else{
+                    $mensaje="Sin horas";
                 }
                 
             }else{
@@ -249,14 +259,17 @@ class PanelAgendadorController extends AbstractController
             }
 
             $nodisponibles=array_unique($nodisponibles);
-            if($abogado->getSobrecupo()>0){
-                $agenda_sobrecupos=$agendaRepository->findByPers($usuario,null,null,'4,5', null,1," a.fechaAsignado = '$fecha 00:00:00'");
-                $cont=0;
-                foreach($agenda_sobrecupos as $agenda_sobrecupo){
-                    $cont++;
-                }
-                if($cont<$abogado->getSobrecupo()){
-                    $sobrecupo="Sobre Cupo";
+
+            if(strtotime($fecha)>=strtotime(date('Y-m-d'))){
+                if($abogado->getSobrecupo()>0){
+                    $agenda_sobrecupos=$agendaRepository->findByPers($usuario,null,null,'4,5', null,1," a.fechaAsignado = '$fecha 00:00:00'");
+                    $cont=0;
+                    foreach($agenda_sobrecupos as $agenda_sobrecupo){
+                        $cont++;
+                    }
+                    if($cont<$abogado->getSobrecupo()){
+                        $sobrecupo="Sobre Cupo";
+                    }
                 }
             }
         }else{

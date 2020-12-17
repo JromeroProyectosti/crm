@@ -93,8 +93,17 @@
 					</div>
 					
 					<div class="col-sm-6 col-md-3">
-						<small class="text-muted">Color para calendario </small> <a href="#" class="btn" style="background-color: {{usuario.color|default('')}};"></a>
-						{{form_row(form.color,{'label':false,'attr':{'class':'form-control my-colorpicker1','novalidate': 'novalidate'}})}}
+						<small class="text-muted">Color para calendario </small> 
+						<div class="row">
+							<div class="col-8">
+								{{form_row(form.color,{'label':false,'attr':{'class':'form-control my-colorpicker1','novalidate': 'novalidate'}})}}
+							</div>
+							<div class="col-2">
+								<div class="input-group-append">
+									<span class="input-group-text"><i class="fas fa-square"></i></span>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 			
@@ -237,7 +246,13 @@
 			//Initialize Select2 Elements
 			$('.select2').select2();
 			//Colorpicker
-			$('.my-colorpicker1').colorpicker()
+			$('.my-colorpicker1').colorpicker();
+
+			$('.my-colorpicker1').on('colorpickerChange', function(event) {
+				$('.fa-square').css('color', event.color.toString());
+			});
+
+			$('.fa-square').css('color', '{{usuario.color}}');
 		});
 
 </script>

@@ -197,7 +197,7 @@
 
         function getAbogados(status){
             
-                
+           
             
             if(status==5){
                 $.ajax({
@@ -208,6 +208,10 @@
                     contentType: false,
                     processData: false,
                     async: true,
+                    beforeSend: function(){
+                        $("#abogado").html(' <div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i><div class="text-bold pt-2">Loading...</div></div>');
+                        
+                    },
                     success:function(data){
                         $("#abogado").html(data);
                     }
@@ -223,6 +227,10 @@
                     contentType: false,
                     processData: false,
                     async: true,
+                    beforeSend: function(){
+                        $("#abogado").html(' <div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i><div class="text-bold pt-2">Loading...</div></div>');
+                        
+                    },
                     success:function(data){
                         $("#abogado").html(data);
                     }
@@ -239,6 +247,10 @@
                 contentType: false,
                 processData: false,
                 async: true,
+                beforeSend: function(){
+                    $("#abogado").html(' <div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i><div class="text-bold pt-2">Loading...</div></div>');
+                    
+                },
                 success:function(data){
                     $("#abogado").html(data);
                 }
@@ -254,6 +266,10 @@
                 contentType: false,
                 processData: false,
                 async: true,
+                beforeSend: function(){
+                    $("#abogado").html(' <div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i><div class="text-bold pt-2">Loading...</div></div>');
+                    
+                },
                 success:function(data){
                     $("#abogado").html(data);
                 }
