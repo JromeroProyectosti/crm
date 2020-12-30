@@ -323,7 +323,7 @@ class PanelAgendadorController extends AbstractController
             
 
            
-            /*if($request->request->get('chkStatus')==5){
+            if($request->request->get('chkStatus')==5){
                 if(null !== $request->request->get('cboAbogado')){
                     $abogado=$usuarioRepository->find($request->request->get('cboAbogado'));
                     $agenda->setAbogado($abogado);
@@ -339,13 +339,13 @@ class PanelAgendadorController extends AbstractController
                   </div>';
                     $abortar=true;
                 }
-            }*/
+            }
             
             
-            if(null !== $request->request->get('cboAbogado')){
+            /*if(null !== $request->request->get('cboAbogado')){
                 $abogado=$usuarioRepository->find($request->request->get('cboAbogado'));
                 $agenda->setAbogado($abogado);
-            }
+            }*/
             
 
             switch($request->request->get('chkStatus')){

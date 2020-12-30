@@ -11,42 +11,42 @@
             </div>
             <div class="col-sm-12 col-md-3">
                 <small class="text-muted">Rut</small><br>
-                {{form_row(form.rut,{'label':false,'attr':{'class':'form-control format-rut','required':true}})}}
+                {{form_row(form.rut,{'label':false,'attr':{'class':'form-control format-rut','autocomplete':"ÑÖcompletes",'required':true}})}}
                 
             </div>
             <div class="col-sm-12 col-md-3">
                 <small class="text-muted">Email</small><br>
-                {{form_row(form.email,{'label':false,'attr':{'class':'form-control','required':true}})}}
+                {{form_row(form.email,{'label':false,'attr':{'class':'form-control','required':true,'autocomplete':"ÑÖcompletes"}})}}
                 
             </div>
             <div class="col-sm-12 col-md-3">
                 <small class="text-muted">Dirección</small><br>
-                {{form_row(form.direccion,{'label':false,'attr':{'class':'form-control'}})}}
+                {{form_row(form.direccion,{'label':false,'attr':{'class':'form-control','autocomplete':"ÑÖcompletes"}})}}
                 
             </div>
             <div class="col-sm-12 col-md-3">
                 <small class="text-muted">Nacionalidad</small><br>
-                {{form_row(form.pais,{'label':false,'attr':{'class':'form-control','required':true}})}}
+                {{form_row(form.pais,{'label':false,'attr':{'class':'form-control','required':true,}})}}
                 
             </div>
             <div class="col-sm-12 col-md-3">
                 <small class="text-muted">Ciudad</small><br>
-                {{form_row(form.ciudad,{'label':false,'attr':{'class':'form-control'}})}}
+                {{form_row(form.ciudad,{'label':false,'attr':{'class':'form-control','autocomplete':"ÑÖcompletes"}})}}
                 
             </div>
             <div class="col-sm-12 col-md-3">
                 <small class="text-muted">Comuna</small><br>
-                {{form_row(form.comuna,{'label':false,'attr':{'class':'form-control'}})}}
+                {{form_row(form.comuna,{'label':false,'attr':{'class':'form-control','autocomplete':"ÑÖcompletes"}})}}
                 
             </div>
             <div class="col-sm-12 col-md-3">
-                <small class="text-muted">Telefono</small><br>
-                {{form_row(form.telefono,{'label':false,'attr':{'class':'form-control','required':true}})}}
+                <small class="text-muted">Teléfono</small><br>
+                {{form_row(form.telefono,{'label':false,'attr':{'class':'form-control','required':true,'autocomplete':"ÑÖcompletes"}})}}
                 
             </div>
             <div class="col-sm-12 col-md-3">
-                <small class="text-muted">Telefono Recado</small><br>
-                {{form_row(form.telefonoRecado,{'label':false,'attr':{'class':'form-control'}})}}
+                <small class="text-muted">Teléfono Recado</small><br>
+                {{form_row(form.telefonoRecado,{'label':false,'attr':{'class':'form-control','autocomplete':"ÑÖcompletes"}})}}
                 
             </div>
             <div class="col-sm-12 col-md-3">
@@ -63,14 +63,14 @@
                 {{form_row(form.vehiculo,{'label':false,'attr':{'class':'form-control'}})}}
             </div>
             <div class="col-sm-12 col-md-3">
-                <small class="text-muted">Situacion Laboral</small><br>
+                <small class="text-muted">Situación Laboral</small><br>
                 {{form_row(form.situacionLaboral,{'label':false,'attr':{'class':'form-control','required':true}})}}
                 
             </div>
            
             <div class="col-sm-12 col-md-3">
                 <small class="text-muted">Clave única</small>
-                {{form_row(form.claveUnica,{'label':false,'attr':{'class':'form-control'}})}}
+                {{form_row(form.claveUnica,{'label':false,'attr':{'class':'form-control','autocomplete':"ÑÖcompletes"}})}}
             </div>
             <div class="col-sm-12 col-md-3">
                 <small class="text-muted">Reunión</small>
@@ -91,20 +91,20 @@
             </div>
             <div class="col-sm-12 col-md-3">
                 <small class="text-muted">Monto nivel de deuda</small>
-                {{form_row(form.montoNivelDeuda,{'label':false,'attr':{'class':'form-control'}})}}
+                {{form_row(form.montoNivelDeuda,{'label':false,'attr':{'class':'form-control','autocomplete':"ÑÖcompletes"}})}}
             </div>
             <div class="col-sm-12 col-md-3">
                 <small class="text-muted">Monto contrato</small>
-                {{form_row(form.MontoContrato,{'label':false,'attr':{'class':'form-control monto-contrato','required':true}})}}
+                {{form_row(form.MontoContrato,{'label':false,'attr':{'class':'form-control monto-contrato','required':true,'autocomplete':"ÑÖcompletes"}})}}
             </div>
             <div class="col-sm-12 col-md-1">
                 <small class="text-muted">Cuotas</small>
-                {{form_row(form.cuotas,{'label':false,'attr':{'class':'form-control cuotas'}})}}
+                {{form_row(form.cuotas,{'label':false,'attr':{'class':'form-control cuotas','autocomplete':"ÑÖcompletes"}})}}
             </div>
            
             <div class="col-sm-12 col-md-3">
                 <small class="text-muted">Valor cuota</small>
-                {{form_row(form.valorCuota,{'label':false,'attr':{'class':'form-control valor-cuota','required':true}})}}
+                {{form_row(form.valorCuota,{'label':false,'attr':{'class':'form-control valor-cuota','required':true,'autocomplete':"ÑÖcompletes"}})}}
             </div>
             <div class="col-sm-12 col-md-3">
                 <small class="text-muted">Sucursal</small>
@@ -138,7 +138,7 @@
             </div>
         
             <div class="col-sm-12 col-md-12">
-                <small class="text-muted">Dias de Pago</small>
+                <small class="text-muted">Días de Pago</small>
                 <br>
                 <div class="btn-group btn-group-toggle" data-toggle="buttons">
                    

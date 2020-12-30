@@ -246,16 +246,16 @@ class ContratoController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $agenda=$contrato->getAgenda();
 
-            $usuario=$usuarioRepository->findOneBy(['username'=>$agenda->getEmailCliente()]);
+            $usuario=$usuarioRepository->findOneBy(['username'=>$contrato->getEmail()]);
             if(!$usuario){
                 $usuario=new Usuario();
-                $usuario->setUsername($agenda->getEmailCliente());
+                $usuario->setUsername($contrato->getEmail());
                 $password=$usuario->getPassword();
                 $encoded=$encoder->encodePassword($usuario,$password);
                 $usuario->setPassword($encoded);
-                $usuario->setCorreo($agenda->getEmailCliente());
-                $usuario->setNombre($agenda->getNombreCliente());
-                $usuario->setTelefono($agenda->getTelefonoCliente());
+                $usuario->setCorreo($contrato->getEmail());
+                $usuario->setNombre($contrato->getNombre());
+                $usuario->setTelefono($contrato->getTelefono());
                 $usuario->setEstado(1);
                 $usuario->setFechaActivacion(new \DateTime(date("Y-m-d H:i:s")));
                 $usuario->setUsuarioTipo($usuarioTipoRepository->find(9));
@@ -267,6 +267,11 @@ class ContratoController extends AbstractController
 
             $contrato->setCliente($usuario);
             $entityManager->persist($contrato);
+            $entityManager->flush();
+            $agenda->setNombreCliente($contrato->getNombre());
+            $agenda->setTelefonoCliente($contrato->getTelefono());
+            $agenda->setEmailCliente($contrato->getEmail());
+            $entityManager->persist($agenda);
             $entityManager->flush();
 
             return $this->redirectToRoute('contrato_index');
