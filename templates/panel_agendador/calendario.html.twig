@@ -66,7 +66,7 @@
         events    : [
             {% for agenda in agendas %}
             {
-                title          : 'Agendado - Compañia: {{agenda.cuenta.nombre}} - Cliente: {{agenda.nombreCliente}}',
+                title          : '{{agenda.status}} - Compañia: {{agenda.cuenta.nombre}} - Cliente: {{agenda.nombreCliente}}',
                 start          : new Date({{agenda.fechaAsignado|date('Y')}},{{agenda.fechaAsignado|date('m')}}-1,{{agenda.fechaAsignado|date('d')}}, {{agenda.fechaAsignado|date('H')}}, {{agenda.fechaAsignado|date('i')}}),
                 end            : new Date({{agenda.fechaAsignado|date('Y')}},{{agenda.fechaAsignado|date('m')}}-1,{{agenda.fechaAsignado|date('d')}}, {{agenda.fechaAsignado|date('H')}}, {{agenda.fechaAsignado|date('i') + 30}}),
                 backgroundColor: '{{agenda.abogado.color}}', //red

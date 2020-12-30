@@ -252,7 +252,7 @@
 				$('.fa-square').css('color', event.color.toString());
 			});
 
-			$('.fa-square').css('color', '{{usuario.color}}');
+			$('.fa-square').css('color', '{{usuario.color|default("")}}');
 		});
 
 </script>

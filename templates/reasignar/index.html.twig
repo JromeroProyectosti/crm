@@ -9,10 +9,10 @@
             Filtro
         </div>
         <div class="card-body">
-            <form action="{{path('reasignar_index')}}" method="post">
+            <form action="{{path('reasignar_index')}}" method="get">
             <div class="row">
                 <div class="col-sm-12 col-md-3">
-                    <select name="cboCompania" class="form-control">
+                    <select name="bCompania" class="form-control">
                         <option value="0">Todos</option>
                         {% for compania in companias %}
                             <option value="{{compania.id}}">{{compania.nombre}}</option>

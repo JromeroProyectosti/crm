@@ -68,7 +68,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <!-- Site wrapper -->
-<div class="wrapper">
+<div class="overlay-wrapper">
+    <!--<div class="overlay loader"><i class="fas fa-3x fa-sync-alt fa-spin"></i><div class="text-bold pt-2">Loading...</div></div>-->
   <!-- Navbar -->
   <nav class="main-header navbar navbar-expand navbar-white navbar-light">
     <!-- Left navbar links -->
@@ -128,6 +129,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- Main content -->
     <div class="content">
       <div class="container-fluid">
+        {% if error is defined %}
+            {{error|raw}}
+        {% endif %}
         {% block body %}
         
         {% endblock %}
@@ -153,6 +157,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
    
 
             <script type="text/javascript">
+                
+              /*  window.onload = function ()  {
+                    $(".loader").fadeOut("slow");
+                };*/
+                
 
                 function pagination(pag){
                     $.ajax({
@@ -397,10 +406,28 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     window.location.href=pag;
                 }
 
-                
+            
                 $('#usuario_whatsapp').inputmask({mask:'(+56 9) 9999 9999'});  //static mask
                 $('#usuario_telefono').inputmask({mask:'(+56 9) 9999 9999'}); 
+                
+                $('#agenda_telefonoCliente').inputmask({mask:'+56999999999'}); 
+                $('#agenda_telefonoRecadoCliente').inputmask({mask:"+5699999999"}); 
+
                 $('#usuario_correo').inputmask({
+                    mask: "*{1,20}[.*{1,20}][.*{1,20}][.*{1,20}]@*{1,20}[.*{2,6}][.*{1,2}]",
+                    greedy: false,
+                    onBeforePaste: function (pastedValue, opts) {
+                    pastedValue = pastedValue.toLowerCase();
+                    return pastedValue.replace("mailto:", "");
+                    },
+                    definitions: {
+                    '*': {
+                        validator: "[0-9A-Za-z!#$%&'*+/=?^_`{|}~\-]",
+                        casing: "lower"
+                    }
+                    }
+                });
+                $('#agenda_emailCliente').inputmask({
                     mask: "*{1,20}[.*{1,20}][.*{1,20}][.*{1,20}]@*{1,20}[.*{2,6}][.*{1,2}]",
                     greedy: false,
                     onBeforePaste: function (pastedValue, opts) {
@@ -417,6 +444,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 $("#usuario_rut").inputmask({
                     mask: "9[9.999.999]-[9|K|k]",
                 });
+                
                 
             </script>
         {% endblock %}

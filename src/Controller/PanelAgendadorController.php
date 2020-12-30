@@ -54,6 +54,7 @@ class PanelAgendadorController extends AbstractController
             $aux_fecha=explode(" - ",$request->query->get('bFecha'));
             $dateInicio=$aux_fecha[0];
             $dateFin=$aux_fecha[1];
+            $statues=$statuesgroup;
         }else{
             $dateInicio=date('Y-m-d',mktime(0,0,0,date('m'),date('d'),date('Y'))-60*60*24*30);
             $dateFin=date('Y-m-d');
@@ -69,12 +70,12 @@ class PanelAgendadorController extends AbstractController
             case 3:
             case 1:
             case 8:
-                $query=$agendaRepository->findByPers(null,$user->getEmpresaActual(),$compania,$statues,$filtro,null,$fecha);
+                $query=$agendaRepository->findByPers(null,$user->getEmpresaActual(),$compania,$statues,$filtro,0,$fecha);
                 $queryresumen=$agendaRepository->findByPersGroup(null,$user->getEmpresaActual(),$compania,$statuesgroup,$filtro,0,$fecha);
                 $companias=$cuentaRepository->findByPers(null,$user->getEmpresaActual());
             break;
             default:
-                $query=$agendaRepository->findByPers($user->getId(),null,$compania,$statues,$filtro,null,$fecha);
+                $query=$agendaRepository->findByPers($user->getId(),null,$compania,$statues,$filtro,0,$fecha);
                 $queryresumen=$agendaRepository->findByPersGroup($user->getId(),null,$compania,$statuesgroup,$filtro,0,$fecha);
                 $companias=$cuentaRepository->findByPers($user->getId());
             break;
@@ -186,7 +187,7 @@ class PanelAgendadorController extends AbstractController
             break;
         }
         if($abogado->getUsuarioTipo()->getId()==6){
-            $agendas=$agendaRepository->findByPers($usuario,null,null,'4,5', null,1," a.fechaAsignado >= '$fecha' and  a.fechaAsignado <= '$fecha 23:59:59'");
+            $agendas=$agendaRepository->findByPers($usuario,null,null,'4,5,7,8,9,10', null,1," a.fechaAsignado >= '$fecha' and  a.fechaAsignado <= '$fecha 23:59:59'");
             $nodisponibleI=$usuarioNoDisponibleRepository->findByIntervalo($usuario,$fecha);
             $nodisponibleD=$usuarioNoDisponibleRepository->findByDinamico($usuario,$fecha);
             if($status){
@@ -262,7 +263,7 @@ class PanelAgendadorController extends AbstractController
 
             if(strtotime($fecha)>=strtotime(date('Y-m-d'))){
                 if($abogado->getSobrecupo()>0){
-                    $agenda_sobrecupos=$agendaRepository->findByPers($usuario,null,null,'4,5', null,1," a.fechaAsignado = '$fecha 00:00:00'");
+                    $agenda_sobrecupos=$agendaRepository->findByPers($usuario,null,null,'4,5,7,8,9,10', null,1," a.fechaAsignado = '$fecha 00:00:00'");
                     $cont=0;
                     foreach($agenda_sobrecupos as $agenda_sobrecupo){
                         $cont++;
@@ -310,7 +311,8 @@ class PanelAgendadorController extends AbstractController
                         Request $request): Response
     {
         $this->denyAccessUnlessGranted('create','panel_agendador');
-
+        $error='';
+        $abortar=false;
         $user=$this->getUser();
         $pagina=$this->getDoctrine()->getRepository(ModuloPer::class)->findOneByName('panel_agendador',$user->getEmpresaActual());
         $form = $this->createForm(AgendaType::class, $agenda);
@@ -318,14 +320,46 @@ class PanelAgendadorController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
-            $agenda->setStatus($agendaStatusRepository->find($request->request->get('chkStatus')));
+            
+
+           
+            /*if($request->request->get('chkStatus')==5){
+                if(null !== $request->request->get('cboAbogado')){
+                    $abogado=$usuarioRepository->find($request->request->get('cboAbogado'));
+                    $agenda->setAbogado($abogado);
+                }
+                $isAgendado=$agendaRepository->findBy(['abogado'=>$request->request->get('cboAbogado'),
+                                                    'fechaAsignado'=>new \DateTime($request->request->get('txtFechaAgendamiento')." ".$request->request->get('cboHoras').":00"),
+                                                    'status'=>$request->request->get('chkStatus')]);
+                if(null != $isAgendado){
+                    $error='<div class="alert alert-danger alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <h5><i class="icon fas fa-ban"></i> Alguien se adelanto!!</h5>
+                    En el momento que presionaste en Gestionar, otro agendador asignó al abogado '.$abogado->getNombre().' a las '.$request->request->get('txtFechaAgendamiento')." ".$request->request->get('cboHoras').":00".' hrs. Intenta otro Horario. 
+                  </div>';
+                    $abortar=true;
+                }
+            }*/
+            
+            
+            if(null !== $request->request->get('cboAbogado')){
+                $abogado=$usuarioRepository->find($request->request->get('cboAbogado'));
+                $agenda->setAbogado($abogado);
+            }
+            
+
+            switch($request->request->get('chkStatus')){
+                case 8:
+                case 9:
+                    $agenda->setAbogado(null);
+                break;
+               
+            }
+
             if(null !== $request->request->get('cboAgendador')){
                 $agenda->setAgendador($usuarioRepository->find($request->request->get('cboAgendador')));
             }
-            if(null !== $request->request->get('cboAbogado')){
-                $agenda->setAbogado($usuarioRepository->find($request->request->get('cboAbogado')));
-            }
+            
             if(null !== $request->request->get('txtCiudad')){
                 $agenda->setCiudadCliente($request->request->get('txtCiudad'));
             }
@@ -338,24 +372,31 @@ class PanelAgendadorController extends AbstractController
             if(null !== $request->request->get('cboReunion')){
                 $agenda->setReunion($reunionRepository->find($request->request->get('cboReunion')));
             }
-            $entityManager = $this->getDoctrine()->getManager();
-           
+            $agenda->setObservacion($request->request->get('txtObservacion'));
 
-            $observacion=new AgendaObservacion();
-            $observacion->setAgenda($agenda);
-            $observacion->setUsuarioRegistro($usuarioRepository->find($user->getId()));
-            $observacion->setStatus($agendaStatusRepository->find($request->request->get('chkStatus')));
-            $observacion->setFechaRegistro(new \DateTime(date("Y-m-d H:i:s")));
-            $observacion->setObservacion($request->request->get('txtObservacion'));
-           
-            $entityManager->persist($observacion);
-            $entityManager->flush();
-            $entityManager->persist($agenda);
-            $entityManager->flush();
-            return $this->redirectToRoute('panel_agendador_index');
+            $this->getDoctrine()->getManager()->flush();
+            $entityManager = $this->getDoctrine()->getManager();
+            
+            //if(!$abortar){
+                $agenda->setStatus($agendaStatusRepository->find($request->request->get('chkStatus')));
+                $observacion=new AgendaObservacion();
+                $observacion->setAgenda($agenda);
+                $observacion->setUsuarioRegistro($usuarioRepository->find($user->getId()));
+                $observacion->setStatus($agendaStatusRepository->find($request->request->get('chkStatus')));
+                $observacion->setFechaRegistro(new \DateTime(date("Y-m-d H:i:s")));
+                $observacion->setObservacion($request->request->get('txtObservacion'));
+            
+                $entityManager->persist($observacion);
+                $entityManager->flush();
+                $entityManager->persist($agenda);
+                $entityManager->flush();
+                return $this->redirectToRoute('panel_agendador_index');
+            //}
+
         }
         return $this->render('panel_agendador/new.html.twig', [
             'agenda'=>$agenda,
+            'error'=>$error,
             'form' => $form->createView(),
             'pagina'=>$pagina->getNombre().' | Asignar',
             'statues'=>$agendaStatusRepository->findBy(['perfil'=>[$agenda->getAgendador()->getUsuarioTipo()->getId(),0]],['orden'=>'asc']),
@@ -392,7 +433,7 @@ class PanelAgendadorController extends AbstractController
         $usuario=$request->query->get('abogado');
         $usuario=$usuarioRepository->find($request->query->get('abogado'));
         
-        $agendas=$agendaRepository->findByPers($usuario->getId(),$agenda->getCuenta()->getEmpresa()->getId(),null,'4,5', null,1);
+        $agendas=$agendaRepository->findByPers($usuario->getId(),$agenda->getCuenta()->getEmpresa()->getId(),null,'4,5,7,8,9,10', null,1);
         
         return $this->render('panel_agendador/calendario.html.twig',[
             'agendas'=>$agendas,

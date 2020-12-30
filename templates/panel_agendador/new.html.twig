@@ -14,7 +14,6 @@
                     <div class="col-sm-12 col-md-6">
                         <small class="text-muted">Campaña</small><br>
                         <label>{{agenda.campania}}</label>
-                        
                     </div>
                     <div class="col-sm-12 col-md-6">
                         <small class="text-muted">Compañia</small><br>
@@ -22,7 +21,7 @@
                     </div>
                     <div class="col-sm-12 col-md-6">
                         <small class="text-muted">Nombre Cliente</small>
-                        {{ form_row(form.nombreCliente,{'label':false,'attr':{'class':'form-control','autocomplete':"ÑÖcompletes"}})}}
+                        {{ form_row(form.nombreCliente,{'label':false,'attr':{'class':'form-control','autocomplete':"ÑÖcompletes","required":'true'}})}}
                     </div>
                     <div class="col-sm-6 col-md-3">
                         <small class="text-muted">Rut Cliente</small>
@@ -30,7 +29,7 @@
                     </div>
                     <div class="col-sm-12 col-md-3">
                         <small class="text-muted">Telefono Cliente</small>
-                        {{ form_row(form.telefonoCliente,{'label':false,'attr':{'class':'form-control','autocomplete':"ÑÖcompletes"}})}}
+                        {{ form_row(form.telefonoCliente,{'label':false,'attr':{'class':'form-control','autocomplete':"ÑÖcompletes","required":'true'}})}}
                     </div>
                     <div class="col-sm-6 col-md-3">
                         <small class="text-muted">Telefono Recado Cliente</small>
@@ -38,7 +37,7 @@
                     </div>
                     <div class="col-sm-12 col-md-6">
                         <small class="text-muted">Correo Cliente</small>
-                        {{ form_row(form.emailCliente,{'label':false,'attr':{'class':'form-control','autocomplete':"ÑÖcompletes"}})}}
+                        {{ form_row(form.emailCliente,{'label':false,'attr':{'class':'form-control','autocomplete':"ÑÖcompletes","required":'true'}})}}
                     </div>
                     
                     
@@ -137,7 +136,7 @@
                     <div class="timeline">
                         <!-- timeline time label -->
                         <div class="time-label">
-                        <span class="bg-red">{{agenda.fechaCarga|date('d-m-Y')}}</span>
+                        <span class="bg-red">{{agenda.fechaCarga|date('d-m-Y H:i')}}</span>
                         </div>
                         <!-- /.timeline-label -->
                         <!-- timeline item -->

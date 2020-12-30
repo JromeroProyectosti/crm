@@ -19,6 +19,10 @@ class JuzgadoRepository extends ServiceEntityRepository
         parent::__construct($registry, Juzgado::class);
     }
 
+    public function findAll()
+    {
+        return $this->findBy(array(), array('nombre' => 'ASC'));
+    }
     // /**
     //  * @return Juzgado[] Returns an array of Juzgado objects
     //  */

@@ -31,18 +31,26 @@ class AgendaRepository extends ServiceEntityRepository
             $query->join('a.cuenta','c');
             $query->andWhere('c.empresa = '.$empresa);
         }
-        if($esAbogado==1){
-        
-            if(!is_null($usuario)){
-                $query->andWhere('a.abogado = '.$usuario);
-            }else{
-                $query->andWhere('a.abogado is not null ');
-            }
+        switch($esAbogado){
+            case 1:
+                if(!is_null($usuario)){
+                    $query->andWhere('a.abogado = '.$usuario);
+                }else{
+                    $query->andWhere('a.abogado is not null ');
+                }
+            break;
+            case 0:
+                if(!is_null($usuario)){
+                    $query->andWhere('a.agendador = '.$usuario);
+                }
+                $query->andWhere('a.abogado is null');
+            break;
+            default:
+                if(!is_null($usuario)){
+                    $query->andWhere('a.agendador = '.$usuario);
+                }
+            break;
 
-        }else{
-            if(!is_null($usuario)){
-                $query->andWhere('a.agendador = '.$usuario);
-            }
         }
         if(!is_null($compania)){
             $query->andWhere('a.cuenta = '.$compania);
@@ -75,18 +83,26 @@ class AgendaRepository extends ServiceEntityRepository
             $query->join('a.cuenta','c');
             $query->andWhere('c.empresa = '.$empresa);
         }
-        if($esAbogado==1){
-        
-            if(!is_null($usuario)){
-                $query->andWhere('a.abogado = '.$usuario);
-            }else{
-                $query->andWhere('a.abogado is not null ');
-            }
+        switch($esAbogado){
+            case 1:
+                if(!is_null($usuario)){
+                    $query->andWhere('a.abogado = '.$usuario);
+                }else{
+                    $query->andWhere('a.abogado is not null ');
+                }
+            break;
+            case 0:
+                if(!is_null($usuario)){
+                    $query->andWhere('a.agendador = '.$usuario);
+                }
+                $query->andWhere('a.abogado is null');
+            break;
+            default:
+                if(!is_null($usuario)){
+                    $query->andWhere('a.agendador = '.$usuario);
+                }
+            break;
 
-        }else{
-            if(!is_null($usuario)){
-                $query->andWhere('a.agendador = '.$usuario);
-            }
         }
         if(!is_null($compania)){
             $query->andWhere('a.cuenta = '.$compania);
@@ -127,20 +143,28 @@ class AgendaRepository extends ServiceEntityRepository
             $query->join('a.cuenta','c');
             $query->andWhere('c.empresa = '.$empresa);
         }
-        if($esAbogado==1){
-        
-            if(!is_null($usuario)){
-                $query->andWhere('a.abogado = '.$usuario);
-            }else{
-                $query->andWhere('a.abogado is not null ');
-            }
+        switch($esAbogado){
+            case 1:
+                if(!is_null($usuario)){
+                    $query->andWhere('a.abogado = '.$usuario);
+                }else{
+                    $query->andWhere('a.abogado is not null ');
+                }
+            break;
+            case 0:
+                if(!is_null($usuario)){
+                    $query->andWhere('a.agendador = '.$usuario);
+                }
+                $query->andWhere('a.abogado is null');
+            break;
+            default:
+                if(!is_null($usuario)){
+                    $query->andWhere('a.agendador = '.$usuario);
+                }
+            break;
 
-        }else{
-      
-            if(!is_null($usuario)){
-                $query->andWhere('a.agendador = '.$usuario);
-            }
         }
+        
         if(!is_null($compania)){
             $query->andWhere('a.cuenta = '.$compania);
         }

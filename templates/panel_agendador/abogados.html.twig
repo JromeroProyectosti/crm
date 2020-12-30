@@ -65,7 +65,7 @@
 
 <script>
     var fecha_cal;
-    verHoras();
+    verHoras($('.datepicker').val());
     $('.datepicker').daterangepicker({
         "singleDatePicker": true,
         "drops": "up",
@@ -101,8 +101,12 @@
             }
         });
     }
-    function verHoras(){
-       var fecha= moment(fecha_cal).format("YYYY-MM-DD")
+    function verHoras(fecha=null){
+        if(fecha == null){
+            var fecha= moment(fecha_cal).format("YYYY-MM-DD");
+        }else{
+            var fecha= moment(fecha).format("YYYY-MM-DD");
+        }
        if($("#cboAbogado").val()>0){
             $.ajax({
                 url:"{{path('panel_agendador_horas')}}",

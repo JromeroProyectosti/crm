@@ -36,30 +36,32 @@ class NocontrataController extends AbstractController
         $pagina=$moduloPerRepository->findOneByName('nocontrata',$user->getEmpresaActual());
         $filtro=null;
         $compania=null;
-        if(null !== $request->request->get('bFiltro')){
-            $filtro=$request->request->get('bFiltro');
+        if(null !== $request->query->get('bFiltro')){
+            $filtro=$request->query->get('bFiltro');
         }
-        if(null !== $request->request->get('bCompania')){
-            $compania=$request->request->get('bCompania');
+        if(null !== $request->query->get('bCompania')){
+            $compania=$request->query->get('bCompania');
         }
 
 
         switch($user->getUsuarioTipo()->getId()){
             case 3:
-                $query=$agendaRepository->findByPers(null,$user->getEmpresaActual(),$compania,'8',$filtro);
-            break;
+            case 4:
             case 1:
-                $query=$agendaRepository->findByPers(null,$user->getEmpresaActual(),$compania,'8',$filtro);
+                $query=$agendaRepository->findByPers(null,$user->getEmpresaActual(),$compania,'8',$filtro,3);
+                $companias=$cuentaRepository->findByPers(null,$user->getEmpresaActual());
             break;
             case 5:
-                $query=$agendaRepository->findByPers($user->getId(),null,$compania,'8',$filtro);
+                $query=$agendaRepository->findByPers($user->getId(),null,$compania,'8',$filtro,3);
+                $companias=$cuentaRepository->findByPers($user->getId());
             break;
             default:
-                $query=$agendaRepository->findByPers($user->getId(),null,$compania,'8',$filtro);
+                $query=$agendaRepository->findByPers($user->getId(),null,$compania,'8',$filtro,3);
+                $companias=$cuentaRepository->findByPers($user->getId());
             break;
         }
 
-        $companias=$cuentaRepository->findByPers($user->getId());
+        
         
         
         $agendas=$paginator->paginate(

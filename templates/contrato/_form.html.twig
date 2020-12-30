@@ -1,4 +1,4 @@
-{{ form_start(form) }}
+{{ form_start(form,{'attr':{'onsubmit':'return validarut()'}}) }}
 <div class="card">
     <div class="card-body table-responsive pad">
        
@@ -11,12 +11,12 @@
             </div>
             <div class="col-sm-12 col-md-3">
                 <small class="text-muted">Rut</small><br>
-                {{form_row(form.rut,{'label':false,'attr':{'class':'form-control'}})}}
+                {{form_row(form.rut,{'label':false,'attr':{'class':'form-control format-rut','required':true}})}}
                 
             </div>
             <div class="col-sm-12 col-md-3">
                 <small class="text-muted">Email</small><br>
-                {{form_row(form.email,{'label':false,'attr':{'class':'form-control'}})}}
+                {{form_row(form.email,{'label':false,'attr':{'class':'form-control','required':true}})}}
                 
             </div>
             <div class="col-sm-12 col-md-3">
@@ -26,7 +26,7 @@
             </div>
             <div class="col-sm-12 col-md-3">
                 <small class="text-muted">Nacionalidad</small><br>
-                {{form_row(form.pais,{'label':false,'attr':{'class':'form-control'}})}}
+                {{form_row(form.pais,{'label':false,'attr':{'class':'form-control','required':true}})}}
                 
             </div>
             <div class="col-sm-12 col-md-3">
@@ -41,7 +41,7 @@
             </div>
             <div class="col-sm-12 col-md-3">
                 <small class="text-muted">Telefono</small><br>
-                {{form_row(form.telefono,{'label':false,'attr':{'class':'form-control'}})}}
+                {{form_row(form.telefono,{'label':false,'attr':{'class':'form-control','required':true}})}}
                 
             </div>
             <div class="col-sm-12 col-md-3">
@@ -51,7 +51,7 @@
             </div>
             <div class="col-sm-12 col-md-3">
                 <small class="text-muted">Estado Civil</small><br>
-                {{form_row(form.estadoCivil,{'label':false,'attr':{'class':'form-control'}})}}
+                {{form_row(form.estadoCivil,{'label':false,'attr':{'class':'form-control','required':true}})}}
                 
             </div>
             <div class="col-sm-12 col-md-3">
@@ -64,7 +64,7 @@
             </div>
             <div class="col-sm-12 col-md-3">
                 <small class="text-muted">Situacion Laboral</small><br>
-                {{form_row(form.situacionLaboral,{'label':false,'attr':{'class':'form-control'}})}}
+                {{form_row(form.situacionLaboral,{'label':false,'attr':{'class':'form-control','required':true}})}}
                 
             </div>
            
@@ -83,11 +83,11 @@
 
             <div class="col-sm-12 col-md-4">
                 <small class="text-muted">Estrategia Juridica</small>
-                {{form_row(form.estrategiaJuridica,{'label':false,'attr':{'class':'form-control'}})}}
+                {{form_row(form.estrategiaJuridica,{'label':false,'attr':{'class':'form-control','required':true}})}}
             </div>
             <div class="col-sm-12 col-md-4">
                 <small class="text-muted">Escritura</small>
-                {{form_row(form.escritura,{'label':false,'attr':{'class':'form-control'}})}}
+                {{form_row(form.escritura,{'label':false,'attr':{'class':'form-control','required':true}})}}
             </div>
             <div class="col-sm-12 col-md-3">
                 <small class="text-muted">Monto nivel de deuda</small>
@@ -95,7 +95,7 @@
             </div>
             <div class="col-sm-12 col-md-3">
                 <small class="text-muted">Monto contrato</small>
-                {{form_row(form.MontoContrato,{'label':false,'attr':{'class':'form-control monto-contrato'}})}}
+                {{form_row(form.MontoContrato,{'label':false,'attr':{'class':'form-control monto-contrato','required':true}})}}
             </div>
             <div class="col-sm-12 col-md-1">
                 <small class="text-muted">Cuotas</small>
@@ -104,7 +104,7 @@
            
             <div class="col-sm-12 col-md-3">
                 <small class="text-muted">Valor cuota</small>
-                {{form_row(form.valorCuota,{'label':false,'attr':{'class':'form-control valor-cuota'}})}}
+                {{form_row(form.valorCuota,{'label':false,'attr':{'class':'form-control valor-cuota','required':true}})}}
             </div>
             <div class="col-sm-12 col-md-3">
                 <small class="text-muted">Sucursal</small>
@@ -159,7 +159,7 @@
             </div>
             <div class="col-sm-12 col-md-3">
                 <small class="text-muted">Primer Pago</small>
-                <input type="text" name="txtFechaPago" class="form-control primer-pago" value="{{contrato.fechaPrimerPago|date('Y-m')}}">
+                <input type="text" name="txtFechaPago" class="form-control primer-pago" value="{{contrato.fechaPrimerPago|date('Y-m')}}" required>
             </div>
         </div>
         <hr>
@@ -298,6 +298,29 @@
             }
     
         });
+    }
+
+    function validarut(){
+        $('button').attr("disabled", true);
+        if($("#Institucion").val()==0){
+            alert("Debe ingresar almenos una Insitution Acreedora");
+            $(".nombre-rol").focus();
+            $('button').attr("disabled", false);
+            return false;
+        }
+        if($(".monto-contrato").val()<=0){
+            alert("Debe ingresar un monto");
+            $(".monto-contrato").focus();
+            $('button').attr("disabled", false);
+            return false;
+        }
+        if($.validateRut($(".format-rut").val())) {
+            return true;
+        }
+        alert("Rut no valido");
+        $(".format-rut").focus();
+        $('button').attr("disabled", false);
+        return false;
     }
 </script>
 
