@@ -5,6 +5,7 @@
 return array (
   'APP_ENV' => 'prod',
   'APP_SECRET' => '303b75b314d614af4592ebb02e166e13',
-  'DATABASE_URL' => 'mysql://root:mister@127.0.0.1:3306/agenda?serverVersion=5.7',
-  'MAILER_DSN' => 'sendgrid+smtp://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@default',
+  'DATABASE_URL' => 'mysql://fuicacl_micrm:hCDUvEF8Wksy@127.0.0.1:3306/fuicacl_micrm?serverVersion=5.7',
+  'MAILER_URL' => 'smtp://mail.proyectosphp.cl:465?encryption=ssl&auth_mode=login&username=info@proyectosphp.cl&password=qljpnfzadwrx',
+  'MAILER_DSN' => 'smtp://info@proyectosphp.cl:qljpnfzadwrx@mail.proyectosphp.cl',
 );
