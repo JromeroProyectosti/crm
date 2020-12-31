@@ -70,13 +70,13 @@ class PanelAgendadorController extends AbstractController
             case 3:
             case 1:
             case 8:
-                $query=$agendaRepository->findByPers(null,$user->getEmpresaActual(),$compania,$statues,$filtro,0,$fecha);
-                $queryresumen=$agendaRepository->findByPersGroup(null,$user->getEmpresaActual(),$compania,$statuesgroup,$filtro,0,$fecha);
+                $query=$agendaRepository->findByPers(null,$user->getEmpresaActual(),$compania,$statues,$filtro,3,$fecha);
+                $queryresumen=$agendaRepository->findByPersGroup(null,$user->getEmpresaActual(),$compania,$statuesgroup,$filtro,3,$fecha);
                 $companias=$cuentaRepository->findByPers(null,$user->getEmpresaActual());
             break;
             default:
-                $query=$agendaRepository->findByPers($user->getId(),null,$compania,$statues,$filtro,0,$fecha);
-                $queryresumen=$agendaRepository->findByPersGroup($user->getId(),null,$compania,$statuesgroup,$filtro,0,$fecha);
+                $query=$agendaRepository->findByPers($user->getId(),null,$compania,$statues,$filtro,3,$fecha);
+                $queryresumen=$agendaRepository->findByPersGroup($user->getId(),null,$compania,$statuesgroup,$filtro,3,$fecha);
                 $companias=$cuentaRepository->findByPers($user->getId());
             break;
         }
@@ -377,7 +377,7 @@ class PanelAgendadorController extends AbstractController
             $this->getDoctrine()->getManager()->flush();
             $entityManager = $this->getDoctrine()->getManager();
             
-            //if(!$abortar){
+            if(!$abortar){
                 $agenda->setStatus($agendaStatusRepository->find($request->request->get('chkStatus')));
                 $observacion=new AgendaObservacion();
                 $observacion->setAgenda($agenda);
@@ -391,7 +391,7 @@ class PanelAgendadorController extends AbstractController
                 $entityManager->persist($agenda);
                 $entityManager->flush();
                 return $this->redirectToRoute('panel_agendador_index');
-            //}
+            }
 
         }
         return $this->render('panel_agendador/new.html.twig', [

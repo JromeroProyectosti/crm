@@ -222,9 +222,7 @@
         var valorCuota=(montoContrato+(montoContrato/100*interes))/cuotas;
         $('.valor-cuota').val(valorCuota);
     }
-    $(".format-rut").inputmask({
-        mask: "9[9.999.999]-[9|K|k]",
-    });
+    $(".format-rut").rut();
     $(".monto-contrato").inputmask({
         mask: "9",
         repeat:20,
@@ -317,6 +315,7 @@
         if($.validateRut($(".format-rut").val())) {
             return true;
         }
+        
         alert("Rut no valido");
         $(".format-rut").focus();
         $('button').attr("disabled", false);

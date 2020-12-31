@@ -38,13 +38,14 @@ class AgendaController extends AbstractController
     public function new(Request $request,
                         AgendaStatusRepository $agendaStatusRepository,
                         CuentaRepository $cuentaRepository,
-                        UsuarioRepository $usuarioRepository
+                        UsuarioRepository $usuarioRepository,
+                        AgendaRepository $agendaRepository
                         ): Response
     {
         $this->denyAccessUnlessGranted('create','agenda');
         $user=$this->getUser();
         $agenda = new Agenda();
-
+        $error='';
         $agenda->setStatus($agendaStatusRepository->find(1));
         $agenda->setFechaCarga(new \DateTime(date('Y-m-d H:i:s')));
         $form = $this->createForm(AgendaType::class, $agenda);
@@ -61,26 +62,40 @@ class AgendaController extends AbstractController
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
+        
+            $telefono = $form->getData()->getTelefonoCliente();
+            $agenda_existe=$agendaRepository->findBy(['telefonoCliente'=>$telefono]);
 
-            $cuenta=$request->request->get('cboCuenta');
-            $usuario=$request->request->get('cboAgendador');
-            $agenda->setCuenta($cuentaRepository->find($cuenta));
-            $agenda->setAgendador($usuarioRepository->find($usuario));
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($agenda);
-            $entityManager->flush();
 
-            $observacion=new AgendaObservacion();
-            $observacion->setAgenda($agenda);
-            $observacion->setUsuarioRegistro($usuarioRepository->find($user->getId()));
-            $observacion->setStatus($agenda->getStatus());
-            $observacion->setFechaRegistro(new \DateTime(date("Y-m-d H:i:s")));
-            $observacion->setObservacion("Genera carga manual");
-           // $agenda->setObservacion("");
-            $entityManager->persist($observacion);
-            $entityManager->flush();
+            if(null == $agenda_existe){
+                $cuenta=$request->request->get('cboCuenta');
+                $usuario=$request->request->get('cboAgendador');
+                $agenda->setCuenta($cuentaRepository->find($cuenta));
+                $agenda->setAgendador($usuarioRepository->find($usuario));
 
-            return $this->redirectToRoute('agenda_new');
+                
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($agenda);
+                $entityManager->flush();
+
+                $observacion=new AgendaObservacion();
+                $observacion->setAgenda($agenda);
+                $observacion->setUsuarioRegistro($usuarioRepository->find($user->getId()));
+                $observacion->setStatus($agenda->getStatus());
+                $observacion->setFechaRegistro(new \DateTime(date("Y-m-d H:i:s")));
+                $observacion->setObservacion("Genera carga manual");
+                // $agenda->setObservacion("");
+                $entityManager->persist($observacion);
+                $entityManager->flush();
+
+                return $this->redirectToRoute('agenda_new');
+            }else{
+                $error="Toast.fire({
+                    icon: 'error',
+                    title: 'Este lead ya se encuentra en agenda, favor verifique la información'
+                  });";
+            }
+           
         }
 
         return $this->render('agenda/new.html.twig', [
@@ -88,6 +103,7 @@ class AgendaController extends AbstractController
             'form' => $form->createView(),
             'cuentas'=>$cuentas,
             'pagina'=>"Carga Manual",
+            'error_toast'=>$error,
         ]);
     }
 
