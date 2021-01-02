@@ -15,7 +15,11 @@
                     <select name="bCompania" class="form-control">
                         <option value="0">Todos</option>
                         {% for compania in companias %}
-                            <option value="{{compania.id}}">{{compania.nombre}}</option>
+                            <option value="{{compania.id}}"
+                            {% if bCompania==compania.id %}
+                                selected
+                            {% endif %}
+                            >{{compania.nombre}}</option>
                         {% endfor %}
                     </select>
                 </div>

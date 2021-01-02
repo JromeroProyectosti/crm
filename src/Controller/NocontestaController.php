@@ -36,11 +36,11 @@ class NocontestaController extends AbstractController
         $pagina=$moduloPerRepository->findOneByName('nocontesta',$user->getEmpresaActual());
         $filtro=null;
         $compania=null;
-        if(null !== $request->request->get('bFiltro')){
-            $filtro=$request->request->get('bFiltro');
+        if(null !== $request->query->get('bFiltro')&& trim($request->query->get('bFiltro'))!=''){
+            $filtro=$request->query->get('bFiltro');
         }
-        if(null !== $request->request->get('bCompania')){
-            $compania=$request->request->get('bCompania');
+        if(null !== $request->query->get('bCompania')&&$request->query->get('bCompania')!=0){
+            $compania=$request->query->get('bCompania');
         }
 
 

@@ -167,15 +167,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 $(function() {
                     const Toast = Swal.mixin({
                       toast: true,
-                      
-                      showConfirmButton: true,
+                      position: 'top-end',
+                      showConfirmButton: false,
                       timer: 5000
                     });
               /*  window.onload = function ()  {
                     $(".loader").fadeOut("slow");
                 };*/
                 {% if error_toast is defined %}
-                {{error_toast|raw}}
+                    {{error_toast|raw}}
                 {% endif %}
             });
 

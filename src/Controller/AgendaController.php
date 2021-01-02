@@ -46,6 +46,13 @@ class AgendaController extends AbstractController
         $user=$this->getUser();
         $agenda = new Agenda();
         $error='';
+        $error_toast="";
+        if($request->query->get('msg')=='exito'){
+            $error_toast="Toast.fire({
+                icon: 'success',
+                title: 'Registro grabado con exito'
+              })";
+        }
         $agenda->setStatus($agendaStatusRepository->find(1));
         $agenda->setFechaCarga(new \DateTime(date('Y-m-d H:i:s')));
         $form = $this->createForm(AgendaType::class, $agenda);
@@ -62,12 +69,23 @@ class AgendaController extends AbstractController
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
-        
+            $sql="";
+            $sql1="";
             $telefono = $form->getData()->getTelefonoCliente();
-            $agenda_existe=$agendaRepository->findBy(['telefonoCliente'=>$telefono]);
+            $telefonoRecado= $form->getData()->getTelefonoRecadoCliente();
+
+            if(trim($telefono)!=""){
+                $sql=" (a.telefonoCliente='$telefono' or a.telefonoRecadoCliente='$telefono' ) ";
+            }
+
+            if(trim($telefonoRecado)!=""){
+                $sql1=" and (a.telefonoCliente='$telefonoRecado' or a.telefonoRecadoCliente='$telefonoRecado' ) ";
+            }
+
+            $agenda_existe=$agendaRepository->findByPers(null,null,null,null,null,3,$sql.$sql1);
 
 
-            if(null == $agenda_existe){
+            if(true){
                 $cuenta=$request->request->get('cboCuenta');
                 $usuario=$request->request->get('cboAgendador');
                 $agenda->setCuenta($cuentaRepository->find($cuenta));
@@ -88,12 +106,13 @@ class AgendaController extends AbstractController
                 $entityManager->persist($observacion);
                 $entityManager->flush();
 
-                return $this->redirectToRoute('agenda_new');
+                return $this->redirectToRoute('agenda_new',['msg'=>'exito']);
             }else{
-                $error="Toast.fire({
-                    icon: 'error',
-                    title: 'Este lead ya se encuentra en agenda, favor verifique la información'
-                  });";
+                $error='<div class="alert alert-danger alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <h5><i class="icon fas fa-ban"></i> Error!!</h5>
+                   Este lead ya se encuentra en agenda, favor verifique la información
+                 </div>';
             }
            
         }
@@ -103,7 +122,8 @@ class AgendaController extends AbstractController
             'form' => $form->createView(),
             'cuentas'=>$cuentas,
             'pagina'=>"Carga Manual",
-            'error_toast'=>$error,
+            'error'=>$error,
+            'error_toast'=>$error_toast,
         ]);
     }
 
