@@ -328,9 +328,13 @@ class PanelAgendadorController extends AbstractController
                     $abogado=$usuarioRepository->find($request->request->get('cboAbogado'));
                     $agenda->setAbogado($abogado);
                 }
-                $isAgendado=$agendaRepository->findBy(['abogado'=>$request->request->get('cboAbogado'),
+                if($request->request->get('cboHoras')=='00:00'){
+                    $isAgendado=null;
+                }else{
+                    $isAgendado=$agendaRepository->findBy(['abogado'=>$request->request->get('cboAbogado'),
                                                     'fechaAsignado'=>new \DateTime($request->request->get('txtFechaAgendamiento')." ".$request->request->get('cboHoras').":00"),
                                                     'status'=>$request->request->get('chkStatus')]);
+                }
                 if(null != $isAgendado){
                     $error='<div class="alert alert-danger alert-dismissible">
                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
