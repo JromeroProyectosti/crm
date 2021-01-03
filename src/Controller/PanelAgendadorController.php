@@ -329,7 +329,17 @@ class PanelAgendadorController extends AbstractController
                     $agenda->setAbogado($abogado);
                 }
                 if($request->request->get('cboHoras')=='00:00'){
-                    $isAgendado=null;
+                    $agenda_sobrecupos=$agendaRepository->findByPers($request->request->get('cboAbogado'),null,null,'4,5,7,8,9,10', null,1," a.fechaAsignado = '".$request->request->get('txtFechaAgendamiento')." 00:00:00'");
+                    $cont=0;
+                    $isAgendado=true;
+                    foreach($agenda_sobrecupos as $agenda_sobrecupo){
+                        $cont++;
+                    }
+                    if($cont<$abogado->getSobrecupo()){
+                        //$sobrecupo="Sobre Cupo";
+                        $isAgendado=null;
+                    }
+                    
                 }else{
                     $isAgendado=$agendaRepository->findBy(['abogado'=>$request->request->get('cboAbogado'),
                                                     'fechaAsignado'=>new \DateTime($request->request->get('txtFechaAgendamiento')." ".$request->request->get('cboHoras').":00"),
