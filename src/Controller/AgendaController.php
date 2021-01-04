@@ -150,10 +150,10 @@ class AgendaController extends AbstractController
             case 3:
             case 4:
             case 1:
-                $queryresumen=$agendaRepository->findByAgendGroup(null,$user->getEmpresaActual(),$compania,$agendaStatus,$filtro,0,$fecha);   
+                $queryresumen=$agendaRepository->findByAgendGroup(null,$user->getEmpresaActual(),$compania,$agendaStatus,$filtro,3,$fecha);   
             break;
             default:
-                $queryresumen=$agendaRepository->findByAgendGroup($user->getId(),$user->getEmpresaActual(),$compania,$agendaStatus,$filtro,0,$fecha);   
+                $queryresumen=$agendaRepository->findByAgendGroup($user->getId(),$user->getEmpresaActual(),$compania,$agendaStatus,$filtro,3,$fecha);   
             break;
         }
         
