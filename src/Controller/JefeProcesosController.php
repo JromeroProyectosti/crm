@@ -75,10 +75,7 @@ class JefeProcesosController extends AbstractController
         $cuentas=$empresa->getCuentas();
         $choices= array();
         
-        $statusChoices=array();
-        foreach($statues as $status){
-            $statusChoices[$status->getNombre()]=$status->getId();
-        }
+       
         
         $usuario->setUsuarioTipo($usuarioTipoRepository->find(3));
         $usuario->setFechaActivacion(new \DateTime(date('Y-m-d H:i:s')));
