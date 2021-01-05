@@ -52,24 +52,6 @@
 				{{form_row(form.sexo,{'label':false,'attr':{'class':'form-control'}})}}
 				
 			</div>
-			
-			<div class="col-sm-6 col-md-3">
-				<small class="text-muted">Status</small>
-				<select name="cboStatues" class="form-control" required>
-					<option></option>
-					{% for status in statues %}
-						<option value="{{status.id}}"
-						{% if usuario.status.id is defined %}
-							{% if usuario.status.id==status.id %}
-								selected
-							{% endif %}
-						{% endif %}
-						>{{status.nombre}}</option>
-					{% endfor %}}
-				</select>
-				
-			</div>
-			
 		</div>
 	</section>
 	<section>
