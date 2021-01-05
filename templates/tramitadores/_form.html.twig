@@ -72,27 +72,6 @@
 			</div>
 			
 			<div class="col-sm-6 col-md-3">
-				<small class="text-muted">Status</small>
-				<select name="cboStatues" class="form-control" required>
-					<option></option>
-					{% for status in statues %}
-						<option value="{{status.id}}"
-						{% if usuario is defined %}
-						{% if usuario.status.id==status.id %}
-							selected
-						{% endif %}
-						{% endif %}
-						>{{status.nombre}}</option>
-					{% endfor %}
-				</select>
-				
-			</div>
-			<div class="col-sm-6 col-md-3">
-				<small class="text-muted">Fecha No Disponible</small>
-				{{form_row(form.fechaNoDisponible,{'label':false,'attr':{'class':'form-control','novalidate': 'novalidate'}})}}
-				
-			</div>
-			<div class="col-sm-6 col-md-3">
 				<small class="text-muted">Color para calendario </small> <button class="btn" style="background-color: {{usuario.color|default('')}};"></button>
 				{{form_row(form.color,{'label':false,'attr':{'class':'form-control my-colorpicker1','novalidate': 'novalidate'}})}}
 			</div>

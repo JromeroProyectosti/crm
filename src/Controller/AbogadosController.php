@@ -74,7 +74,6 @@ class AbogadosController extends AbstractController
         $usuario = new Usuario();
         $usuario->setEstado(1);
         $empresa=$this->getDoctrine()->getRepository(Empresa::class)->find($user->getEmpresaActual());
-        $statues=$this->getDoctrine()->getRepository(UsuarioStatus::class)->findBy(['id'=>[1,2]]);
         
         $cuentas=$empresa->getCuentas();
         $choices= array();
@@ -199,8 +198,7 @@ class AbogadosController extends AbstractController
             
             $usuario->setTipoDocumento($tipoDocumento->find($request->request->get('cboTipoDocumento')));
 
-            $status=$this->getDoctrine()->getRepository(UsuarioStatus::class)->find($request->request->get('cboStatues'));
-            $usuario->setStatus($status);
+            
             $entityManager->persist($usuario);
             $entityManager->flush();
 
@@ -246,7 +244,7 @@ class AbogadosController extends AbstractController
             'form' => $form->createView(),
             'pagina'=>$pagina->getNombre(),
             'cuentas'=>$cuentas,
-            'statues'=>$statues,
+            
             'tipo_documentos'=>$tipoDocumento->findAll(),
             'hora_inicio'=>$horaInicio,
             'hora_fin'=>$horaFin
@@ -406,8 +404,6 @@ class AbogadosController extends AbstractController
 
             $usuario->setTipoDocumento($tipoDocumento->find($request->request->get('cboTipoDocumento')));
 
-            $status=$this->getDoctrine()->getRepository(UsuarioStatus::class)->find($request->request->get('cboStatues'));
-            $usuario->setStatus($status);
             
             $usuarioCuentas=$usuario->getUsuarioCuentas();
             foreach($usuarioCuentas as $usuarioCuenta){
@@ -441,7 +437,6 @@ class AbogadosController extends AbstractController
             'form' => $form->createView(),
             'pagina'=>$pagina->getNombre(),
             'cuentas'=>$cuentas,
-            'statues'=>$statues,
             'cuentas_sel'=>$usuario->getUsuarioCuentas(),
             'tipo_documentos'=>$tipoDocumento->findAll(),
             'hora_inicio'=>$horaInicio,

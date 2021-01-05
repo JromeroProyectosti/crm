@@ -71,7 +71,6 @@ class JefeAbogadosController extends AbstractController
         $usuario = new Usuario();
         $usuario->setEstado(1);
         $empresa=$this->getDoctrine()->getRepository(Empresa::class)->find($user->getEmpresaActual());
-        $statues=$this->getDoctrine()->getRepository(UsuarioStatus::class)->findBy(['id'=>[1,2]]);
         $cuentas=$empresa->getCuentas();
         $choices= array();
         
@@ -116,8 +115,7 @@ class JefeAbogadosController extends AbstractController
         
             $usuario->setTipoDocumento($tipoDocumento->find($request->request->get('cboTipoDocumento')));
 
-            $status=$this->getDoctrine()->getRepository(UsuarioStatus::class)->find($request->request->get('cboStatues'));
-            $usuario->setStatus($status);
+           
             $entityManager->persist($usuario);
             $entityManager->flush();
 
@@ -163,7 +161,7 @@ class JefeAbogadosController extends AbstractController
             'form' => $form->createView(),
             'pagina'=>$pagina->getNombre(),
             'cuentas'=>$cuentas,
-            'statues'=>$statues,
+            
             'tipo_documentos'=>$tipoDocumento->findAll(),
             
         ]);
@@ -202,7 +200,6 @@ class JefeAbogadosController extends AbstractController
        
         $cuentas=$empresa->getCuentas();
 
-        $statues=$this->getDoctrine()->getRepository(UsuarioStatus::class)->findBy(['id'=>[1,2]]);
         $form = $this->createForm(UsuarioType::class, $usuario);
 
             $form->add("password", TextType::class,[
@@ -241,9 +238,6 @@ class JefeAbogadosController extends AbstractController
             
 
             $usuario->setTipoDocumento($tipoDocumento->find($request->request->get('cboTipoDocumento')));
-
-            $status=$this->getDoctrine()->getRepository(UsuarioStatus::class)->find($request->request->get('cboStatues'));
-            $usuario->setStatus($status);
             
 
             $usuarioCuentas=$usuario->getUsuarioCuentas();
@@ -278,7 +272,6 @@ class JefeAbogadosController extends AbstractController
             'form' => $form->createView(),
             'pagina'=>$pagina->getNombre(),
             'cuentas'=>$cuentas,
-            'statues'=>$statues,
             'cuentas_sel'=>$usuario->getUsuarioCuentas(),
             'tipo_documentos'=>$tipoDocumento->findAll(),
         ]);

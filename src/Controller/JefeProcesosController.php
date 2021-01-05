@@ -71,8 +71,7 @@ class JefeProcesosController extends AbstractController
         $usuario = new Usuario();
         $usuario->setEstado(1);
         $empresa=$this->getDoctrine()->getRepository(Empresa::class)->find($user->getEmpresaActual());
-        $statues=$this->getDoctrine()->getRepository(UsuarioStatus::class)->findBy(['id'=>[1,2]]);
-
+       
         $cuentas=$empresa->getCuentas();
         $choices= array();
         
@@ -117,8 +116,7 @@ class JefeProcesosController extends AbstractController
     
             $usuario->setTipoDocumento($tipoDocumento->find($request->request->get('cboTipoDocumento')));
 
-            $status=$this->getDoctrine()->getRepository(UsuarioStatus::class)->find($request->request->get('cboStatues'));
-            $usuario->setStatus($status);
+           
             $entityManager->persist($usuario);
             $entityManager->flush();
 
@@ -164,7 +162,6 @@ class JefeProcesosController extends AbstractController
             'form' => $form->createView(),
             'pagina'=>$pagina->getNombre(),
             'cuentas'=>$cuentas,
-            'statues'=>$statues,
             'tipo_documentos'=>$tipoDocumento->findAll(),
             
         ]);
@@ -199,7 +196,6 @@ class JefeProcesosController extends AbstractController
         $cuentas=$empresa->getCuentas();
         //$usuario->setPasswordAnt($usuario->getPassword());
         //$usuario->setPassword('');
-        $statues=$this->getDoctrine()->getRepository(UsuarioStatus::class)->findBy(['id'=>[1,2]]);
         $form = $this->createForm(UsuarioType::class, $usuario);
 
         $form->add("password", TextType::class,[
@@ -240,10 +236,7 @@ class JefeProcesosController extends AbstractController
 
             $usuario->setTipoDocumento($tipoDocumento->find($request->request->get('cboTipoDocumento')));
 
-            $status=$this->getDoctrine()->getRepository(UsuarioStatus::class)->find($request->request->get('cboStatues'));
-            $usuario->setStatus($status);
-
-            
+                 
            
             
 
@@ -279,7 +272,6 @@ class JefeProcesosController extends AbstractController
             'form' => $form->createView(),
             'pagina'=>$pagina->getNombre(),
             'cuentas'=>$cuentas,
-            'statues'=>$statues,
             'id_cuenta'=>$usuarioCuenta->getCuenta()->getId(),
             'tipo_documentos'=>$tipoDocumento->findAll(),
             'cuentas_sel'=>$usuario->getUsuarioCuentas(),

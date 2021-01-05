@@ -60,7 +60,6 @@ class ClientesController extends AbstractController
         $usuario = new Usuario();
         $usuario->setEstado(1);
         $empresa=$this->getDoctrine()->getRepository(Empresa::class)->find($user->getEmpresaActual());
-        $statues=$this->getDoctrine()->getRepository(UsuarioStatus::class)->findBy(['id'=>[1,2]]);
         $usuarioCategorias=$empresa->getUsuarioCategorias();
         $cuentas=$empresa->getCuentas();
         $choices= array();
@@ -99,8 +98,7 @@ class ClientesController extends AbstractController
         
             
 
-            $status=$this->getDoctrine()->getRepository(UsuarioStatus::class)->find($request->request->get('cboStatues'));
-            $usuario->setStatus($status);
+            
             $entityManager->persist($usuario);
             $entityManager->flush();
 
@@ -126,8 +124,6 @@ class ClientesController extends AbstractController
             'form' => $form->createView(),
             'pagina'=>$pagina->getNombre(),
             'cuentas'=>$cuentas,
-    
-            'statues'=>$statues,
         ]);
     }
 
@@ -163,7 +159,6 @@ class ClientesController extends AbstractController
         $usuarioCategorias=$empresa->getUsuarioCategorias();
         $cuentas=$empresa->getCuentas();
 
-        $statues=$this->getDoctrine()->getRepository(UsuarioStatus::class)->findBy(['id'=>[1,2]]);
         $form = $this->createForm(UsuarioType::class, $usuario);
 
         $form->add("password", TextType::class,[
@@ -202,8 +197,7 @@ class ClientesController extends AbstractController
                 $entityManager->persist($usuarioCuenta);
                 $entityManager->flush();
             }
-            $status=$this->getDoctrine()->getRepository(UsuarioStatus::class)->find($request->request->get('cboStatues'));
-            $usuario->setStatus($status);
+           
             if($usuario->getPasswordAnt()!=""){
                 $password=$usuario->getPasswordAnt();
                 $encoded=$encoder->encodePassword($usuario,$password);
@@ -221,7 +215,6 @@ class ClientesController extends AbstractController
             'form' => $form->createView(),
             'pagina'=>$pagina->getNombre(),
             'cuentas'=>$cuentas,
-            'statues'=>$statues,
             'cuentas_sel'=>$usuario->getUsuarioCuentas(),
         ]);
     }
