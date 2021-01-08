@@ -84,7 +84,7 @@ class AgendaController extends AbstractController
 
             $agenda_existe=$agendaRepository->findByPers(null,null,null,null,null,3,$sql.$sql1);
 
-            if(null != $agenda_existe){
+            if(null == $agenda_existe){
                 $cuenta=$request->request->get('cboCuenta');
                 $usuario=$request->request->get('cboAgendador');
                 $agenda->setCuenta($cuentaRepository->find($cuenta));
