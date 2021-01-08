@@ -201,7 +201,7 @@ class PanelAbogadoController extends AbstractController
             'agenda'=>$agenda,
             'pagina'=>$pagina->getNombre().' | Gestionar',
             
-            'statues'=>$agendaStatusRepository->findBy(['perfil'=>[$agenda->getAbogado()->getUsuarioTipo()->getId(),0]]),
+            'statues'=>$agendaStatusRepository->findBy(['perfil'=>[$agenda->getAbogado()->getUsuarioTipo()->getId(),0]],['orden'=>'asc']),
         ]);
 
     }

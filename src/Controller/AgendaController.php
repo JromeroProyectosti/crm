@@ -56,7 +56,7 @@ class AgendaController extends AbstractController
         $agenda->setStatus($agendaStatusRepository->find(1));
         $agenda->setFechaCarga(new \DateTime(date('Y-m-d H:i:s')));
         $form = $this->createForm(AgendaType::class, $agenda);
-        $form->add('campania');
+        //$form->add('campania');
         $form->add('ciudadCliente');
         $form->handleRequest($request);
 
@@ -73,7 +73,7 @@ class AgendaController extends AbstractController
             $sql1="";
             $telefono = $form->getData()->getTelefonoCliente();
             $telefonoRecado= $form->getData()->getTelefonoRecadoCliente();
-
+            $canal=$request->request->get('cboCanal');
             if(trim($telefono)!=""){
                 $sql=" (a.telefonoCliente='$telefono' or a.telefonoRecadoCliente='$telefono' ) ";
             }
@@ -84,14 +84,13 @@ class AgendaController extends AbstractController
 
             $agenda_existe=$agendaRepository->findByPers(null,null,null,null,null,3,$sql.$sql1);
 
-
-            if(true){
+            if(null != $agenda_existe){
                 $cuenta=$request->request->get('cboCuenta');
                 $usuario=$request->request->get('cboAgendador');
                 $agenda->setCuenta($cuentaRepository->find($cuenta));
                 $agenda->setAgendador($usuarioRepository->find($usuario));
 
-                
+                $agenda->setCampania($canal);
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->persist($agenda);
                 $entityManager->flush();

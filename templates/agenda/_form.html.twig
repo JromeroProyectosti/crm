@@ -28,8 +28,17 @@
             {{form_row(form.ciudadCliente,{'label':false,'attr':{'class':'form-control'}})}}
         </div>
         <div class="col-sm-6 col-md-3">
-            <small class="text-muted">Campaña</small>
-            {{form_row(form.campania,{'label':false,'attr':{'class':'form-control'}})}}
+            <small class="text-muted">Canal</small>
+            <select class="form-control" name="cboCanal" required>
+                <option value=""></option>
+                <option value="Email contacto">Email contacto</option>
+                <option value="Espontaneo">Espontaneo</option>
+                <option value="Referencia">Referencia</option>
+                <option value="Facebook propio">Facebook propio</option>
+                <option value="Carta">Carta</option>
+                <option value="Web de asistencia deudores">Web de asistencia deudores</option>
+                <option value="Web de cero dicom">Web de cero dicom</option>
+            </select>
         </div>
         <div class="col-sm-6 col-md-3">
             <small class="text-muted">Compañia</small>

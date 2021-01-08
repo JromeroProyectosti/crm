@@ -87,23 +87,7 @@ class UsuarioController extends AbstractController
         $form = $this->createForm(UsuarioType::class, $usuario);
         $form->add('usuarioTipo');
         $form->add('estado');
-        $form->add('lunes',TimeType::class,[
-            'placeholder' => [
-                'hour' => 'Hora', 'minute' => 'Minuto', 'second' => 'Segundo',
-            ],
-        ]);
-        $form->add('lunes_interval', DateIntervalType::class, [
-            'widget'      => 'integer', // render a text field for each part
-        // 'input'    => 'string',  // if you want the field to return a ISO 8601 string back to you
-    
-        // customize which text boxes are shown
-        'with_years'  => false,
-        'with_months' => false,
-        'with_days'   => true,
-        'with_hours'  => true,
         
-        'days' => array_combine(range(1, 31), range(1, 31)),
-        'hours' => range(1, 12),]);
         $form->add("password", TextType::class,[
             'attr'=>[
                 'style'=>'display:none'

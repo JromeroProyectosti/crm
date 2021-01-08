@@ -43,7 +43,7 @@ class AgendaRepository extends ServiceEntityRepository
                 if(!is_null($usuario)){
                     $query->andWhere('a.agendador = '.$usuario);
                 }
-                $query->andWhere('a.abogado is null');
+                //$query->andWhere('(a.abogado is null or a.status in (4,6,7,8))');
             break;
             default:
                 if(!is_null($usuario)){
@@ -73,6 +73,7 @@ class AgendaRepository extends ServiceEntityRepository
 
     public function findByPersGroup($usuario=null,$empresa=null,$compania=null,$status=null, $filtro=null,$esAbogado=null, $otros=null)
     {
+        echo $esAbogado;
         $query=$this->createQueryBuilder('a');
         $query->select(array('a','s','count(s.id) as valor'));
         $query->join('a.status','s');
@@ -95,15 +96,16 @@ class AgendaRepository extends ServiceEntityRepository
                 if(!is_null($usuario)){
                     $query->andWhere('a.agendador = '.$usuario);
                 }
-                $query->andWhere('a.abogado is null');
+                //$query->andWhere('(a.abogado is null or a.status in (4,6,7,8))');
             break;
             default:
                 if(!is_null($usuario)){
                     $query->andWhere('a.agendador = '.$usuario);
                 }
             break;
-
+            
         }
+
         if(!is_null($compania)){
             $query->andWhere('a.cuenta = '.$compania);
         }
@@ -155,7 +157,7 @@ class AgendaRepository extends ServiceEntityRepository
                 if(!is_null($usuario)){
                     $query->andWhere('a.agendador = '.$usuario);
                 }
-                $query->andWhere('a.abogado is null');
+                //$query->andWhere('(a.abogado is null or a.status in (4,6,7,8))');
             break;
             default:
                 if(!is_null($usuario)){

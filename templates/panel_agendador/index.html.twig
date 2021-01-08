@@ -20,9 +20,13 @@
                 <span class="info-box-text">{{resumen[0].status.nombre}}</span>
                 <span class="info-box-number">{{resumen.valor}}</span>
                 {% set total= total + resumen.valor %}
+                {% if resumen[0].status.id not in [10,6] %}
+                    
+                
                 <a href="#" class="small-box-footer" onclick="javascript:buscar({{resumen[0].status.id}})">
                     Ver Más <i class="fas fa-arrow-circle-right"></i>
                 </a>
+                {% endif %}
                 </div>
 
                 

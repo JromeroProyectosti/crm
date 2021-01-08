@@ -40,7 +40,7 @@ class PanelAgendadorController extends AbstractController
         $filtro=null;
         $compania=null;
         $fecha=null;
-        $statues='1,2,3,11';
+        $statues='1,2,3,4,11';
         $statuesgroup=null;
         $status=null;
         if(null !== $request->query->get('bFiltro') && trim($request->query->get('bFiltro'))!=''){
@@ -70,13 +70,13 @@ class PanelAgendadorController extends AbstractController
             case 3:
             case 1:
             case 8:
-                $query=$agendaRepository->findByPers(null,$user->getEmpresaActual(),$compania,$statues,$filtro,3,$fecha);
-                $queryresumen=$agendaRepository->findByPersGroup(null,$user->getEmpresaActual(),$compania,$statuesgroup,$filtro,3,$fecha);
+                $query=$agendaRepository->findByPers(null,$user->getEmpresaActual(),$compania,$statues,$filtro,0,$fecha);
+                $queryresumen=$agendaRepository->findByPersGroup(null,$user->getEmpresaActual(),$compania,$statuesgroup,$filtro,0,$fecha);
                 $companias=$cuentaRepository->findByPers(null,$user->getEmpresaActual());
             break;
             default:
-                $query=$agendaRepository->findByPers($user->getId(),null,$compania,$statues,$filtro,3,$fecha);
-                $queryresumen=$agendaRepository->findByPersGroup($user->getId(),null,$compania,$statuesgroup,$filtro,3,$fecha);
+                $query=$agendaRepository->findByPers($user->getId(),null,$compania,$statues,$filtro,0,$fecha);
+                $queryresumen=$agendaRepository->findByPersGroup($user->getId(),null,$compania,$statuesgroup,$filtro,0,$fecha);
                 $companias=$cuentaRepository->findByPers($user->getId());
             break;
         }

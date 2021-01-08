@@ -50,15 +50,15 @@ class ReasignarController extends AbstractController
             case 3:
             case 4:
             case 1:
-                $query=$agendaRepository->findByPers(null,$user->getEmpresaActual(),$compania,'9',$filtro,3);
+                $query=$agendaRepository->findByPers(null,$user->getEmpresaActual(),$compania,'9,6',$filtro,3);
                 $companias=$cuentaRepository->findByPers(null,$user->getEmpresaActual());
             break;
             case 5:
-                $query=$agendaRepository->findByPers($user->getId(),null,$compania,'9',$filtro,3);
+                $query=$agendaRepository->findByPers($user->getId(),null,$compania,'9,6',$filtro,3);
                 $companias=$cuentaRepository->findByPers($user->getId());
             break;
             default:
-                $query=$agendaRepository->findByPers($user->getId(),null,$compania,'9',$filtro,3);
+                $query=$agendaRepository->findByPers($user->getId(),null,$compania,'9,6',$filtro,3);
                 $companias=$cuentaRepository->findByPers($user->getId());
             break;
         }
