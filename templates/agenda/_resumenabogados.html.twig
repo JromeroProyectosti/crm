@@ -1,3 +1,18 @@
+<div class="card card-outline card-info">
+    <div class="card-header">
+      <h3 class="card-title">Resumen por abogado 
+        {% if nombre_status != '' %}
+        <strong>en {{nombre_status}}</strong>
+        {% endif %}
+      </h3>
+
+      <div class="card-tools">
+        <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+        </button>
+        <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+      </div>
+    </div>
+    <div class="card-body">
 {% for agendador in agendadores %}
     
 <div class="row">
@@ -18,3 +33,7 @@
     </div>
 </div>
 {% endfor %}
+
+</div>
+<!-- /.card-body -->
+</div>

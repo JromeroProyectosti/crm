@@ -142,23 +142,27 @@ class AgendaController extends AbstractController
     {
         $user=$this->getUser();
         $fecha="a.fechaCarga between '$fechainicio' and '$fechafin 23:59:59'" ;
-
-        
+        $nombre_status="";
+        if(null != $agendaStatus){
+            $status=$this->getDoctrine()->getRepository(AgendaStatus::class)->find($agendaStatus);
+            $nombre_status=$status->getNombre();
+        }
         //$queryresumen=$agendaRepository->findByAgendGroup(null,$user->getEmpresaActual(),$compania,$statuesgroup,$filtro,null,$fecha);   
         switch($user->getUsuarioTipo()->getId()){
             case 3:
             case 4:
             case 1:
-                $queryresumen=$agendaRepository->findByAgendGroup(null,$user->getEmpresaActual(),$compania,$agendaStatus,$filtro,3,$fecha);   
+                $queryresumen=$agendaRepository->findByAgendGroup(null,$user->getEmpresaActual(),$compania,$agendaStatus,$filtro,0,$fecha);   
             break;
             default:
-                $queryresumen=$agendaRepository->findByAgendGroup($user->getId(),$user->getEmpresaActual(),$compania,$agendaStatus,$filtro,3,$fecha);   
+                $queryresumen=$agendaRepository->findByAgendGroup($user->getId(),$user->getEmpresaActual(),$compania,$agendaStatus,$filtro,0,$fecha);   
             break;
         }
         
         return $this->render('agenda/_resumenagendadores.html.twig',[
             'agendadores'=>$queryresumen,
             'total'=>$totalStatus,
+            'nombre_status'=>$nombre_status,
         ]);
     }
     /**
@@ -168,7 +172,11 @@ class AgendaController extends AbstractController
     {
         $user=$this->getUser();
         $fecha="a.fechaAsignado between '$fechainicio' and '$fechafin 23:59:59'" ;
-
+        $nombre_status="";
+        if(null != $agendaStatus){
+            $status=$this->getDoctrine()->getRepository(AgendaStatus::class)->find($agendaStatus);
+            $nombre_status=$status->getNombre();
+        }
         
         //$queryresumen=$agendaRepository->findByAgendGroup(null,$user->getEmpresaActual(),$compania,$statuesgroup,$filtro,null,$fecha);   
         switch($user->getUsuarioTipo()->getId()){
@@ -185,6 +193,7 @@ class AgendaController extends AbstractController
         return $this->render('agenda/_resumenabogados.html.twig',[
             'agendadores'=>$queryresumen,
             'total'=>$totalStatus,
+            'nombre_status'=>$nombre_status,
         ]);
     }
 

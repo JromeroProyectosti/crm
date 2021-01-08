@@ -98,21 +98,9 @@
 
     
 
-    <div class="card card-outline card-info">
-        <div class="card-header">
-          <h3 class="card-title">Resumen por abogado</h3>
-
-          <div class="card-tools">
-            <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
-            </button>
-            <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
-          </div>
-        </div>
-        <div class="card-body">
+   
         {{ render(controller('App\\Controller\\AgendaController::resumenabogados', {'agendaStatus':status,'fechainicio':dateInicio,'fechafin':dateFin,'compania':bCompania,'filtro':bFiltro,'totalStatus':total})) }}
-    </div>
-    <!-- /.card-body -->
-  </div>
+    
 </section>
 {% endif %}
 <section>
