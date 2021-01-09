@@ -138,10 +138,24 @@ class AgendaController extends AbstractController
     /**
      * @Route("/resumenagendadores", name="agenda_resumenagendadores", methods={"GET","POST"})
      */
-    public function resumenagendadores(Request $request,$agendaStatus,String $fechainicio, String $fechafin,$compania,$filtro,$totalStatus, AgendaRepository $agendaRepository): Response
+    public function resumenagendadores(Request $request,$agendaStatus,String $fechainicio, String $fechafin,$compania,$filtro,$totalStatus,$tipoFecha, AgendaRepository $agendaRepository): Response
     {
         $user=$this->getUser();
-        $fecha="a.fechaCarga between '$fechainicio' and '$fechafin 23:59:59'" ;
+        switch($tipoFecha){
+            case 0:
+                $fecha="a.fechaCarga between '$fechainicio' and '$fechafin 23:59:59'" ;
+                break;
+            case 1:
+                $fecha="a.fechaAsignado between '$fechainicio' and '$fechafin 23:59:59'" ;
+                break;
+            case 2:
+                $fecha="a.fechaContrato between '$fechainicio' and '$fechafin 23:59:59'" ;
+                break;
+            default:
+                $fecha="a.fechaCarga between '$fechainicio' and '$fechafin 23:59:59'" ;
+                break;
+        }
+        //$fecha="a.fechaCarga between '$fechainicio' and '$fechafin 23:59:59'" ;
         $nombre_status="";
         if(null != $agendaStatus){
             $status=$this->getDoctrine()->getRepository(AgendaStatus::class)->find($agendaStatus);
@@ -168,9 +182,24 @@ class AgendaController extends AbstractController
     /**
      * @Route("/resumenabogados", name="agenda_resumenabogados", methods={"GET","POST"})
      */
-    public function resumenabogados(Request $request, $agendaStatus,String $fechainicio, String $fechafin,$compania,$filtro,$totalStatus, AgendaRepository $agendaRepository): Response
+    public function resumenabogados(Request $request, $agendaStatus,String $fechainicio, String $fechafin,$compania,$filtro,$totalStatus,$tipoFecha, AgendaRepository $agendaRepository): Response
     {
         $user=$this->getUser();
+
+        switch($tipoFecha){
+            case 0:
+                $fecha="a.fechaCarga between '$fechainicio' and '$fechafin 23:59:59'" ;
+                break;
+            case 1:
+                $fecha="a.fechaAsignado between '$fechainicio' and '$fechafin 23:59:59'" ;
+                break;
+            case 2:
+                $fecha="a.fechaContrato between '$fechainicio' and '$fechafin 23:59:59'" ;
+                break;
+            default:
+                $fecha="a.fechaCarga between '$fechainicio' and '$fechafin 23:59:59'" ;
+                break;
+        }
         $fecha="a.fechaAsignado between '$fechainicio' and '$fechafin 23:59:59'" ;
         $nombre_status="";
         if(null != $agendaStatus){
