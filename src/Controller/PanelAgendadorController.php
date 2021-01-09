@@ -206,7 +206,7 @@ class PanelAgendadorController extends AbstractController
             break;
         }
         if($abogado->getUsuarioTipo()->getId()==6){
-            $agendas=$agendaRepository->findByPers($usuario,null,null,'4,5,7,8,9,10', null,1," a.fechaAsignado >= '$fecha' and  a.fechaAsignado <= '$fecha 23:59:59'");
+            $agendas=$agendaRepository->findByPers($usuario,null,null,'4,5,7,6,8,9,10', null,1," a.fechaAsignado >= '$fecha' and  a.fechaAsignado <= '$fecha 23:59:59'");
             $nodisponibleI=$usuarioNoDisponibleRepository->findByIntervalo($usuario,$fecha);
             $nodisponibleD=$usuarioNoDisponibleRepository->findByDinamico($usuario,$fecha);
             if($status){
