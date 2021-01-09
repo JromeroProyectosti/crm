@@ -202,18 +202,7 @@ class PanelAbogadoController extends AbstractController
             }
             $entityManager = $this->getDoctrine()->getManager();
 
-            switch($request->request->get('chkStatus')){
-                case 6:
-                    switch($user->getUsuarioTipo()->getId()){
-                        case 3:
-                        case 1:
-                        case 4:
-                        case 8:
-                            $agenda->setAbogado(null);
-                            break;
-                    }
-                break;
-            }
+            
 
             $observacion=new AgendaObservacion();
             $observacion->setAgenda($agenda);
@@ -396,6 +385,7 @@ class PanelAbogadoController extends AbstractController
         
         if(null !== $request->request->get('status')){
             //$agenda->setStatus($agendaStatusRepository->find($request->request->get('status')));
+           
         }
         if(null !==$request->request->get('hdNoContrata')){
             $agenda->setStatus($agendaStatusRepository->find($request->request->get('hdNoContrata')));
@@ -411,6 +401,18 @@ class PanelAbogadoController extends AbstractController
             $entityManager->persist($observacion);
             $entityManager->flush();
 
+            switch($request->request->get('hdNoContrata')){
+                case 6:
+                    switch($user->getUsuarioTipo()->getId()){
+                        case 3:
+                        case 1:
+                        case 4:
+                        case 8:
+                            $agenda->setAbogado(null);
+                            break;
+                    }
+                break;
+            }
 
             
             $entityManager->persist($agenda);
