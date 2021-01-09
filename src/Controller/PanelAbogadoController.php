@@ -54,8 +54,9 @@ class PanelAbogadoController extends AbstractController
         $compania=null;
         $fecha=null;
         $statues='4,5,6';
-        $statuesgroup='4,5,7,6,8,9,10';
+        $statuesgroup='4,5,7,6,8';
         $status=null;
+        $tipo_fecha=1;
         if(null !== $request->query->get('bFiltro') && trim($request->query->get('bFiltro'))!=''){
             $filtro=$request->query->get('bFiltro');
         }
@@ -73,7 +74,24 @@ class PanelAbogadoController extends AbstractController
             $dateFin=date('Y-m-d');
 
         }
-        $fecha="a.fechaAsignado between '$dateInicio' and '$dateFin 23:59:59'" ;
+        if(null !== $request->query->get('bTipofecha') ){
+            $tipo_fecha=$request->query->get('bTipofecha');
+        }
+        switch($tipo_fecha){
+            case 0:
+                $fecha="a.fechaCarga between '$dateInicio' and '$dateFin 23:59:59'" ;
+                break;
+            case 1:
+                $fecha="a.fechaAsignado between '$dateInicio' and '$dateFin 23:59:59'" ;
+                break;
+            case 2:
+                $fecha="a.fechaContrato between '$dateInicio' and '$dateFin 23:59:59'" ;
+                break;
+            default:
+                $fecha="a.fechaCarga between '$dateInicio' and '$dateFin 23:59:59'" ;
+                break;
+        }
+       // $fecha="a.fechaAsignado between '$dateInicio' and '$dateFin 23:59:59'" ;
         
         if(null !== $request->query->get('bStatus') && trim($request->query->get('bStatus')!='')){
             $status=$request->query->get('bStatus');
@@ -114,6 +132,7 @@ class PanelAbogadoController extends AbstractController
             'dateInicio'=>$dateInicio,
             'dateFin'=>$dateFin,
             'status'=>$status,
+            'tipoFecha'=>$tipo_fecha,
         ]);
     }
     /**
@@ -316,12 +335,15 @@ class PanelAbogadoController extends AbstractController
             $contrato->setFechaPrimerPago(new \DateTime(date($request->request->get('txtFechaPago')."-1 00:00:00")));
             $entityManager = $this->getDoctrine()->getManager();
 
+            
+            $entityManager->persist($contrato);
+            $entityManager->flush();
+
             $agenda->setNombreCliente($contrato->getNombre());
             $agenda->setTelefonoCliente($contrato->getTelefono());
             $agenda->setEmailCliente($contrato->getEmail());
+            $agenda->setFechaContrato($contrato->getFechaCreacion());
 
-            $entityManager->persist($contrato);
-            $entityManager->flush();
             $entityManager->persist($agenda);
             $entityManager->flush();
            

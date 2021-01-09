@@ -78,15 +78,27 @@
                 <div class="col-sm-12 col-md-3">
                     <input type="text" class="form-control" name="bFiltro" placeholder="Nombre/Email/Telefono" value="{{bFiltro}}">
                 </div>
-                <div class="col-sm-12 col-md-3">
+                <div class="col-sm-12 col-md-2">
+                    <select name="bTipofecha" class="form-control">
+                        <option value="0" {% if tipoFecha==0 %}
+                            selected
+                        {% endif %}>Fecha Carga</option>
+                        <option value="1" {% if tipoFecha==1 %}
+                        selected
+                    {% endif %}>Fecha Asignado</option>
+                        <option value="2" {% if tipoFecha==2 %}
+                        selected
+                    {% endif %}>Fecha Contrato</option>
+
+                    </select>
+                </div>
+                <div class="col-sm-12 col-md-2">
                     <input type="text" class="form-control" name="bFecha" id="bFecha"  value="">
                 </div>
-                <div class="col-sm-12 col-md-3">
+                <div class="col-sm-12 col-md-2">
                     <button class="btn btn-primary"><i class="fas fa-search"></i></button>
                 </div>
-                <div class="col-sm-12 col-md-3">
-                    
-                </div>
+                
 
             </div>
             
@@ -97,11 +109,6 @@
 </form>
 {% if sesion.getSesion.usuarioTipo.id in [3,1]  %}
 <section>
-
-
-    
-
-    
         {{ render(controller('App\\Controller\\AgendaController::resumenagendadores', {'agendaStatus':status,'fechainicio':dateInicio,'fechafin':dateFin,'compania':bCompania,'filtro':bFiltro,'totalStatus':total})) }}
     
 </section>
@@ -130,6 +137,7 @@
                 <th>Telefono</th>
                 <th>Fecha Carga</th>
                 <th>Fecha Asignado</th>
+                <th>Fecha Contrato</th>
             </tr>
         </thead>
         <tbody>
@@ -149,6 +157,7 @@
                 <td><a href="https://api.whatsapp.com/send?phone={{ agenda.telefonoCliente }}&text=" target="_blank">{{ agenda.telefonoCliente }}</a></td>
                   <td>{{ agenda.fechaCarga ? agenda.fechaCarga|date('d-m-Y H:i') : '' }}</td>
                   <td>{{ agenda.fechaAsignado ? agenda.fechaAsignado|date('d-m-Y H:i') : '' }}</td>
+                  <td>{{ agenda.fechaContrato ? agenda.fechaContrato|date('d-m-Y H:i') : '' }}</td>
                <!-- <td>
                     <div class="btn-group" role="group" aria-label="Basic example">
                     <a href="{{ path('agenda_show', {'id': agenda.id}) }}" class="btn btn-primary"><i class="fas fa-eye"></i></a>

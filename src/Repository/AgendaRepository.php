@@ -21,7 +21,7 @@ class AgendaRepository extends ServiceEntityRepository
     /**
       * @return Agenda[] Returns an array of Agenda objects
     */
-    public function findByPers($usuario=null,$empresa=null,$compania=null,$status=null, $filtro=null,$esAbogado=null,$otros=null)
+    public function findByPers($usuario=null,$empresa=null,$compania=null,$status=null, $filtro=null,$esAbogado=null,$otros=null,$tipoFecha=null)
     {
         $query=$this->createQueryBuilder('a');
         if(!is_null($status)){
@@ -66,6 +66,7 @@ class AgendaRepository extends ServiceEntityRepository
          ;
 
         }
+    
         return $query->getQuery()
             ->getResult()
         ;

@@ -125,6 +125,11 @@ class Agenda
      */
     private $telefonoRecadoCliente;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $fechaContrato;
+
     public function __construct()
     {
         $this->usuarioUsuariocategorias = new ArrayCollection();
@@ -422,6 +427,18 @@ class Agenda
     public function setTelefonoRecadoCliente(?string $telefonoRecadoCliente): self
     {
         $this->telefonoRecadoCliente = $telefonoRecadoCliente;
+
+        return $this;
+    }
+
+    public function getFechaContrato(): ?\DateTimeInterface
+    {
+        return $this->fechaContrato;
+    }
+
+    public function setFechaContrato(?\DateTimeInterface $fechaContrato): self
+    {
+        $this->fechaContrato = $fechaContrato;
 
         return $this;
     }

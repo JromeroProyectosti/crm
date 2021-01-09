@@ -88,6 +88,22 @@ class ContratoController extends AbstractController
         ]);
     }
 
+     /**
+     * @Route("/actualizafecha", name="contrato_actualizaFecha", methods={"GET","POST"})
+     */
+    public function actualizafecha(Request $request,ContratoRepository $contratoRepository): Response
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+        
+        $contratos=$contratoRepository->findAll();
+        foreach($contratos as $contrato){
+            $agenda=$contrato->getAgenda();
+            $agenda->setFechaContrato($contrato->getFechaCreacion());
+            $entityManager->persist($agenda);
+            $entityManager->flush();
+        }
+        return $this->redirectToRoute('contrato_index');
+    }
     /**
      * @Route("/new", name="contrato_new", methods={"GET","POST"})
      */

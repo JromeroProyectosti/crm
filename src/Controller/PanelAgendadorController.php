@@ -43,6 +43,7 @@ class PanelAgendadorController extends AbstractController
         $statues='1,2,3,4,11';
         $statuesgroup=null;
         $status=null;
+        $tipo_fecha=0;
         if(null !== $request->query->get('bFiltro') && trim($request->query->get('bFiltro'))!=''){
             $filtro=$request->query->get('bFiltro');
         }
@@ -59,8 +60,25 @@ class PanelAgendadorController extends AbstractController
             $dateInicio=date('Y-m-d',mktime(0,0,0,date('m'),date('d'),date('Y'))-60*60*24*30);
             $dateFin=date('Y-m-d');
         }
-        $fecha="a.fechaCarga between '$dateInicio' and '$dateFin 23:59:59'" ;
-        
+        if(null !== $request->query->get('bTipofecha') ){
+            $tipo_fecha=$request->query->get('bTipofecha');
+        }
+        switch($tipo_fecha){
+            case 0:
+                $fecha="a.fechaCarga between '$dateInicio' and '$dateFin 23:59:59'" ;
+                break;
+            case 1:
+                $fecha="a.fechaAsignado between '$dateInicio' and '$dateFin 23:59:59'" ;
+                break;
+            case 2:
+                $fecha="a.fechaContrato between '$dateInicio' and '$dateFin 23:59:59'" ;
+                break;
+            default:
+                $fecha="a.fechaCarga between '$dateInicio' and '$dateFin 23:59:59'" ;
+                break;
+        }
+        //$fecha="a.fechaCarga between '$dateInicio' and '$dateFin 23:59:59'" ;
+       
         if(null !== $request->query->get('bStatus') && trim($request->query->get('bStatus')!='')){
             $status=$request->query->get('bStatus');
             $statues=$status;
@@ -99,6 +117,7 @@ class PanelAgendadorController extends AbstractController
             'dateInicio'=>$dateInicio,
             'dateFin'=>$dateFin,
             'status'=>$status,
+            'tipoFecha'=>$tipo_fecha,
         ]);
     }
     /**
