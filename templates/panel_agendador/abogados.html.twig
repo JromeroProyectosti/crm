@@ -40,7 +40,7 @@
     </div>
     <div class="col-sm-12 col-md-4">
         <small class="text-muted">Fecha Agendada</small>
-        <input type="text" class="form-control datepicker" name="txtFechaAgendamiento" required value="{{agenda.fechaAsignado|date('Y-m-d H:i:s')|default('')}}">
+        <input type="text" class="form-control datepicker" name="txtFechaAgendamiento" required value="{{agenda.fechaAsignado|date('Y-m-d')|default('')}}">
     </div>
     <div class="col-sm-12 col-md-2">
         <small class="text-muted">Horas</small>
@@ -65,7 +65,8 @@
 
 <script>
     var fecha_cal;
-    verHoras($('.datepicker').val());
+    //verHoras($('.datepicker').val());
+    verHoras("{{agenda.fechaAsignado|date('Y-m-d')}}");
     $('.datepicker').daterangepicker({
         "singleDatePicker": true,
         "drops": "up",
@@ -77,6 +78,7 @@
         }
     }, function(start, end, label) {
         fecha_cal=start;
+        console.log("fecha Cal: "+fecha_cal);
         verHoras();
     });
     $(".monto-deuda").inputmask({
@@ -106,7 +108,10 @@
             var fecha= moment(fecha_cal).format("YYYY-MM-DD");
         }else{
             var fecha= moment(fecha).format("YYYY-MM-DD");
+            fecha_cal=fecha;
         }
+        console.log("fecha cal: "+fecha_cal);
+        console.log("fecha: "+fecha);
        if($("#cboAbogado").val()>0){
             $.ajax({
                 url:"{{path('panel_agendador_horas')}}",

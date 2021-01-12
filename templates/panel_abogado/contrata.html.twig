@@ -266,11 +266,17 @@
             contentType: false,
             processData: false,
             async: true,
+            beforeSend: function(){
+                $(".btn-agregar").attr("disabled", true);
+                $("#contratoRoles").html(' <div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i><div class="text-bold pt-2">Loading...</div></div>');
+
+            },
             success:function(data){
                 $("#contratoRoles").html(data);
                 $('.nombre-rol').val("");
                 $('.institucion').val("");
                 $('.juzgado').val("");
+                $(".btn-agregar").attr("disabled", false);
             }
     
         });

@@ -217,7 +217,7 @@ class Contrato
         return $this->telefono;
     }
 
-    public function setTelefono(string $telefono): self
+    public function setTelefono(?string $telefono): self
     {
         $this->telefono = $telefono;
 
