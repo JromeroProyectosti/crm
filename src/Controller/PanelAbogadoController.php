@@ -53,7 +53,7 @@ class PanelAbogadoController extends AbstractController
         $filtro=null;
         $compania=null;
         $fecha=null;
-        $statues='4,5,6';
+        $statues='5';
         $statuesgroup='4,5,7,6,8';
         $status=null;
         $tipo_fecha=1;
