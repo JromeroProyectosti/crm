@@ -363,7 +363,7 @@ class PanelAbogadoController extends AbstractController
             'agenda'=>$agenda,
             'contrato'=>$contrato,
             'juzgados'=>$juzgados,
-            'tramitadores'=>$usuarioRepository->findByCuenta($agenda->getCuenta()->getId(),['usuarioTipo'=>7]),
+            'tramitadores'=>$usuarioRepository->findByCuenta($agenda->getCuenta()->getId(),['usuarioTipo'=>7,'status'=>1]),
             'form'=>$form->createView(),
             'diasPagos'=>$diasPagoRepository->findAll(),
             'sucursales'=>$sucursalRepository->findBy(['cuenta'=>$agenda->getCuenta()->getId()]),
