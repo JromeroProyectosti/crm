@@ -255,7 +255,8 @@ class TramitadoresController extends AbstractController
         $this->denyAccessUnlessGranted('full','tramitadores');
         if ($this->isCsrfTokenValid('delete'.$usuario->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($usuario);
+            $usuario->setEstado(0);
+            $entityManager->persist($usuario);
             $entityManager->flush();
         }
 
