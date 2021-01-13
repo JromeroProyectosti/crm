@@ -64,6 +64,10 @@ class ContratoController extends AbstractController
                 $query=$contratoRepository->findByPers(null,$user->getEmpresaActual(),$compania,$filtro,null,$fecha);
                 $companias=$cuentaRepository->findByPers(null,$user->getEmpresaActual());
             break;
+            case 7:
+                $query=$contratoRepository->findByPers(null,null,$compania,$filtro,null,$fecha." and c.tramitador = ".$user->getId());
+                $companias=$cuentaRepository->findByPers($user->getId());
+                break;
             default:
                 $query=$contratoRepository->findByPers($user->getId(),null,$compania,$filtro,null,$fecha);
                 $companias=$cuentaRepository->findByPers($user->getId());

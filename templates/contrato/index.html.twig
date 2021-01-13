@@ -45,9 +45,10 @@
                         <th>{{ knp_pagination_sortable(contratos, 'Cliente', 'nombre') }} {% if contratos.isSorted('nombre') %} <i class="fas fa-sort"></i>{% endif %}</th>
                         <th>{{ knp_pagination_sortable(contratos, 'Agendador', 'agenda.agendador') }} {% if contratos.isSorted('agenda.agendador') %} <i class="fas fa-sort"></i>{% endif %}</th>
                         <th>{{ knp_pagination_sortable(contratos, 'Abogado', 'agenda.abogado') }} {% if contratos.isSorted('agenda.abogado') %} <i class="fas fa-sort"></i>{% endif %}</th>
+                        <th>{{ knp_pagination_sortable(contratos, 'Tramitador', 'tramitador') }} {% if contratos.isSorted('tramitador') %} <i class="fas fa-sort"></i>{% endif %}</th>
                         <th>{{ knp_pagination_sortable(contratos, 'Sucursal', 'sucursal') }} {% if contratos.isSorted('sucursal') %} <i class="fas fa-sort"></i>{% endif %}</th>
                         <th>{{ knp_pagination_sortable(contratos, 'Fecha Contrato', 'fechaCreacion') }} {% if contratos.isSorted('fechaCreacion') %} <i class="fas fa-sort"></i>{% endif %}</th>
-                        {% if sesion.getSesion.usuarioTipo.id in [1,4,8] %}
+                        {% if sesion.getSesion.usuarioTipo.id in [1,4,8,7] %}
                         <th>Acciones</th>
                         {% endif %}
                     </tr>
@@ -60,9 +61,10 @@
                         <td>{{ contrato.nombre }}</td>
                         <td>{{ contrato.agenda.agendador.nombre }}</td>
                         <td>{{ contrato.agenda.abogado.nombre }}</td>
+                        <td>{{ contrato.tramitador.nombre }}</td>
                         <td>{{ contrato.sucursal}}</td>
                         <td>{{ contrato.fechaCreacion|date('d-m-Y H:i') }}</td>
-                        {% if sesion.getSesion.usuarioTipo.id in [1,4,6,8] %}
+                        {% if sesion.getSesion.usuarioTipo.id in [1,4,6,8,7] %}
                         <td>
                             
                                 

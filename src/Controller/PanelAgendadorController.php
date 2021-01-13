@@ -40,7 +40,7 @@ class PanelAgendadorController extends AbstractController
         $filtro=null;
         $compania=null;
         $fecha=null;
-        $statues='1,2,3,4,11';
+        $statues='1';
         $statuesgroup=null;
         $status=null;
         $tipo_fecha=0;
