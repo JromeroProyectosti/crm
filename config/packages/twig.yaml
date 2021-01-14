@@ -6,4 +6,4 @@ twig:
         sesion: '@App\Service\SesionGenerator'
         url_root: '%url_root%'
         url_web: '%url_web%'
-        pdf_contrato: '%pdf_contrato%'
+        pdf_contrato: '%pdf_contratos%'
