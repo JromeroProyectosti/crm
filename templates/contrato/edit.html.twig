@@ -5,6 +5,7 @@
 {% block body %}
 
     {{ include('contrato/_form.html.twig', {'button_label': 'Modificar'}) }}
+    <a href="{{ path('contrato_pdf', {'id': contrato.id}) }}" class="btn btn-success btn-sm"><i class="fas fa-file-pdf"></i> Regenerar</a>
 
     
 {% endblock %}
