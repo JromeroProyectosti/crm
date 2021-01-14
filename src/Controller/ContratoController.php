@@ -323,7 +323,7 @@ class ContratoController extends AbstractController
     public function pdf(Contrato $contrato,\Knp\Snappy\Pdf $snappy): Response
     {
         $this->denyAccessUnlessGranted('view','contrato');
-        $filename = sprintf('Contrato-'.$contrato->getId().'-%s.pdf', date('Y-m-d-hh-ss'));
+        $filename = sprintf('Contrato-'.$contrato->getId().'-%s.pdf',rand(0,9000));
        
         $html = $this->renderView('contrato/print.html.twig', array(
             'contrato' => $contrato,
@@ -331,9 +331,14 @@ class ContratoController extends AbstractController
             'Titulo'=>"Contrato"
         ));
 
+        $entityManager = $this->getDoctrine()->getManager();
+        $contrato->setPdf($filename);
+        $entityManager->persist($contrato);
+        $entityManager->flush();
+
         $snappy->generateFromHtml(
            $html,
-           'D:\\htdocs\\desarrollos_symfony\\crm\\public\\build\\'.$filename
+           $this->getParameter('url_root'). $this->getParameter('pdf_contratos').$filename
         );
         return new PdfResponse(
             $snappy->getOutputFromHtml($html, array(

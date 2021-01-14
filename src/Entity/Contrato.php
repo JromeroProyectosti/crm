@@ -187,6 +187,11 @@ class Contrato
      */
     private $fechaPrimeraCuota;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $pdf;
+
     
 
     public function __construct()
@@ -613,6 +618,18 @@ class Contrato
     public function setFechaPrimeraCuota(?\DateTimeInterface $fechaPrimeraCuota): self
     {
         $this->fechaPrimeraCuota = $fechaPrimeraCuota;
+
+        return $this;
+    }
+
+    public function getPdf(): ?string
+    {
+        return $this->pdf;
+    }
+
+    public function setPdf(?string $pdf): self
+    {
+        $this->pdf = $pdf;
 
         return $this;
     }

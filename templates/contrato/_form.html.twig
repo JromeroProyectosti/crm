@@ -222,7 +222,7 @@
         recalcula();
     });
     function recalcula(){
-        var montoContrato=parseInt($('.monto-contrato').val());
+        var montoContrato=parseInt($('.monto-contrato').val())-parseInt($('.primera-cuota').val());
         var cuotas=parseInt($('.cuotas').val());
         var interes=0;
         var valorCuota=(montoContrato+(montoContrato/100*interes))/cuotas;
