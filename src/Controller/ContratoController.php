@@ -144,6 +144,7 @@ class ContratoController extends AbstractController
             'contrato' => $contrato,
             'pagina'=>$pagina->getNombre(),
             'diasPagos'=>$diasPagoRepository->findAll(),
+            
         ]);
     }
 
@@ -154,7 +155,12 @@ class ContratoController extends AbstractController
     {
         
         $user=$this->getUser();
-
+        if (null==$request->query->get('mode')){
+            $mode='edit';
+        }else{
+            $mode=$request->query->get('mode');
+        }
+        
         $contrato_rol = new ContratoRol();
         $contrato_rol->setContrato($contrato);
         $abogado=$this->getDoctrine()->getRepository(Usuario::class)->find($user->getId());
@@ -172,6 +178,7 @@ class ContratoController extends AbstractController
         }
         return $this->render('contrato/contratoRoles.html.twig', [
             'contrato_rols' => $contratoRolRepository->findBy(['contrato'=>$contrato->getId()]),
+            'mode'=>$mode,
            
         ]);
     }
@@ -323,6 +330,11 @@ class ContratoController extends AbstractController
             
             'Titulo'=>"Contrato"
         ));
+
+        $snappy->generateFromHtml(
+           $html,
+           'D:\\htdocs\\desarrollos_symfony\\crm\\public\\build\\'.$filename
+        );
         return new PdfResponse(
             $snappy->getOutputFromHtml($html, array(
                 'page-size' => 'letter')),

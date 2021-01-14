@@ -14,9 +14,14 @@
     </div>   
     <div class="col-sm-12 col-md-1">
         
-       
-        <button type="button" class="btn btn-danger" onclick="javascript:eliminarRol({{contrato_rol.id}})" ><i class="fas fa-minus"></i></button>
-        
+       {% if mode is defined %}
+           {% if mode == 'edit' %}
+           <button type="button" class="btn btn-danger" onclick="javascript:eliminarRol({{contrato_rol.id}})" ><i class="fas fa-minus"></i></button>
+
+           {% endif %}
+       {% else %}
+            <button type="button" class="btn btn-danger" onclick="javascript:eliminarRol({{contrato_rol.id}})" ><i class="fas fa-minus"></i></button>
+        {% endif %}
     </div>
     
 

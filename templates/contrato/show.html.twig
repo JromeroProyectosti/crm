@@ -166,7 +166,7 @@
     <script>
         
         $.ajax({
-            url:"{{path('contrato_new_rol',{'id':contrato.id})}}",
+            url:"{{path('contrato_new_rol',{'id':contrato.id,'mode':'view'})}}",
             type: "get",
             dataType: "html",
             cache: false,
