@@ -177,6 +177,18 @@ class Contrato
      */
     private $reunion;
 
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $primeraCuota;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $fechaPrimeraCuota;
+
+    
+
     public function __construct()
     {
         $this->contratoRols = new ArrayCollection();
@@ -580,6 +592,31 @@ class Contrato
 
         return $this;
     }
+
+    public function getPrimeraCuota(): ?float
+    {
+        return $this->primeraCuota;
+    }
+
+    public function setPrimeraCuota(?float $primeraCuota): self
+    {
+        $this->primeraCuota = $primeraCuota;
+
+        return $this;
+    }
+
+    public function getFechaPrimeraCuota(): ?\DateTimeInterface
+    {
+        return $this->fechaPrimeraCuota;
+    }
+
+    public function setFechaPrimeraCuota(?\DateTimeInterface $fechaPrimeraCuota): self
+    {
+        $this->fechaPrimeraCuota = $fechaPrimeraCuota;
+
+        return $this;
+    }
+
 
     
 }

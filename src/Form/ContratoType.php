@@ -23,6 +23,8 @@ class ContratoType extends AbstractType
             ->add('comuna')
             ->add('montoNivelDeuda')
             ->add('MontoContrato')
+            ->add('primeraCuota')
+            
             ->add('cuotas')
             ->add('valorCuota')
             ->add('estadoCivil')

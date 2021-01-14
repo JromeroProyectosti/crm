@@ -320,9 +320,11 @@ class PanelAbogadoController extends AbstractController
             $contrato->setMontoNivelDeuda($agenda->getMonto()); 
         }
         //$contrato->setCiudad($agenda->getCiudadCliente());
+//$contrato->setFechaPrimeraCuota(new \DateTime(date('Y-m-d')));
         $form = $this->createForm(ContratoType::class, $contrato, [
             'action' =>$this->generateUrl('panel_abogado_contrata',['id'=>$agenda->getId()])
         ]);
+        //$form->add('fechaPrimeraCuota',TextType::class);
     
         $form->handleRequest($request);
         
@@ -333,7 +335,8 @@ class PanelAbogadoController extends AbstractController
             $contrato->setFechaCreacion(new \DateTime(date("Y-m-d H:i:s")));
             $contrato->setSucursal($sucursalRepository->find($request->request->get('cboSucursal')));
             $contrato->setTramitador($usuarioRepository->find($request->request->get('cboTramitador')));
-            $contrato->setFechaPrimerPago(new \DateTime(date($request->request->get('txtFechaPago')."-1 00:00:00")));
+            $contrato->setFechaPrimeraCuota(new \DateTime(date("Y-m-d 00:00:00")));
+
             $entityManager = $this->getDoctrine()->getManager();
 
             

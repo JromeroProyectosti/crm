@@ -54,10 +54,16 @@ un contrato de prestacion de servicios juridicos, desglozando su contenido en la
       ASISTENCIA DEUDORES, los cuales se pactan en conformidad de ambas partes, de la siguiente manera:</p> 
 
       <table border="1"  cellspacing="0" width="50%">
-{% for i in 1..contrato.cuotas  %}
-       
+        {% if contrato.primeraCuota is not null %}
+        <tr>
+            <td align="right">1</td><td align="center">{{contrato.fechaPrimeraCuota|date("d-m-Y")}}</td><td align="right">${{contrato.primeraCuota|number_format(0,",",".")}}</td></tr>
+            {% set primero=2 %}
+        {% else %}
+            {% set primero=1 %}
+        {% endif %}
+{% for i in primero..contrato.cuotas  %}
     <tr>
-        <td align="right">{{i}}</td><td align="center">{{suma_mes(contrato.diaPago,contrato.fechaPrimerPago|date("n"),contrato.fechaPrimerPago|date("Y"),i-1)}}</td><td align="right">${{contrato.valorCuota|number_format(0,",",".")}}</td></tr>
+        <td align="right">{{i}}</td><td align="center">{{suma_mes(contrato.diaPago,contrato.fechaPrimeraCuota|date("n"),contrato.fechaPrimeraCuota|date("Y"),i-1)}}</td><td align="right">${{contrato.valorCuota|number_format(0,",",".")}}</td></tr>
 {% endfor %}
 
 
