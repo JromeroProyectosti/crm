@@ -106,13 +106,15 @@
 </form>
 {% if sesion.getSesion.usuarioTipo.id in [3,1,4] %}
 <section>
+{% if total>0 %}
+    
 
 
     
 
    
         {{ render(controller('App\\Controller\\AgendaController::resumenabogados', {'agendaStatus':status,'fechainicio':dateInicio,'fechafin':dateFin,'compania':bCompania,'filtro':bFiltro,'totalStatus':total,'tipoFecha':tipoFecha})) }}
-    
+{% endif %}
 </section>
 {% endif %}
 <section>

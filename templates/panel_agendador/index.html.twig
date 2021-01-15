@@ -20,7 +20,7 @@
                 <span class="info-box-text">{{resumen[0].status.nombre}}</span>
                 <span class="info-box-number">{{resumen.valor}}</span>
                 {% set total= total + resumen.valor %}
-                {% if resumen[0].status.id not in [10,6] %}
+                {% if resumen[0].status.id not in [10] %}
                     
                 
                 <a href="#" class="small-box-footer" onclick="javascript:buscar({{resumen[0].status.id}})">
@@ -109,8 +109,11 @@
 </form>
 {% if sesion.getSesion.usuarioTipo.id in [3,1]  %}
 <section>
-        {{ render(controller('App\\Controller\\AgendaController::resumenagendadores', {'agendaStatus':status,'fechainicio':dateInicio,'fechafin':dateFin,'compania':bCompania,'filtro':bFiltro,'totalStatus':total,'tipoFecha':tipoFecha})) }}
+    {% if total>0 %}
+        
     
+        {{ render(controller('App\\Controller\\AgendaController::resumenagendadores', {'agendaStatus':status,'fechainicio':dateInicio,'fechafin':dateFin,'compania':bCompania,'filtro':bFiltro,'totalStatus':total,'tipoFecha':tipoFecha})) }}
+        {% endif %}
 </section>
 {% endif %}
 <section>
