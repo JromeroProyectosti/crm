@@ -113,16 +113,38 @@ class PrivilegioTipousuarioController extends AbstractController
     /**
      * @Route("/{id}/edit", name="privilegio_tipousuario_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, PrivilegioTipousuario $privilegioTipousuario,AccionRepository $accionRepository): Response
+    public function edit(Request $request,PrivilegioTipousuario $privilegioTipousuario,AccionRepository $accionRepository,PrivilegioTipousuarioRepository $privilegioTipousuarioRepository,PrivilegioRepository $privilegioRepository): Response
     {
         $this->denyAccessUnlessGranted('edit','privilegio_tipousuario');
         $accion=$accionRepository->find($request->request->get('accion'));
 
         $privilegioTipousuario->setAccion($accion);
 
+        
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($privilegioTipousuario);
         $entityManager->flush();
+        $tipousuario=$privilegioTipousuario->getTipousuario();
+        foreach($tipousuario->getUsuarios() as $usuario){
+            //echo $usuario->getId();
+            $privilegioTipousuarios=$privilegioTipousuarioRepository->findBy(['tipousuario'=>$usuario->getUsuarioTipo()->getId()]);
+
+            foreach($privilegioTipousuarios as $privilegioTipousuario){
+                $privilegio=$privilegioRepository->findOneBy(["moduloPer"=>$privilegioTipousuario->getModuloPer()->getId(),"usuario"=>$usuario->getId()]);
+                
+                if($privilegio){
+                    echo  $privilegio->getId();
+                   // $privilegio->setUsuario($usuario);
+                    //$privilegio->setModuloPer($privilegioTipousuario->getModuloPer());
+                    $privilegio->setAccion($privilegioTipousuario->getAccion());
+
+                    //$entityManager = $this->getDoctrine()->getManager();
+                    $entityManager->persist($privilegio);
+                    $entityManager->flush();
+
+                }
+            }
+        }
 
         return $this->render('privilegio_tipousuario/ok.html.twig');
     }
