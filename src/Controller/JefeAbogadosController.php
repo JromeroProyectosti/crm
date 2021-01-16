@@ -292,7 +292,7 @@ class JefeAbogadosController extends AbstractController
             $entityManager->flush();
      
 
-        return $this->redirectToRoute('abogados_index');
+        return $this->redirectToRoute('jefe_abogados_index');
     }
     /**
      * @Route("/{id}", name="jefe_abogados_delete", methods={"DELETE"})

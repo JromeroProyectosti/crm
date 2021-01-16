@@ -36,8 +36,14 @@ class TramitadoresController extends AbstractController
     {
         $this->denyAccessUnlessGranted('view','tramitadores');
         $user=$this->getUser();
+        $modo=1;
+        if($request->query->get('modo')=='trash'){
+            $modo=0;
+            
+        }
+
         $pagina=$moduloPerRepository->findOneByName('tramitadores',$user->getEmpresaActual());
-        $query=$usuarioRepository->findBy(['usuarioTipo'=>7]);
+        $query=$usuarioRepository->findBy(['usuarioTipo'=>7,'estado'=>$modo]);
         $usuarios=$paginator->paginate(
             $query, /* query NOT result */
             $request->query->getInt('page', 1), /*page number*/
@@ -47,6 +53,7 @@ class TramitadoresController extends AbstractController
         return $this->render('tramitadores/index.html.twig', [
             'usuarios' => $usuarios,
             'pagina'=>$pagina->getNombre(),
+            'modo'=>$modo,
         ]);
     }
 
@@ -246,7 +253,21 @@ class TramitadoresController extends AbstractController
             'tipo_documentos'=>$tipoDocumento->findAll(),
         ]);
     }
+    /**
+     * @Route("/{id}/restore", name="tramitadores_restore", methods={"GET"})
+     */
+    public function restore(Request $request, Usuario $usuario): Response
+    {
+        $this->denyAccessUnlessGranted('full','tramitadores');
+      
+            $entityManager = $this->getDoctrine()->getManager();
+            $usuario->setEstado(1);
+            $entityManager->persist($usuario);
+            $entityManager->flush();
+     
 
+        return $this->redirectToRoute('tramitadores_index');
+    }
     /**
      * @Route("/{id}", name="tramitadores_delete", methods={"DELETE"})
      */

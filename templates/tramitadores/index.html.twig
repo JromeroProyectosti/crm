@@ -9,6 +9,11 @@
         </div>
         <div class="card-body">
         <a href="{{path('tramitadores_new')}}" class="btn btn-primary" id="btn-agregar"><i class="fas fa-plus"></i></a>
+        {% if modo == 1 %}
+        <a href="{{path('tramitadores_index',{'modo':'trash'})}}" class="btn btn-danger"><i class="fas fa-trash"></i> Eliminados</a>
+    {% else %}
+        <a href="{{path('tramitadores_index')}}" class="btn btn-success"><i class="fas fa-trash-restore"></i> Habilitados</a>
+    {% endif %}
             <table class="table">
                 <thead>
                     <tr>
@@ -34,9 +39,14 @@
                         
                         <td>
                             <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                                {% if modo == 1 %}
                                 <a href="{{path('tramitadores_edit',{'id':usuario.id})}}" class="btn btn-secondary"><spam class='fas fa-edit'></spam></a>
                                 {{ include('tramitadores/_delete_form.html.twig',{'id_usuario':usuario.id}) }}
                                 <a href="{{path('privilegio_index',{'id':usuario.id})}}" class="btn btn-warning" > <i class="fas fa-share-alt"></i></a>
+                                {% else %}
+                                <a href="{{path('tramitadores_restore',{'id':usuario.id})}}" class="btn btn-success"><spam class='fas fa-trash-restore'></spam></a>
+
+                                {% endif %}
                             </div>
                         </td>
                     </tr>

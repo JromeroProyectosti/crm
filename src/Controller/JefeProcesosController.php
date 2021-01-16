@@ -40,8 +40,13 @@ class JefeProcesosController extends AbstractController
     {
         $this->denyAccessUnlessGranted('view','jefe_procesos');
         $user=$this->getUser();
+        $modo=1;
+        if($request->query->get('modo')=='trash'){
+            $modo=0;
+            
+        }
         $pagina=$moduloPerRepository->findOneByName('jefe_procesos',$user->getEmpresaActual());
-        $query=$usuarioRepository->findBy(['usuarioTipo'=>3,'estado'=>1]);
+        $query=$usuarioRepository->findBy(['usuarioTipo'=>3,'estado'=>$modo]);
         $usuarios=$paginator->paginate(
             $query, /* query NOT result */
             $request->query->getInt('page', 1), /*page number*/
@@ -51,6 +56,7 @@ class JefeProcesosController extends AbstractController
         return $this->render('jefe_procesos/index.html.twig', [
             'usuarios' => $usuarios,
             'pagina'=>$pagina->getNombre(),
+            'modo'=>$modo,
         ]);
     }
 
@@ -274,7 +280,21 @@ class JefeProcesosController extends AbstractController
             'cuentas_sel'=>$usuario->getUsuarioCuentas(),
         ]);
     }
+    /**
+     * @Route("/{id}/restore", name="jefe_procesos_restore", methods={"GET"})
+     */
+    public function restore(Request $request, Usuario $usuario): Response
+    {
+        $this->denyAccessUnlessGranted('full','jefe_procesos');
+      
+            $entityManager = $this->getDoctrine()->getManager();
+            $usuario->setEstado(1);
+            $entityManager->persist($usuario);
+            $entityManager->flush();
+     
 
+        return $this->redirectToRoute('jefe_procesos_index');
+    }
     /**
      * @Route("/{id}", name="jefe_procesos_delete", methods={"DELETE"})
      */

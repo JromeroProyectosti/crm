@@ -35,8 +35,15 @@ class ClientesController extends AbstractController
     {
         $this->denyAccessUnlessGranted('view','clientes');
         $user=$this->getUser();
+
+        $modo=1;
+        if($request->query->get('modo')=='trash'){
+            $modo=0;
+            
+        }
+
         $pagina=$moduloPerRepository->findOneByName('clientes',$user->getEmpresaActual());
-        $query=$usuarioRepository->findBy(['usuarioTipo'=>9]);
+        $query=$usuarioRepository->findBy(['usuarioTipo'=>9,'estado'=>$modo]);
         $usuarios=$paginator->paginate(
             $query, /* query NOT result */
             $request->query->getInt('page', 1), /*page number*/
@@ -46,6 +53,7 @@ class ClientesController extends AbstractController
         return $this->render('clientes/index.html.twig', [
             'usuarios' => $usuarios,
             'pagina'=>$pagina->getNombre(),
+            'modo'=>$modo,
         ]);
     }
 
@@ -217,6 +225,21 @@ class ClientesController extends AbstractController
             'cuentas'=>$cuentas,
             'cuentas_sel'=>$usuario->getUsuarioCuentas(),
         ]);
+    }
+    /**
+     * @Route("/{id}/restore", name="clientes_restore", methods={"GET"})
+     */
+    public function restore(Request $request, Usuario $usuario): Response
+    {
+        $this->denyAccessUnlessGranted('full','clientes');
+      
+            $entityManager = $this->getDoctrine()->getManager();
+            $usuario->setEstado(1);
+            $entityManager->persist($usuario);
+            $entityManager->flush();
+     
+
+        return $this->redirectToRoute('clientes_index');
     }
 
     /**
