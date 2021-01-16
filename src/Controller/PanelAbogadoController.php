@@ -282,6 +282,7 @@ class PanelAbogadoController extends AbstractController
             if(null !== $request->request->get('cboReunion')){
                 $agenda->setReunion($reunionRepository->find($request->request->get('cboReunion')));
             }
+            
             $entityManager = $this->getDoctrine()->getManager();
            
 

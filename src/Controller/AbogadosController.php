@@ -42,8 +42,14 @@ class AbogadosController extends AbstractController
     {
         $this->denyAccessUnlessGranted('view','abogados');
         $user=$this->getUser();
+        $modo=1;
+        if($request->query->get('modo')=='trash'){
+            $modo=0;
+            
+        }
+      
         $pagina=$moduloPerRepository->findOneByName('abogados',$user->getEmpresaActual());
-        $query=$usuarioRepository->findBy(['usuarioTipo'=>6,'estado'=>1]);
+        $query=$usuarioRepository->findBy(['usuarioTipo'=>6,'estado'=>$modo]);
         $usuarios=$paginator->paginate(
             $query, /* query NOT result */
             $request->query->getInt('page', 1), /*page number*/
@@ -53,6 +59,7 @@ class AbogadosController extends AbstractController
         return $this->render('abogados/index.html.twig', [
             'usuarios' => $usuarios,
             'pagina'=>$pagina->getNombre(),
+            'modo'=>$modo,
         ]);
     }
 
@@ -438,6 +445,21 @@ class AbogadosController extends AbstractController
             'hora_inicio'=>$horaInicio,
             'hora_fin'=>$horaFin,
         ]);
+    }
+    /**
+     * @Route("/{id}/restore", name="abogados_restore", methods={"GET"})
+     */
+    public function restore(Request $request, Usuario $usuario): Response
+    {
+        $this->denyAccessUnlessGranted('full','abogados');
+      
+            $entityManager = $this->getDoctrine()->getManager();
+            $usuario->setEstado(1);
+            $entityManager->persist($usuario);
+            $entityManager->flush();
+     
+
+        return $this->redirectToRoute('abogados_index');
     }
 
     /**

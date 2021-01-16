@@ -41,8 +41,14 @@ class AgendadoresController extends AbstractController
     {
         $this->denyAccessUnlessGranted('view','agendadores');
         $user=$this->getUser();
+
+        $modo=1;
+        if($request->query->get('modo')=='trash'){
+            $modo=0;
+            
+        }
         $pagina=$moduloPerRepository->findOneByName('agendadores',$user->getEmpresaActual());
-        $query=$usuarioRepository->findBy(['usuarioTipo'=>5,'estado'=>1]);
+        $query=$usuarioRepository->findBy(['usuarioTipo'=>5,'estado'=>$modo]);
         $usuarios=$paginator->paginate(
             $query, /* query NOT result */
             $request->query->getInt('page', 1), /*page number*/
@@ -52,6 +58,7 @@ class AgendadoresController extends AbstractController
         return $this->render('agendadores/index.html.twig', [
             'usuarios' => $usuarios,
             'pagina'=>$pagina->getNombre(),
+            'modo'=>$modo,
         ]);
     }
 
@@ -297,6 +304,21 @@ class AgendadoresController extends AbstractController
             'hora_inicio'=>$horaInicio,
             'hora_fin'=>$horaFin,
         ]);
+    }
+    /**
+     * @Route("/{id}/restore", name="agendadores_restore", methods={"GET"})
+     */
+    public function restore(Request $request, Usuario $usuario): Response
+    {
+        $this->denyAccessUnlessGranted('full','agendadores');
+      
+            $entityManager = $this->getDoctrine()->getManager();
+            $usuario->setEstado(1);
+            $entityManager->persist($usuario);
+            $entityManager->flush();
+     
+
+        return $this->redirectToRoute('agendadores_index');
     }
 
     /**
