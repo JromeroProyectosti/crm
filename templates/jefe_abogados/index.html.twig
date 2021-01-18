@@ -8,11 +8,12 @@
             Listado
         </div>
         <div class="card-body">
-        <a href="{{path('jefe_abogados_new')}}" class="btn btn-primary" id="btn-agregar"><i class="fas fa-plus"></i></a>
+        
         {% if modo == 1 %}
-            <a href="{{path('jefe_abogados_index',{'modo':'trash'})}}" class="btn btn-danger"><i class="fas fa-trash"></i> Eliminados</a>
+        <a href="{{path('jefe_abogados_new')}}" class="btn btn-primary" id="btn-agregar"><i class="fas fa-plus"></i></a>
+            <a href="{{path('jefe_abogados_index',{'modo':'trash'})}}" class="btn btn-danger"><i class="fas fa-trash"></i> Usuarios Eliminados</a>
         {% else %}
-            <a href="{{path('jefe_abogados_index')}}" class="btn btn-success"><i class="fas fa-trash-restore"></i> Habilitados</a>
+            <a href="{{path('jefe_abogados_index')}}" class="btn btn-success"><i class="fas fa-trash-restore"></i> Usuarios Activos</a>
         {% endif %}
             <table class="table">
                 <thead>
