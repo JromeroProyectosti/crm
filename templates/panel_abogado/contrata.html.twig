@@ -91,7 +91,8 @@
     </div>
     <div class="col-sm-12 col-md-3">
         <small class="text-muted">Fecha Primera Cuota *</small>
-		<p>{{"now"|date("Y-m-d")}}</p>
+		{{form_row(form.fechaPrimeraCuota,{'label':false,'attr':{'class':'form-control datepicker','required':true,'autocomplete':"ÑÖcompletes"}})}}
+
     </div>
     <div class="col-sm-12 col-md-3">
         <small class="text-muted">Cuotas *</small>
@@ -337,5 +338,18 @@
 
         return false;
     }
+    $('.datepicker').daterangepicker({
+        "singleDatePicker": true,
+        "drops": "up",
+        "minDate": moment().format("YYYY-MM-DD"),
+        "locale": {
+            "format": "YYYY-MM-DD",
+        
+            "applyLabel": "Apply",
+            "cancelLabel": "Cancel",
+        }
+    }, function(start, end, label) {
+        
+    });
 </script>
 {{ form_end(form) }}
