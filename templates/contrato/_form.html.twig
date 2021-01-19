@@ -103,7 +103,9 @@
             </div>
             <div class="col-sm-12 col-md-3">
                 <small class="text-muted">Fecha Primera Cuota *</small>
-                <p>{{contrato.fechaPrimeraCuota|date("Y-m-d")}}</p>
+      
+                {{form_row(form.fechaPrimeraCuota,{'label':false,'attr':{'class':'form-control datepicker','required':true,'autocomplete':"ÑÖcompletes"}})}}
+
             </div>
             <div class="col-sm-12 col-md-1">
                 <small class="text-muted">Cuotas</small>
@@ -264,7 +266,20 @@
             }
         }, function(start, end, label) {
         });
-        
+        $('.datepicker').daterangepicker({
+            "singleDatePicker": true,
+            "drops": "up",
+            "defaultDate": "{{contrato.fechaPrimeraCuota|date('Y-m-d')}}",
+            "minDate": moment().format("YYYY-MM-DD"),
+            "locale": {
+                "format": "YYYY-MM-DD",
+            
+                "applyLabel": "Apply",
+                "cancelLabel": "Cancel",
+            }
+        }, function(start, end, label) {
+            
+        });
     });
     function agregarRol(){
         $.ajax({

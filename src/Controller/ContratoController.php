@@ -23,6 +23,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 /**
@@ -218,6 +219,7 @@ class ContratoController extends AbstractController
         $pagina=$moduloPerRepository->findOneByName('contrato',$user->getEmpresaActual());
         $juzgados=$juzgadoRepository->findAll();
         $form = $this->createForm(ContratoType::class, $contrato);
+        $form->add('fechaPrimeraCuota',DateType::class,array('widget'=>'single_text','html5'=>false));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -260,6 +262,7 @@ class ContratoController extends AbstractController
         $this->denyAccessUnlessGranted('create','panel_abogado');
         $juzgados=$juzgadoRepository->findAll();
         $form = $this->createForm(ContratoType::class, $contrato);
+        $form->add('fechaPrimeraCuota',DateType::class,array('widget'=>'single_text','html5'=>false));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
