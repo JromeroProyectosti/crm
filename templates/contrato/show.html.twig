@@ -3,7 +3,8 @@
 {% block title %}Contrato{% endblock %}
 
 {% block body %}
-
+<div class="row">
+    <div class="col-sm-12 col-md-8">
     <div class="card">
         <div class="card-body table-responsive pad">
            
@@ -103,6 +104,14 @@
                     <small class="text-muted">Monto contrato</small>
                     <p>{{contrato.MontoContrato}}</p>   
                 </div>
+                <div class="col-sm-12 col-md-3">
+                    <small class="text-muted">Primera Cuota </small>
+                    <p>{{contrato.primeraCuota}}</p> 
+                 </div>
+                <div class="col-sm-12 col-md-3">
+                    <small class="text-muted">Fecha Primera Cuota</small>
+                    <p>{{contrato.fechaPrimeraCuota|date('Y-m-d')}}</p> 
+                </div>
                 <div class="col-sm-12 col-md-1">
                     <small class="text-muted">Cuotas</small>
                     <p>{{contrato.cuotas}}</p>   
@@ -143,10 +152,7 @@
                         {% endfor %}
                     </div>
                 </div>
-                <div class="col-sm-12 col-md-3">
-                    <small class="text-muted">Primer Pago</small>
-                    <input type="text" name="txtFechaPago" class="form-control primer-pago" value="{{contrato.fechaPrimerPago|date('Y-m')}}">
-                </div>
+                
             </div>
             <hr>
             <div class="card">
@@ -163,6 +169,55 @@
             <a href="{{ path('contrato_edit', {'id': contrato.id}) }}" class="btn btn-warning">Editar</a>
         </div>
     </div>
+
+</div>
+<div class="col-sm-12 col-md-4">
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+        {% set agenda=contrato.agenda %}
+        <!-- Timelime example  -->
+            <div class="row">
+                <div class="col-md-12">
+                <!-- The time line -->
+                    <div class="timeline">
+                        <!-- timeline time label -->
+                        <div class="time-label">
+                        <span class="bg-red">{{agenda.fechaCarga|date('d-m-Y H:i')}}</span>
+                        </div>
+                        <!-- /.timeline-label -->
+                        <!-- timeline item -->
+                        {% for observacion in agenda.agendaObservacions %}
+                            
+                        
+                        <div class="time-label">
+                            <span class="bg-green">{{observacion.fechaRegistro|date('d-m-Y')}}</span>
+                        </div>
+                        <div>
+                            <i class="fas fa-envelope bg-blue"></i>
+                            <div class="timeline-item">
+                                <span class="time"><i class="fas fa-clock"></i>{{observacion.fechaRegistro|date('h:i')}}</span>
+                                <h3 class="timeline-header"><a href="#">{{observacion.status}}</a> {{observacion.usuarioRegistro}} </h3>
+
+                                <div class="timeline-body">
+                                    {{observacion.observacion}}
+                                </div>
+                               
+                            </div>
+                        </div>
+                        {% endfor %}
+                        <div>
+                            <i class="fas fa-clock bg-gray"></i>
+                          </div>
+                    </div>
+                    
+                </div>
+                
+            </div>
+        </div>
+    </section>
+    </div>
+</div>
     <script>
         
         $.ajax({
