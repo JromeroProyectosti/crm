@@ -343,6 +343,15 @@ class PanelAbogadoController extends AbstractController
             $entityManager->persist($agenda);
             $entityManager->flush();
            
+            $observacion=new AgendaObservacion();
+            $observacion->setAgenda($agenda);
+            $observacion->setUsuarioRegistro($usuarioRepository->find($user->getId()));
+            $observacion->setStatus($agendaStatusRepository->find(7);
+            $observacion->setFechaRegistro(new \DateTime(date("Y-m-d H:i:s")));
+            $observacion->setObservacion('Contrato '.$agenda->getReunion()->getNombre());
+           
+            $entityManager->persist($observacion);
+            $entityManager->flush();
             $contratoRoles=$contratoRolRepository->findByTemporal($user->getId());
             foreach($contratoRoles as $contratoRol){
                 $contratoRol->setContrato($contrato);
