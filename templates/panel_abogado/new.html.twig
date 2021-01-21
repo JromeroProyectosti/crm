@@ -21,17 +21,13 @@
                     <label>{{agenda.campania}}</label>
                     
                 </div>
-                <div class="col-sm-12 col-md-3">
+                <div class="col-sm-12 col-md-6">
                     <small class="text-muted">Nombre Cliente</small><br>
                     <label>{{agenda.nombreCliente}}</label>
                 </div>
                 <div class="col-sm-12 col-md-3">
                     <small class="text-muted">Rut Cliente</small><br>
                     <label>{{agenda.rutCliente}}</label>
-                </div>
-                <div class="col-sm-12 col-md-6">
-                    <small class="text-muted">Correo Cliente</small><br>
-                    <label>{{agenda.emailCliente}}</label>
                 </div>
                 <div class="col-sm-12 col-md-3">
                     <small class="text-muted">Telefono Cliente</small><br>
@@ -41,14 +37,36 @@
                     <small class="text-muted">Telefono Recado</small><br>
                     <label>{{agenda.telefonoRecadoCliente}}</label>
                 </div>
+                <div class="col-sm-12 col-md-6">
+                    <small class="text-muted">Correo Cliente</small><br>
+                    <label>{{agenda.emailCliente}}</label>
+                </div>
+                <div class="col-sm-12 col-md-2">
+                    <small class="text-muted">Monto Deuda</small>
+                    <br>
+                    <label>{{agenda.monto|number_format(0, ',', '.')}}</label>
+                </div>
+                <div class="col-sm-12 col-md-3">
+                    <small class="text-muted">Abogado</small><br>
+                    <label>{{agenda.abogado.nombre}}</label>
+                </div>
+                <div class="col-sm-12 col-md-3">
+                    <small class="text-muted">Reunión</small><br>
+                    <label>{{agenda.reunion.nombre}}</label>
+                </div>
                 <div class="col-sm-12 col-md-3">
                     <small class="text-muted">Ciudad Cliente</small><br>
                     <label>{{agenda.ciudadCliente}}</label>
                     
                 </div>
                 <div class="col-sm-12 col-md-3">
-                    <small class="text-muted">Reunión</small><br>
-                    <label>{{agenda.reunion}}</label>
+                    <small class="text-muted">Fecha</small><br>
+                    <label>{{agenda.fechaAsignado|date('Y-m-d')}}</label>
+                    
+                </div>
+                <div class="col-sm-12 col-md-3">
+                    <small class="text-muted">Hora</small><br>
+                    <label>{{agenda.fechaAsignado|date('h:i')}}</label>
                     
                 </div>
                 <div class="col-sm-12 col-md-3">
@@ -56,11 +74,7 @@
                     <label>{{agenda.status}}</label>
                     
                 </div>
-                <div class="col-sm-12 col-md-2">
-                    <small class="text-muted">Monto Deuda</small>
-                    <br>
-                    <label>{{agenda.monto|number_format(0, ',', '.')}}</label>
-                </div>
+                
             </div>
             <br />
             <h4>Gestion</h4>
