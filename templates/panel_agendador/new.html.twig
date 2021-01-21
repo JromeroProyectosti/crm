@@ -39,6 +39,10 @@
                         <small class="text-muted">Correo Cliente</small>
                         {{ form_row(form.emailCliente,{'label':false,'attr':{'class':'form-control','autocomplete':"ÑÖcompletes"}})}}
                     </div>
+                    <div class="col-sm-12 col-md-2">
+                        <small class="text-muted">Monto Deuda</small>
+                        <p>{{agenda.monto|number_format(0, ',', '.')}}</p>
+                    </div>
                     
                     
                     

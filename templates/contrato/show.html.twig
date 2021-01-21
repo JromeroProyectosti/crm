@@ -163,11 +163,13 @@
             
                 </div>
             </div>
-            
+            <div class="col-sm-12 col-md-3">
+                <small class="text-muted">Observación</small>
+                <p>{{contrato.observacion}}</p>   
+                
+            </div>
         </div>
-        <div class="card-footer">
-            <a href="{{ path('contrato_edit', {'id': contrato.id}) }}" class="btn btn-warning">Editar</a>
-        </div>
+        
     </div>
 
 </div>
@@ -175,7 +177,7 @@
     <!-- Main content -->
     <section class="content">
         <div class="container-fluid">
-        {% set agenda=contrato.agenda %}
+    
         <!-- Timelime example  -->
             <div class="row">
                 <div class="col-md-12">

@@ -138,9 +138,9 @@
                <th>{{ knp_pagination_sortable(agendas, 'Nombre', 'nombreCliente') }} {% if agendas.isSorted('nombreCliente') %} <i class="fas fa-sort"></i>{% endif %}</th>
                 <th>{{ knp_pagination_sortable(agendas, 'Email', 'emailCliente') }} {% if agendas.isSorted('emailCliente') %} <i class="fas fa-sort"></i>{% endif %}</th>
                 <th>Telefono</th>
-                <th>Fecha Carga</th>
-                <th>Fecha Asignado</th>
-                <th>Fecha Contrato</th>
+                <th>{{ knp_pagination_sortable(agendas, 'Fecha Carga', 'fechaCarga') }} {% if agendas.isSorted('fechaCarga') %} <i class="fas fa-sort"></i>{% endif %}</th>
+                <th>{{ knp_pagination_sortable(agendas, 'Fecha Asignado', 'fechaAsignado') }} {% if agendas.isSorted('fechaAsignado') %} <i class="fas fa-sort"></i>{% endif %}</th>
+                <th>{{ knp_pagination_sortable(agendas, 'Fecha Contrato', 'fechaContrato') }} {% if agendas.isSorted('fechaContrato') %} <i class="fas fa-sort"></i>{% endif %}</th>
             </tr>
         </thead>
         <tbody>

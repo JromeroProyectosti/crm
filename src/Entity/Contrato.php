@@ -192,6 +192,11 @@ class Contrato
      */
     private $pdf;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $observacion;
+
     
 
     public function __construct()
@@ -630,6 +635,18 @@ class Contrato
     public function setPdf(?string $pdf): self
     {
         $this->pdf = $pdf;
+
+        return $this;
+    }
+
+    public function getObservacion(): ?string
+    {
+        return $this->observacion;
+    }
+
+    public function setObservacion(?string $observacion): self
+    {
+        $this->observacion = $observacion;
 
         return $this;
     }

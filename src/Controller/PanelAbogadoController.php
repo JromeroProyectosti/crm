@@ -284,19 +284,10 @@ class PanelAbogadoController extends AbstractController
             }
             
             $entityManager = $this->getDoctrine()->getManager();
-           
-
-            $observacion=new AgendaObservacion();
-            $observacion->setAgenda($agenda);
-            $observacion->setUsuarioRegistro($usuarioRepository->find($user->getId()));
-            $observacion->setStatus($agendaStatusRepository->find($request->request->get('chkStatus')));
-            $observacion->setFechaRegistro(new \DateTime(date("Y-m-d H:i:s")));
-            $observacion->setObservacion($request->request->get('txtObservacion'));
-           
-            $entityManager->persist($observacion);
-            $entityManager->flush();
             $entityManager->persist($agenda);
             $entityManager->flush();
+
+            
             return $this->redirectToRoute('panel_abogado_index');
         }
 
@@ -359,7 +350,8 @@ class PanelAbogadoController extends AbstractController
                 $entityManager->flush();
             }
 
-            
+           
+           
 
             return $this->redirectToRoute('contrato_finalizar',['id'=>$contrato->getId()]);
         }

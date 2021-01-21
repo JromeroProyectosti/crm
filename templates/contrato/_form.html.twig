@@ -91,7 +91,7 @@
             </div>
             <div class="col-sm-12 col-md-3">
                 <small class="text-muted">Monto nivel de deuda</small>
-                {{form_row(form.montoNivelDeuda,{'label':false,'attr':{'class':'form-control','autocomplete':"ÑÖcompletes"}})}}
+                {{form_row(form.montoNivelDeuda,{'label':false,'attr':{'class':'form-control nivel-deuda','autocomplete':"ÑÖcompletes"}})}}
             </div>
             <div class="col-sm-12 col-md-3">
                 <small class="text-muted">Monto contrato</small>
@@ -204,7 +204,7 @@
             </div>
             <div class="col-sm-12 col-md-12">
                 <small class="text-muted">Observación</small><br>
-                <textarea name="txtObservacion" class="form-control" cols="30" rows="5" required></textarea>
+                {{form_row(form.observacion,{'label':false,'attr':{'class':'form-control','required':true}})}}
             </div>
         </div>
         
@@ -219,27 +219,39 @@
  
 
 <script>
+
+    $('.nivel-deuda').inputmask("999.999.999",{ placeholder:" ",numericInput: true, removeMaskOnSubmit: true});
+    $('.valor-cuota').inputmask("999.999.999",{numericInput: true,placeholder:" ", removeMaskOnSubmit: true});
+    $('.primera-cuota').inputmask("999.999.999",{numericInput: true,placeholder:" ", removeMaskOnSubmit: true});
+    $('.monto-contrato').inputmask("999.999.999",{numericInput: true,placeholder:" ", removeMaskOnSubmit: true});
+   
+
     $('.cuotas').change(function(){
         recalcula();
     });
     $('.monto-contrato').change(function(){
         recalcula();
     });
+    $('.primera-cuota').change(function(){
+        recalcula();
+    });
     $('.interes').change(function(){
         recalcula();
     });
     function recalcula(){
-        var montoContrato=parseInt($('.monto-contrato').val())-parseInt($('.primera-cuota').val());
+        var _montoContrato=$('.monto-contrato').val().toString().replace(/\./g, "");
+        var _primeraCuota=$('.primera-cuota').val().toString().replace(/\./g, "");
+        
+        var montoContrato=parseInt( _montoContrato)-parseInt(_primeraCuota);
+        console.log(montoContrato);
         var cuotas=parseInt($('.cuotas').val());
         var interes=0;
-        var valorCuota=(montoContrato+(montoContrato/100*interes))/cuotas;
+        var valorCuota=round((montoContrato)/cuotas, 'floor');
+        console.log(valorCuota);
         $('.valor-cuota').val(valorCuota);
     }
     $(".format-rut").rut();
-    $(".monto-contrato").inputmask({
-        mask: "9",
-        repeat:20,
-    });
+   
     
     $(document).ready(function(){
         $('#controles').modal('show');

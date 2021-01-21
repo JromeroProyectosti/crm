@@ -37,6 +37,7 @@ class ContratoType extends AbstractType
             ->add('vehiculo')
             ->add('vivienda')
             ->add('reunion')
+            ->add('observacion')
 
         ;
     }

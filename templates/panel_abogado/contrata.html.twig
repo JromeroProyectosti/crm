@@ -79,7 +79,7 @@
     </div>
     <div class="col-sm-12 col-md-3">
         <small class="text-muted">Monto nivel de deuda</small>
-		{{form_row(form.montoNivelDeuda,{'label':false,'attr':{'class':'form-control','autocomplete':"ÑÖcompletes"}})}}
+		{{form_row(form.montoNivelDeuda,{'label':false,'attr':{'class':'form-control nivel-deuda','autocomplete':"ÑÖcompletes"}})}}
     </div>
     <div class="col-sm-12 col-md-3">
         <small class="text-muted">Monto contrato *</small>
@@ -217,7 +217,8 @@
 
     <div class="col-sm-12 col-md-12">
         <small class="text-muted">Observación</small><br>
-        <textarea name="txtObservacion" class="form-control" cols="30" rows="5" required></textarea>
+        
+        {{form_row(form.observacion,{'label':false,'attr':{'class':'form-control','required':true}})}}
     </div>
 </div>
 {% if contrato.id is null %}
@@ -237,8 +238,14 @@
     $('.interes').change(function(){
         recalcula();
     });
-    function recalcula(){
-        var montoContrato=parseInt($('.monto-contrato').val())-parseInt($('.primera-cuota').val());
+    function recalcula()
+    {
+        var _montoContrato=$('.monto-contrato').val().toString().replace(/\./g, "");
+        var _primeraCuota=$('.primera-cuota').val().toString().replace(/\./g, "");
+        console.log(_montoContrato);
+        console.log(_primeraCuota);
+        var montoContrato=parseInt( _montoContrato)-parseInt(_primeraCuota);
+        console.log(montoContrato);
         var cuotas=parseInt($('.cuotas').val());
         var interes=0;
         var valorCuota=(montoContrato+(montoContrato/100*interes))/cuotas;
@@ -255,7 +262,13 @@
             repeat:20,
         });
 
-        //$('.monto-contrato').inputmask({ "mask": "999.999.999", "greedy": true });
+        //$('.monto-contrato').inputmask("999.999.999",{ placeholder:" ",numericInput: true, clearMaskOnLostFocus: true ,showMaskOnFocus: true});
+        
+        $('.nivel-deuda').inputmask("999.999.999",{ placeholder:" ",numericInput: true, removeMaskOnSubmit: true});
+        $('.valor-cuota').inputmask("999.999.999",{numericInput: true,placeholder:" ", removeMaskOnSubmit: true});
+        $('.primera-cuota').inputmask("999.999.999",{numericInput: true,placeholder:" ", removeMaskOnSubmit: true});
+        $('.monto-contrato').inputmask("999.999.999",{numericInput: true,placeholder:" ", removeMaskOnSubmit: true});
+       
         $('.primer-pago').daterangepicker({
             "singleDatePicker": true,
             "drops": "up",
@@ -315,6 +328,7 @@
     }
     function validarut(){
         $('button').attr("disabled", true);
+        //$('.primera-cuota,.valor-cuota,.monto-contrato,.nivel-deuda').inputmask('remove');
         if($("#Institucion").val()==0){
             alert("Debe ingresar almenos una Insitution Acreedora");
             $(".nombre-rol").focus();
@@ -335,6 +349,7 @@
 
         $(".format-rut").focus();
         $('button').attr("disabled", false);
+        
 
         return false;
     }

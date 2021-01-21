@@ -6,6 +6,7 @@ use App\Entity\Contrato;
 use App\Entity\ContratoRol;
 use App\Entity\Usuario;
 use App\Form\ContratoType;
+use App\Entity\AgendaObservacion;
 use App\Form\ContratoRolType;
 use App\Repository\ContratoRepository;
 use App\Repository\ContratoRolRepository;
@@ -143,6 +144,7 @@ class ContratoController extends AbstractController
         $pagina=$moduloPerRepository->findOneByName('contrato',$user->getEmpresaActual());
         return $this->render('contrato/show.html.twig', [
             'contrato' => $contrato,
+            'agenda'=>$contrato->getAgenda(),
             'pagina'=>$pagina->getNombre(),
             'diasPagos'=>$diasPagoRepository->findAll(),
             
@@ -232,11 +234,22 @@ class ContratoController extends AbstractController
             $entityManager->persist($contrato);
             $entityManager->flush();
 
+            $observacion=new AgendaObservacion();
+            $observacion->setAgenda($contrato->getAgenda());
+            $observacion->setUsuarioRegistro($usuarioRepository->find($user->getId()));
+            $observacion->setStatus($contrato->getAgenda()->getStatus());
+            $observacion->setFechaRegistro(new \DateTime(date("Y-m-d H:i:s")));
+            $observacion->setObservacion($request->request->get('txtObservacion'));
+           
+            $entityManager->persist($observacion);
+            $entityManager->flush();
+
             return $this->redirectToRoute('contrato_index');
         }
 
         return $this->render('contrato/edit.html.twig', [
             'contrato' => $contrato,
+            'agenda'=>$contrato->getAgenda(),
             'form' => $form->createView(),
             'juzgados'=>$juzgados,
             'pagina'=>$pagina->getNombre(),
@@ -309,6 +322,7 @@ class ContratoController extends AbstractController
 
         return $this->render('contrato/finalizar.html.twig', [
             'contrato' => $contrato,
+            'agenda'=> $contrato->getAgenda(),
             'form' => $form->createView(),
             'juzgados'=>$juzgados,
             'pagina'=>"Revise los datos para finalizar",
