@@ -214,7 +214,8 @@ class ContratoController extends AbstractController
                     SucursalRepository $sucursalRepository,
                     DiasPagoRepository $diasPagoRepository,
                     UsuarioRepository $usuarioRepository,
-                    ModuloPerRepository $moduloPerRepository): Response
+                    ModuloPerRepository $moduloPerRepository,
+                    \Knp\Snappy\Pdf $snappy): Response
     {
         $this->denyAccessUnlessGranted('edit','contrato');
         $user=$this->getUser();
@@ -243,6 +244,24 @@ class ContratoController extends AbstractController
            
             $entityManager->persist($observacion);
             $entityManager->flush();
+
+
+            $filename = sprintf('Contrato-'.$contrato->getId().'-%s.pdf',rand(0,9000));
+       
+            $html = $this->renderView('contrato/print.html.twig', array(
+                'contrato' => $contrato,
+                'Titulo'=>"Contrato"
+            ));
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $contrato->setPdf($filename);
+            $entityManager->persist($contrato);
+            $entityManager->flush();
+
+            $snappy->generateFromHtml(
+                $html,
+                $this->getParameter('url_root'). $this->getParameter('pdf_contratos').$filename
+            );
 
             return $this->redirectToRoute('contrato_index');
         }
@@ -344,7 +363,6 @@ class ContratoController extends AbstractController
        
         $html = $this->renderView('contrato/print.html.twig', array(
             'contrato' => $contrato,
-            
             'Titulo'=>"Contrato"
         ));
 
