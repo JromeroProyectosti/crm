@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Cobranza index{% endblock %}
+
+{% block body %}
+    <h1>Cobranza index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Fecha</th>
+                <th>FechaCompromiso</th>
+                <th>Observacion</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for cobranza in cobranzas %}
+            <tr>
+                <td>{{ cobranza.id }}</td>
+                <td>{{ cobranza.fecha ? cobranza.fecha|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ cobranza.fechaCompromiso ? cobranza.fechaCompromiso|date('Y-m-d') : '' }}</td>
+                <td>{{ cobranza.observacion }}</td>
+                <td>
+                    <a href="{{ path('cobranza_show', {'id': cobranza.id}) }}">show</a>
+                    <a href="{{ path('cobranza_edit', {'id': cobranza.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('cobranza_new') }}">Create new</a>
+{% endblock %}

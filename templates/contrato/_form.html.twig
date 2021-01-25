@@ -220,10 +220,10 @@
 
 <script>
 
-    $('.nivel-deuda').inputmask("999.999.999",{ placeholder:" ",numericInput: true, removeMaskOnSubmit: true});
-    $('.valor-cuota').inputmask("999.999.999",{numericInput: true,placeholder:" ", removeMaskOnSubmit: true});
-    $('.primera-cuota').inputmask("999.999.999",{numericInput: true,placeholder:" ", removeMaskOnSubmit: true});
-    $('.monto-contrato').inputmask("999.999.999",{numericInput: true,placeholder:" ", removeMaskOnSubmit: true});
+    $('.nivel-deuda').inputmask("9999999999",{ placeholder:" ",numericInput: true, removeMaskOnSubmit: true});
+    $('.valor-cuota').inputmask("9999999999",{numericInput: true,placeholder:" ", removeMaskOnSubmit: true});
+    $('.primera-cuota').inputmask("9999999999",{numericInput: true,placeholder:" ", removeMaskOnSubmit: true});
+    $('.monto-contrato').inputmask("9999999999",{numericInput: true,placeholder:" ", removeMaskOnSubmit: true});
    
 
     $('.cuotas').change(function(){
@@ -239,8 +239,8 @@
         recalcula();
     });
     function recalcula(){
-        var _montoContrato=$('.monto-contrato').val().toString().replace(/\./g, "");
-        var _primeraCuota=$('.primera-cuota').val().toString().replace(/\./g, "");
+        var _montoContrato=$('.monto-contrato').val().toString();
+        var _primeraCuota=$('.primera-cuota').val().toString();
         
         var montoContrato=parseInt( _montoContrato)-parseInt(_primeraCuota);
         console.log(montoContrato);
