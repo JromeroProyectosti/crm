@@ -90,33 +90,6 @@
                 {{form_row(form.escritura,{'label':false,'attr':{'class':'form-control','required':true}})}}
             </div>
             <div class="col-sm-12 col-md-3">
-                <small class="text-muted">Monto nivel de deuda</small>
-                {{form_row(form.montoNivelDeuda,{'label':false,'attr':{'class':'form-control nivel-deuda','autocomplete':"ÑÖcompletes"}})}}
-            </div>
-            <div class="col-sm-12 col-md-3">
-                <small class="text-muted">Monto contrato</small>
-                {{form_row(form.MontoContrato,{'label':false,'attr':{'class':'form-control monto-contrato','required':true,'autocomplete':"ÑÖcompletes"}})}}
-            </div>
-            <div class="col-sm-12 col-md-3">
-                <small class="text-muted">Primera Cuota *</small>
-                {{form_row(form.primeraCuota,{'label':false,'attr':{'class':'form-control primera-cuota number','required':true,'autocomplete':"ÑÖcompletes"}})}}
-            </div>
-            <div class="col-sm-12 col-md-3">
-                <small class="text-muted">Fecha Primera Cuota *</small>
-      
-                {{form_row(form.fechaPrimeraCuota,{'label':false,'attr':{'class':'form-control datepicker','required':true,'autocomplete':"ÑÖcompletes"}})}}
-
-            </div>
-            <div class="col-sm-12 col-md-1">
-                <small class="text-muted">Cuotas</small>
-                {{form_row(form.cuotas,{'label':false,'attr':{'class':'form-control cuotas','autocomplete':"ÑÖcompletes"}})}}
-            </div>
-           
-            <div class="col-sm-12 col-md-3">
-                <small class="text-muted">Valor cuota</small>
-                {{form_row(form.valorCuota,{'label':false,'attr':{'class':'form-control valor-cuota','required':true,'autocomplete':"ÑÖcompletes"}})}}
-            </div>
-            <div class="col-sm-12 col-md-3">
                 <small class="text-muted">Sucursal</small>
                 <select name="cboSucursal" id="sucursal" required class="form-control">
                     <option value=""></option>
@@ -146,6 +119,34 @@
                     {% endfor %}
                 </select>
             </div>
+            <div class="col-sm-12 col-md-3">
+                <small class="text-muted">Monto nivel de deuda</small>
+                {{form_row(form.montoNivelDeuda,{'label':false,'attr':{'class':'form-control nivel-deuda','autocomplete':"ÑÖcompletes"}})}}
+            </div>
+            <div class="col-sm-12 col-md-3">
+                <small class="text-muted">Monto contrato</small>
+                {{form_row(form.MontoContrato,{'label':false,'attr':{'class':'form-control monto-contrato','required':true,'autocomplete':"ÑÖcompletes"}})}}
+            </div>
+            <div class="col-sm-12 col-md-3">
+                <small class="text-muted">Primera Cuota *</small>
+                {{form_row(form.primeraCuota,{'label':false,'attr':{'class':'form-control primera-cuota number','required':true,'autocomplete':"ÑÖcompletes"}})}}
+            </div>
+            <div class="col-sm-12 col-md-3">
+                <small class="text-muted">Fecha Primera Cuota *</small>
+      
+                {{form_row(form.fechaPrimeraCuota,{'label':false,'attr':{'class':'form-control datepicker','required':true,'autocomplete':"ÑÖcompletes"}})}}
+
+            </div>
+            <div class="col-sm-12 col-md-1">
+                <small class="text-muted">Cuotas restantes *</small>
+                {{form_row(form.cuotas,{'label':false,'attr':{'class':'form-control cuotas','autocomplete':"ÑÖcompletes"}})}}
+            </div>
+           
+            <div class="col-sm-12 col-md-3">
+                <small class="text-muted">Valor cuota *</small>
+                {{form_row(form.valorCuota,{'label':false,'attr':{'class':'form-control valor-cuota','required':true,'autocomplete':"ÑÖcompletes"}})}}
+            </div>
+            
         
             <div class="col-sm-12 col-md-12">
                 <small class="text-muted">Días de Pago</small>
