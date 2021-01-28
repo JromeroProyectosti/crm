@@ -52,6 +52,12 @@ class Cuota
      */
     private $usuarioAnulacion;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Contrato::class, inversedBy="detalleCuotas")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $contrato;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -137,6 +143,18 @@ class Cuota
     public function setUsuarioAnulacion(?Usuario $usuarioAnulacion): self
     {
         $this->usuarioAnulacion = $usuarioAnulacion;
+
+        return $this;
+    }
+
+    public function getContrato(): ?Contrato
+    {
+        return $this->contrato;
+    }
+
+    public function setContrato(?Contrato $contrato): self
+    {
+        $this->contrato = $contrato;
 
         return $this;
     }

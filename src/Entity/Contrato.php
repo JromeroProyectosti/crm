@@ -202,11 +202,17 @@ class Contrato
      */
     private $isAbono;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Cuota::class, mappedBy="contrato", orphanRemoval=true)
+     */
+    private $detalleCuotas;
+
     
 
     public function __construct()
     {
         $this->contratoRols = new ArrayCollection();
+        $this->detalleCuotas = new ArrayCollection();
         
     }
 
@@ -664,6 +670,36 @@ class Contrato
     public function setIsAbono(?bool $isAbono): self
     {
         $this->isAbono = $isAbono;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Cuota[]
+     */
+    public function getDetalleCuotas(): Collection
+    {
+        return $this->detalleCuotas;
+    }
+
+    public function addDetalleCuota(Cuota $detalleCuota): self
+    {
+        if (!$this->detalleCuotas->contains($detalleCuota)) {
+            $this->detalleCuotas[] = $detalleCuota;
+            $detalleCuota->setContrato($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDetalleCuota(Cuota $detalleCuota): self
+    {
+        if ($this->detalleCuotas->removeElement($detalleCuota)) {
+            // set the owning side to null (unless already changed)
+            if ($detalleCuota->getContrato() === $this) {
+                $detalleCuota->setContrato(null);
+            }
+        }
 
         return $this;
     }

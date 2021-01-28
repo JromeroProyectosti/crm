@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Contrato;
 use App\Entity\ContratoRol;
 use App\Entity\Usuario;
+use App\Entity\Cuota;
 use App\Form\ContratoType;
 use App\Entity\AgendaObservacion;
 use App\Form\ContratoRolType;
@@ -18,6 +19,7 @@ use App\Repository\UsuarioRepository;
 use App\Repository\UsuarioTipoRepository;
 use App\Repository\AgendaStatusRepository;
 use App\Repository\ModuloPerRepository;
+use App\Repository\CuotaRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -215,6 +217,7 @@ class ContratoController extends AbstractController
                     DiasPagoRepository $diasPagoRepository,
                     UsuarioRepository $usuarioRepository,
                     ModuloPerRepository $moduloPerRepository,
+                    CuotaRepository $cuotaRepository,
                     \Knp\Snappy\Pdf $snappy): Response
     {
         $this->denyAccessUnlessGranted('edit','contrato');
@@ -231,6 +234,12 @@ class ContratoController extends AbstractController
             $contrato->setDiaPago($request->request->get('chkDiasPago'));
             $contrato->setTramitador($usuarioRepository->find($request->request->get('cboTramitador')));
             $contrato->setFechaPrimerPago(new \DateTime(date($request->request->get('txtFechaPago')."-1 00:00:00")));
+
+            $detalleCuotas=$contrato->getDetalleCuotas();
+            foreach($detalleCuotas as $detalleCuota){
+                $contrato->removeDetalleCuota($detalleCuota);
+            }
+
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($contrato);
             $entityManager->flush();
@@ -238,16 +247,68 @@ class ContratoController extends AbstractController
 
             $filename = sprintf('Contrato-'.$contrato->getId().'-%s.pdf',rand(0,9000));
        
-            $html = $this->renderView('contrato/print.html.twig', array(
-                'contrato' => $contrato,
-                'Titulo'=>"Contrato"
-            ));
+           
 
             $entityManager = $this->getDoctrine()->getManager();
             $contrato->setPdf($filename);
             $entityManager->persist($contrato);
             $entityManager->flush();
 
+            $countCuotas=$contrato->getCuotas();
+            $fechaPrimerPago=$contrato->getFechaPrimerPago();
+            $diaPago=$contrato->getDiaPago();
+            $sumames=0;
+            $numeroCuota=1;
+            $isAbono=$contrato->getIsAbono();
+            if($isAbono){
+                $cuota=new Cuota();
+
+                $cuota->setContrato($contrato);
+                $cuota->setNumero($numeroCuota);
+                $cuota->setFechaPago($contrato->getFechaPrimeraCuota());
+                $cuota->setMonto($contrato->getPrimeraCuota());
+
+                $entityManager->persist($cuota);
+                $entityManager->flush();
+                $numeroCuota++;
+            }
+            
+            $primerPago=date("Y-m-".$diaPago,strtotime($fechaPrimerPago->format('Y-m-d')));
+            $timePrimrePago=strtotime($primerPago);
+
+            $timeFechaActual=strtotime(date("Y-m-d"));
+
+            if($timeFechaActual>=$timePrimrePago){
+
+                $sumames=1;
+            }
+            for($i=0;$i<$countCuotas;$i++){
+                $cuota=new Cuota();
+
+                $cuota->setContrato($contrato);
+                $cuota->setNumero($numeroCuota);
+
+                $ts = mktime(0, 0, 0, date('m',$timeFechaActual) + $sumames+$i, 1,date('Y',$timeFechaActual));
+
+                if(date("n",$ts)==2){
+                    if($diaPago==30){
+                        $diaPago=date("d",mktime(0,0,0,date('m',$timeFechaActual)+ $sumames+$i+1,1,date('Y',$timeFechaActual))-24);
+                    }
+                }
+                $fechaCuota=date("d-m-Y", mktime(0,0,0,date('m',$timeFechaActual) + $sumames+$i,$diaPago,date('Y',$timeFechaActual)));
+                $cuota->setFechaPago(new \DateTime($fechaCuota));
+                $cuota->setMonto($contrato->getValorCuota());
+
+                $entityManager->persist($cuota);
+                $entityManager->flush();
+                $numeroCuota++;
+            }
+            
+            $html = $this->renderView('contrato/print.html.twig', array(
+                'contrato' => $contrato,
+                'Titulo'=>"Contrato"
+            ));
+            
             $snappy->generateFromHtml(
                 $html,
                 $this->getParameter('url_root'). $this->getParameter('pdf_contratos').$filename
@@ -326,7 +387,57 @@ class ContratoController extends AbstractController
             $entityManager->persist($agenda);
             $entityManager->flush();
 
-                        
+            $countCuotas=$contrato->getCuotas();
+            $fechaPrimerPago=$contrato->getFechaPrimerPago();
+            $diaPago=$contrato->getDiaPago();
+            $sumames=0;
+            $numeroCuota=1;
+            $isAbono=$contrato->getIsAbono();
+            if($isAbono){
+                $cuota=new Cuota();
+
+                $cuota->setContrato($contrato);
+                $cuota->setNumero($numeroCuota);
+                $cuota->setFechaPago($contrato->getFechaPrimeraCuota());
+                $cuota->setMonto($contrato->getPrimeraCuota());
+
+                $entityManager->persist($cuota);
+                $entityManager->flush();
+                $numeroCuota++;
+            }
+           
+            
+            $primerPago=date("Y-m-".$diaPago,strtotime($fechaPrimerPago->format('Y-m-d')));
+            $timePrimrePago=strtotime($primerPago);
+
+            $timeFechaActual=strtotime(date("Y-m-d"));
+
+            if($timeFechaActual>=$timePrimrePago){
+
+                $sumames=1;
+            }
+            for($i=0;$i<$countCuotas;$i++){
+                $cuota=new Cuota();
+
+                $cuota->setContrato($contrato);
+                $cuota->setNumero($numeroCuota);
+
+                $ts = mktime(0, 0, 0, date('m',$timeFechaActual) + $sumames+$i, 1,date('Y',$timeFechaActual));
+
+                if(date("n",$ts)==2){
+                    if($diaPago==30){
+                        $diaPago=date("d",mktime(0,0,0,date('m',$timeFechaActual)+ $sumames+$i+1,1,date('Y',$timeFechaActual))-24);
+                    }
+                }
+                $fechaCuota=date("d-m-Y", mktime(0,0,0,date('m',$timeFechaActual) + $sumames+$i,$diaPago,date('Y',$timeFechaActual)));
+                $cuota->setFechaPago(new \DateTime($fechaCuota));
+                $cuota->setMonto($contrato->getValorCuota());
+
+                $entityManager->persist($cuota);
+                $entityManager->flush();
+                $numeroCuota++;
+            }
+
             return $this->redirectToRoute('contrato_index');
         }
 
