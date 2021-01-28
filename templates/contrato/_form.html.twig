@@ -395,7 +395,7 @@
                 "defaultDate": "{{contrato.fechaPrimeraCuota|date('Y-m-d')}}",
                 "minDate": "{{contrato.fechaPrimeraCuota|date('Y-m-d')}}",
                 "locale": {
-                    "format": "YYYY-MM-DD",
+                    "format": "YYYY-MM",
                     "applyLabel": "Apply",
                     "cancelLabel": "Cancel",
                 }
@@ -414,7 +414,7 @@
                 "defaultDate": "{{contrato.fechaPrimeraCuota|date('Y-m-d')}}",
                 "minDate": "{{contrato.fechaPrimeraCuota|date('Y-m-d')}}",
                 "locale": {
-                    "format": "YYYY-MM-DD",
+                    "format": "YYYY-MM",
                     "applyLabel": "Apply",
                     "cancelLabel": "Cancel",
                 }
@@ -422,5 +422,6 @@
             });
         }
     }
+    $('.primer-pago').inputmask("9999-99");
 </script>
 
