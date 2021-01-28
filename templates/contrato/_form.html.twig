@@ -286,7 +286,8 @@
         $('.primer-pago').daterangepicker({
             "singleDatePicker": true,
             "drops": "up",
-            "defaultDate": "{{contrato.fechaPrimerPago|date('Y-m')}}",
+            "defaultDate": "{{contrato.fechaPrimerPago|date('Y-m-d')}}",
+            "minDate": "{{contrato.fechaPrimeraCuota|date('Y-m-d')}}",
             "locale": {
                 "format": "YYYY-MM",
                 "applyLabel": "Apply",
@@ -298,7 +299,7 @@
             "singleDatePicker": true,
             "drops": "up",
             "defaultDate": "{{contrato.fechaPrimeraCuota|date('Y-m-d')}}",
-            "minDate": moment().format("YYYY-MM-DD"),
+            "minDate": "{{contrato.fechaPrimeraCuota|date('Y-m-d')}}",
             "locale": {
                 "format": "YYYY-MM-DD",
             
@@ -388,9 +389,10 @@
             $('.primer-pago').daterangepicker({
                 "singleDatePicker": true,
                 "drops": "up",
-                "minDate": moment().format("YYYY-MM-DD"),
+                "defaultDate": "{{contrato.fechaPrimeraCuota|date('Y-m-d')}}",
+                "minDate": "{{contrato.fechaPrimeraCuota|date('Y-m-d')}}",
                 "locale": {
-                    "format": "YYYY-MM",
+                    "format": "YYYY-MM-DD",
                     "applyLabel": "Apply",
                     "cancelLabel": "Cancel",
                 }
@@ -403,10 +405,10 @@
             $('.primer-pago').daterangepicker({
                 "singleDatePicker": true,
                 "drops": "up",
-                "defaultDate": moment().format("YYYY-MM-DD"),
-                "minDate": moment().format("YYYY-MM-DD"),
+                "defaultDate": "{{contrato.fechaPrimeraCuota|date('Y-m-d')}}",
+                "minDate": "{{contrato.fechaPrimeraCuota|date('Y-m-d')}}",
                 "locale": {
-                    "format": "YYYY-MM",
+                    "format": "YYYY-MM-DD",
                     "applyLabel": "Apply",
                     "cancelLabel": "Cancel",
                 }

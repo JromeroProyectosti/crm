@@ -283,9 +283,9 @@
             "singleDatePicker": true,
             "drops": "up",
             "defaultDate": "{{contrato.fechaCreacion|date('Y-m-d')}}",
-            "minDate": moment().format("YYYY-MM-DD"),
+            "minDate":"{{contrato.fechaCreacion|date('Y-m-d')}}",
             "locale": {
-                "format": "YYYY-MM",
+                "format": "YYYY-MM-DD",
                 "applyLabel": "Apply",
                 "cancelLabel": "Cancel",
             }
@@ -386,9 +386,9 @@
             $('.primer-pago').daterangepicker({
                 "singleDatePicker": true,
                 "drops": "up",
-                "minDate": moment().format("YYYY-MM-DD"),
+                "minDate": "{{contrato.fechaCreacion|date('Y-m-d')}}",
                 "locale": {
-                    "format": "YYYY-MM",
+                    "format": "YYYY-MM-DD",
                     "applyLabel": "Apply",
                     "cancelLabel": "Cancel",
                 }
@@ -401,10 +401,10 @@
             $('.primer-pago').daterangepicker({
                 "singleDatePicker": true,
                 "drops": "up",
-                "defaultDate": moment().format("YYYY-MM-DD"),
-                "minDate": moment().format("YYYY-MM-DD"),
+                "defaultDate": "{{contrato.fechaCreacion|date('Y-m-d')}}",
+                "minDate": "{{contrato.fechaCreacion|date('Y-m-d')}}",
                 "locale": {
-                    "format": "YYYY-MM",
+                    "format": "YYYY-MM-DD",
                     "applyLabel": "Apply",
                     "cancelLabel": "Cancel",
                 }
