@@ -326,6 +326,7 @@ class ContratoController extends AbstractController
             $entityManager->persist($agenda);
             $entityManager->flush();
 
+                        
             return $this->redirectToRoute('contrato_index');
         }
 
