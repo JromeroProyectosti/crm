@@ -1,3 +1,4 @@
 .env
 .env.local.php.pp
 vendor\h4cc\wkhtmltoimage-i386
+var\

@@ -328,6 +328,7 @@ class PanelAbogadoController extends AbstractController
             $contrato->setSucursal($sucursalRepository->find($request->request->get('cboSucursal')));
             $contrato->setTramitador($usuarioRepository->find($request->request->get('cboTramitador')));
             //$contrato->setFechaPrimeraCuota(new \DateTime(date("Y-m-d 00:00:00")));
+            $contrato->setFechaPrimerPago(new \DateTime(date($request->request->get('txtFechaPago')." 00:00:00")));
 
             $entityManager = $this->getDoctrine()->getManager();
 

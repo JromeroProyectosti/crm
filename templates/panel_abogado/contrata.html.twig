@@ -101,17 +101,18 @@
     </div>
     <div class="col-sm-12 col-md-3">
         <small class="text-muted">Monto contrato *</small>
-		{{form_row(form.MontoContrato,{'label':false,'attr':{'class':'form-control monto-contrato number','required':true,'autocomplete':"ÑÖcompletes"}})}}
+        {{form_row(form.MontoContrato,{'label':false,'attr':{'class':'form-control monto-contrato number','required':true,'autocomplete':"ÑÖcompletes"}})}}
+        <strong><label id="m-monto-contrato"></label></strong>
     </div>
+    
     <div class="col-sm-12 col-md-3">
         <small class="text-muted">Primera Cuota *</small>
-		{{form_row(form.primeraCuota,{'label':false,'attr':{'class':'form-control primera-cuota number','required':true,'autocomplete':"ÑÖcompletes"}})}}
+        <input type="checkbox" name="my-checkbox"  id="chk-bono" >
+        {{form_row(form.primeraCuota,{'label':false,'attr':{'class':'form-control primera-cuota number','required':true,'autocomplete':"ÑÖcompletes"}})}}
+        
+        <strong><label id="m-primera-cuota"></label></strong>
     </div>
-    <div class="col-sm-12 col-md-3">
-        <small class="text-muted">Fecha Primera Cuota *</small>
-		{{form_row(form.fechaPrimeraCuota,{'label':false,'attr':{'class':'form-control datepicker','required':true,'autocomplete':"ÑÖcompletes"}})}}
-
-    </div>
+    
     <div class="col-sm-12 col-md-3">
         <small class="text-muted">Cuotas restantes *</small>
 		{{form_row(form.cuotas,{'label':false,'attr':{'class':'form-control cuotas','required':true,'autocomplete':"ÑÖcompletes"}})}}
@@ -119,7 +120,8 @@
     
     <div class="col-sm-12 col-md-3">
         <small class="text-muted">Valor cuota *</small>
-		{{form_row(form.valorCuota,{'label':false,'attr':{'class':'form-control valor-cuota','required':true,'autocomplete':"ÑÖcompletes"}})}}
+        {{form_row(form.valorCuota,{'label':false,'attr':{'class':'form-control valor-cuota','required':true,'autocomplete':"ÑÖcompletes"}})}}
+        <strong><label id="m-valor-cuota"></label></strong>
     </div>
     
 
@@ -140,6 +142,10 @@
             </label>
             {% endfor %}
         </div>
+    </div>
+    <div class="col-sm-12 col-md-3">
+        <small class="text-muted">Primer Pago</small>
+        <input type="text" name="txtFechaPago" class="form-control primer-pago">    
     </div>
     
 </div>
@@ -223,19 +229,22 @@
         {{form_row(form.observacion,{'label':false,'attr':{'class':'form-control','required':true}})}}
     </div>
 </div>
+{{form_row(form.fechaPrimeraCuota,{'label':false,'attr':{'class':'form-control','style':'visibility:hidden'}})}}
 {% if contrato.id is null %}
 <button class="btn btn-primary">Preparar Contrato</button>
 {% endif %}
 <script>
-   
+    $('.primera-cuota').css("visibility", "hidden");
     $('.cuotas').change(function(){
         recalcula();
     });
     $('.monto-contrato').change(function(){
         recalcula();
+        $("#m-monto-contrato").html($.number( $(this).val(), 0, ',', '.' ));
     });
     $('.primera-cuota').change(function(){
         recalcula();
+        $("#m-primera-cuota").html($.number( $(this).val(), 0, ',', '.' ));
     });
     $('.interes').change(function(){
         recalcula();
@@ -252,6 +261,7 @@
         var interes=0;
         var valorCuota=(montoContrato+(montoContrato/100*interes))/cuotas;
         $('.valor-cuota').val(Math.round(valorCuota));
+        $("#m-valor-cuota").html($.number( $('.valor-cuota').val(), 0, ',', '.' ));
     }
     $(document).ready(function(){
         $('.monto-contrato').val('0');
@@ -266,17 +276,14 @@
 
         //$('.monto-contrato').inputmask("999.999.999",{ placeholder:" ",numericInput: true, clearMaskOnLostFocus: true ,showMaskOnFocus: true});
         
-        $('.nivel-deuda').inputmask("99999999999",{ placeholder:" ",numericInput: true, removeMaskOnSubmit: true});
-        $('.valor-cuota').inputmask("99999999999",{numericInput: true,placeholder:" ", removeMaskOnSubmit: true});
-        $('.primera-cuota').inputmask("99999999999",{numericInput: true,placeholder:" ", removeMaskOnSubmit: true});
-        $('.monto-contrato').inputmask("99999999999",{numericInput: true,placeholder:" ", removeMaskOnSubmit: true});
        
         $('.primer-pago').daterangepicker({
             "singleDatePicker": true,
             "drops": "up",
             "defaultDate": "{{contrato.fechaCreacion|date('Y-m-d')}}",
+            "minDate": moment().format("YYYY-MM-DD"),
             "locale": {
-                "format": "YYYY-MM",
+                "format": "YYYY-MM-DD",
                 "applyLabel": "Apply",
                 "cancelLabel": "Cancel",
             }
@@ -367,6 +374,42 @@
         }
     }, function(start, end, label) {
         
+    });
+    
+    //$("#chk-bono").bootstrapSwitch('state', $(this).prop('checked'));
+    $("#chk-bono").change(function(){
+        
+        if($(this).prop( "checked" )){
+            $('.primera-cuota').css("visibility", "visible");
+            $('.primer-pago').daterangepicker({
+                "singleDatePicker": true,
+                "drops": "up",
+                "minDate": moment().add(1, 'months').format("YYYY-MM-DD"),
+                "locale": {
+                    "format": "YYYY-MM-DD",
+                    "applyLabel": "Apply",
+                    "cancelLabel": "Cancel",
+                }
+            }, function(start, end, label) {
+            });
+        }else{
+            $('.primera-cuota').css("visibility", "hidden");
+            $('.primera-cuota').val(0);
+            $('#m-primera-cuota').html("");
+            $('.primer-pago').daterangepicker({
+                "singleDatePicker": true,
+                "drops": "up",
+                "defaultDate": moment().format("YYYY-MM-DD"),
+                "minDate": moment().format("YYYY-MM-DD"),
+                "locale": {
+                    "format": "YYYY-MM-DD",
+                    "applyLabel": "Apply",
+                    "cancelLabel": "Cancel",
+                }
+            }, function(start, end, label) {
+            });
+        }
+        recalcula();
     });
 </script>
 {{ form_end(form) }}
