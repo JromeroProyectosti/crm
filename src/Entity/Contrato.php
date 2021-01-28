@@ -197,6 +197,11 @@ class Contrato
      */
     private $observacion;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $isAbono;
+
     
 
     public function __construct()
@@ -647,6 +652,18 @@ class Contrato
     public function setObservacion(?string $observacion): self
     {
         $this->observacion = $observacion;
+
+        return $this;
+    }
+
+    public function getIsAbono(): ?bool
+    {
+        return $this->isAbono;
+    }
+
+    public function setIsAbono(?bool $isAbono): self
+    {
+        $this->isAbono = $isAbono;
 
         return $this;
     }

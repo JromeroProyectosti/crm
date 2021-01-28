@@ -106,8 +106,10 @@
     </div>
     
     <div class="col-sm-12 col-md-3">
-        <small class="text-muted">Primera Cuota *</small>
-        <input type="checkbox" name="my-checkbox"  id="chk-bono" >
+        <div class="row"><small class="text-muted">Primera Cuota *</small>
+        
+        {{form_row(form.isAbono,{'label':false,'attr':{'class':' chk-bono'}})}}</div>
+        
         {{form_row(form.primeraCuota,{'label':false,'attr':{'class':'form-control primera-cuota number','required':true,'autocomplete':"ÑÖcompletes"}})}}
         
         <strong><label id="m-primera-cuota"></label></strong>
@@ -144,7 +146,7 @@
         </div>
     </div>
     <div class="col-sm-12 col-md-3">
-        <small class="text-muted">Primer Pago</small>
+        <small class="text-muted">Mes Primer Pago</small>
         <input type="text" name="txtFechaPago" class="form-control primer-pago">    
     </div>
     
@@ -283,7 +285,7 @@
             "defaultDate": "{{contrato.fechaCreacion|date('Y-m-d')}}",
             "minDate": moment().format("YYYY-MM-DD"),
             "locale": {
-                "format": "YYYY-MM-DD",
+                "format": "YYYY-MM",
                 "applyLabel": "Apply",
                 "cancelLabel": "Cancel",
             }
@@ -377,7 +379,7 @@
     });
     
     //$("#chk-bono").bootstrapSwitch('state', $(this).prop('checked'));
-    $("#chk-bono").change(function(){
+    $(".chk-bono").change(function(){
         
         if($(this).prop( "checked" )){
             $('.primera-cuota').css("visibility", "visible");
@@ -386,7 +388,7 @@
                 "drops": "up",
                 "minDate": moment().add(1, 'months').format("YYYY-MM-DD"),
                 "locale": {
-                    "format": "YYYY-MM-DD",
+                    "format": "YYYY-MM",
                     "applyLabel": "Apply",
                     "cancelLabel": "Cancel",
                 }
@@ -402,7 +404,7 @@
                 "defaultDate": moment().format("YYYY-MM-DD"),
                 "minDate": moment().format("YYYY-MM-DD"),
                 "locale": {
-                    "format": "YYYY-MM-DD",
+                    "format": "YYYY-MM",
                     "applyLabel": "Apply",
                     "cancelLabel": "Cancel",
                 }

@@ -124,27 +124,29 @@
                 {{form_row(form.montoNivelDeuda,{'label':false,'attr':{'class':'form-control nivel-deuda','autocomplete':"ÑÖcompletes"}})}}
             </div>
             <div class="col-sm-12 col-md-3">
-                <small class="text-muted">Monto contrato</small>
-                {{form_row(form.MontoContrato,{'label':false,'attr':{'class':'form-control monto-contrato','required':true,'autocomplete':"ÑÖcompletes"}})}}
+                <small class="text-muted">Monto contrato *</small>
+                {{form_row(form.MontoContrato,{'label':false,'attr':{'class':'form-control monto-contrato number','required':true,'autocomplete':"ÑÖcompletes"}})}}
+                <strong><label id="m-monto-contrato"></label></strong>
             </div>
+            
             <div class="col-sm-12 col-md-3">
-                <small class="text-muted">Primera Cuota *</small>
+                <div class="row"><small class="text-muted">Primera Cuota *</small>
+        
+                    {{form_row(form.isAbono,{'label':false,'attr':{'class':' chk-bono'}})}}</div>
                 {{form_row(form.primeraCuota,{'label':false,'attr':{'class':'form-control primera-cuota number','required':true,'autocomplete':"ÑÖcompletes"}})}}
+                
+                <strong><label id="m-primera-cuota"></label></strong>
             </div>
+            
             <div class="col-sm-12 col-md-3">
-                <small class="text-muted">Fecha Primera Cuota *</small>
-      
-                {{form_row(form.fechaPrimeraCuota,{'label':false,'attr':{'class':'form-control datepicker','required':true,'autocomplete':"ÑÖcompletes"}})}}
-
-            </div>
-            <div class="col-sm-12 col-md-1">
                 <small class="text-muted">Cuotas restantes *</small>
-                {{form_row(form.cuotas,{'label':false,'attr':{'class':'form-control cuotas','autocomplete':"ÑÖcompletes"}})}}
+                {{form_row(form.cuotas,{'label':false,'attr':{'class':'form-control cuotas','required':true,'autocomplete':"ÑÖcompletes"}})}}
             </div>
-           
+            
             <div class="col-sm-12 col-md-3">
                 <small class="text-muted">Valor cuota *</small>
                 {{form_row(form.valorCuota,{'label':false,'attr':{'class':'form-control valor-cuota','required':true,'autocomplete':"ÑÖcompletes"}})}}
+                <strong><label id="m-valor-cuota"></label></strong>
             </div>
             
         
@@ -168,7 +170,10 @@
                     {% endfor %}
                 </div>
             </div>
-           
+            <div class="col-sm-12 col-md-3">
+                <small class="text-muted">Mes Primer Pago</small>
+                <input type="text" name="txtFechaPago" class="form-control primer-pago">    
+            </div>
         </div>
         <hr>
         <div class="card">
@@ -221,40 +226,41 @@
 
 <script>
 
-    $('.nivel-deuda').inputmask("9999999999",{ placeholder:" ",numericInput: true, removeMaskOnSubmit: true});
-    $('.valor-cuota').inputmask("9999999999",{numericInput: true,placeholder:" ", removeMaskOnSubmit: true});
-    $('.primera-cuota').inputmask("9999999999",{numericInput: true,placeholder:" ", removeMaskOnSubmit: true});
-    $('.monto-contrato').inputmask("9999999999",{numericInput: true,placeholder:" ", removeMaskOnSubmit: true});
-   
-
     $('.cuotas').change(function(){
         recalcula();
     });
     $('.monto-contrato').change(function(){
         recalcula();
+        $("#m-monto-contrato").html($.number( $(this).val(), 0, ',', '.' ));
     });
     $('.primera-cuota').change(function(){
         recalcula();
+        $("#m-primera-cuota").html($.number( $(this).val(), 0, ',', '.' ));
     });
     $('.interes').change(function(){
         recalcula();
     });
-    function recalcula(){
-        var _montoContrato=$('.monto-contrato').val().toString();
-        var _primeraCuota=$('.primera-cuota').val().toString();
+    function recalcula()
+        {
+            var _montoContrato=$('.monto-contrato').val();
+            var _primeraCuota=$('.primera-cuota').val();
+            console.log(_montoContrato);
+            console.log(_primeraCuota);
+            var montoContrato=parseInt( _montoContrato)-parseInt(_primeraCuota);
+            console.log(montoContrato);
+            var cuotas=parseInt($('.cuotas').val());
+            var interes=0;
+            var valorCuota=(montoContrato+(montoContrato/100*interes))/cuotas;
+            $('.valor-cuota').val(Math.round(valorCuota));
+            $("#m-valor-cuota").html($.number( $('.valor-cuota').val(), 0, ',', '.' ));
+        }
         
-        var montoContrato=parseInt( _montoContrato)-parseInt(_primeraCuota);
-        console.log(montoContrato);
-        var cuotas=parseInt($('.cuotas').val());
-        var interes=0;
-        var valorCuota=round((montoContrato)/cuotas, 'floor');
-        console.log(valorCuota);
-        $('.valor-cuota').val(valorCuota);
-    }
     $(".format-rut").rut();
-   
+    $("#m-monto-contrato").html($.number( $('.monto-contrato').val(), 0, ',', '.' ));
+    $("#m-primera-cuota").html($.number( $('.primera-cuota').val(), 0, ',', '.' ));
     
     $(document).ready(function(){
+        checkAbono();
         $('#controles').modal('show');
         $.ajax({
             url:"{{path('contrato_new_rol',{'id':contrato.id})}}",
@@ -271,6 +277,10 @@
                 $('.juzgado').val("");
             }
     
+        });
+        $(".number").inputmask({
+            mask: "9",
+            repeat:20,
         });
 
         $('.primer-pago').daterangepicker({
@@ -321,7 +331,6 @@
                 $('.juzgado').val("");
                 $(".btn-agregar").attr("disabled", false);
             }
-    
         });
     }
     function eliminarRol(id){
@@ -365,6 +374,45 @@
         $(".format-rut").focus();
         $('button').attr("disabled", false);
         return false;
+    }
+
+    $('.chk-bono').change(function(){
+        console.log('paso');
+        checkAbono();
+        recalcula();
+    });
+
+    function checkAbono(){
+        if($('.chk-bono').prop( "checked" )){
+            $('.primera-cuota').css("visibility", "visible");
+            $('.primer-pago').daterangepicker({
+                "singleDatePicker": true,
+                "drops": "up",
+                "minDate": moment().add(1, 'months').format("YYYY-MM-DD"),
+                "locale": {
+                    "format": "YYYY-MM",
+                    "applyLabel": "Apply",
+                    "cancelLabel": "Cancel",
+                }
+            }, function(start, end, label) {
+            });
+        }else{
+            $('.primera-cuota').css("visibility", "hidden");
+            $('.primera-cuota').val(0);
+            $('#m-primera-cuota').html("");
+            $('.primer-pago').daterangepicker({
+                "singleDatePicker": true,
+                "drops": "up",
+                "defaultDate": moment().format("YYYY-MM-DD"),
+                "minDate": moment().format("YYYY-MM-DD"),
+                "locale": {
+                    "format": "YYYY-MM",
+                    "applyLabel": "Apply",
+                    "cancelLabel": "Cancel",
+                }
+            }, function(start, end, label) {
+            });
+        }
     }
 </script>
 
