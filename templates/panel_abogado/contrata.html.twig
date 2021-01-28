@@ -382,10 +382,10 @@
         
         if($(this).prop( "checked" )){
             $('.primera-cuota').css("visibility", "visible");
-            $('.cuotas').html('Cuotas restantes *');
+            $('.t-cuotas').html('Cuotas restantes *');
             $('.t-valor-cuota').html('Valor Cuotas Restantes *');
             $('.t-mes-pago').html('Mes Segundo Pago');
-            $('.t-primer-pago').daterangepicker({
+            $('.primer-pago').daterangepicker({
                 "singleDatePicker": true,
                 "drops": "up",
                 "minDate": "{{contrato.fechaCreacion|date('Y-m-d')}}",
