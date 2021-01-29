@@ -290,26 +290,13 @@
             "defaultDate": "{{contrato.fechaPrimerPago|date('Y-m-d')}}",
             
             "locale": {
-                "format": "YYYY-MM-DD",
+                "format": "YYYY-MM",
                 "applyLabel": "Apply",
                 "cancelLabel": "Cancel",
             }
         }, function(start, end, label) {
         });
-        $('.datepicker').daterangepicker({
-            "singleDatePicker": true,
-            "drops": "up",
-            "defaultDate": "{{contrato.fechaPrimeraCuota|date('Y-m-d')}}",
-            
-            "locale": {
-                "format": "YYYY-MM-DD",
-            
-                "applyLabel": "Apply",
-                "cancelLabel": "Cancel",
-            }
-        }, function(start, end, label) {
-            
-        });
+        
     });
     function agregarRol(){
         $.ajax({
@@ -396,7 +383,7 @@
                 "defaultDate": "{{contrato.fechaPrimerPago|date('Y-m-d')}}",
                 
                 "locale": {
-                    "format": "YYYY-MM-DD",
+                    "format": "YYYY-MM",
                     "applyLabel": "Apply",
                     "cancelLabel": "Cancel",
                 }
@@ -415,7 +402,7 @@
                 "defaultDate": "{{contrato.fechaPrimerPago|date('Y-m-d')}}",
                
                 "locale": {
-                    "format": "YYYY-MM-DD",
+                    "format": "YYYY-MM",
                     "applyLabel": "Apply",
                     "cancelLabel": "Cancel",
                 }
@@ -423,6 +410,6 @@
             });
         }
     }
-    $('.primer-pago').inputmask("9999-99");
+    //$('.primer-pago').inputmask("9999-99");
 </script>
 
