@@ -423,18 +423,18 @@ class ContratoController extends AbstractController
             }
             for($i=0;$i<$countCuotas;$i++){
                 $cuota=new Cuota();
-
+                $i_aux=$i-1;
                 $cuota->setContrato($contrato);
                 $cuota->setNumero($numeroCuota);
 
-                $ts = mktime(0, 0, 0, date('m',$timePrimerPago) + $sumames+$i, 1,date('Y',$timePrimerPago));
+                $ts = mktime(0, 0, 0, date('m',$timePrimerPago) + $sumames+$i_aux, 1,date('Y',$timePrimerPago));
                 $dia=$diaPago;
                 if(date("n",$ts)==2){
                     if($dia==30){
-                        $dia=date("d",mktime(0,0,0,date('m',$timePrimerPago)+ $sumames+$i+1,1,date('Y',$timePrimerPago))-24);
+                        $dia=date("d",mktime(0,0,0,date('m',$timePrimerPago)+ $sumames+$i_aux+1,1,date('Y',$timePrimerPago))-24);
                     }
                 }
-                $fechaCuota=date("d-m-Y", mktime(0,0,0,date('m',$timePrimerPago) + $sumames+$i,$dia,date('Y',$timePrimerPago)));
+                $fechaCuota=date("d-m-Y", mktime(0,0,0,date('m',$timePrimerPago) + $sumames+$i_aux,$dia,date('Y',$timePrimerPago)));
                 $cuota->setFechaPago(new \DateTime($fechaCuota));
                 $cuota->setMonto($contrato->getValorCuota());
 
