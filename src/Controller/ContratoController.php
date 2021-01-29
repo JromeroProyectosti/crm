@@ -241,7 +241,7 @@ class ContratoController extends AbstractController
                 $entityManager->remove($detalleCuota);
                 $entityManager->flush();
             }
-
+            $contrato->setPdf(null);
             $entityManager->persist($contrato);
             $entityManager->flush();
 
@@ -268,6 +268,8 @@ class ContratoController extends AbstractController
             }
 
             $primerPago=date("Y-m-".$diaPago,strtotime($fechaPrimerPago->format('Y-m-d')));
+
+           
             $timePrimrePago=strtotime($primerPago);
 
             $timeFechaActual=strtotime(date("Y-m-d"));
@@ -277,10 +279,11 @@ class ContratoController extends AbstractController
 
                 $sumames=1;
             }
-            for($i=0;$i<=$countCuotas;$i++){
+            for($i=0;$i<$countCuotas;$i++){
                 $cuota=new Cuota();
          
-                $i_aux=$i-1;
+                $i_aux=$i;
+               
                 $cuota->setContrato($contrato);
                 $cuota->setNumero($numeroCuota);
 
@@ -291,7 +294,7 @@ class ContratoController extends AbstractController
                         $dia=date("d",mktime(0,0,0,date('m',$timePrimrePago)+ $sumames+$i_aux+1,1,date('Y',$timePrimrePago))-24);
                     }
                 }
-                $fechaCuota=date("d-m-Y", mktime(0,0,0,date('m',$timePrimrePago) + $sumames+$i_aux,$dia,date('Y',$timePrimrePago)));
+                $fechaCuota=date("Y-m-d", mktime(0,0,0,date('m',$timePrimrePago) + $sumames+$i_aux,$dia,date('Y',$timePrimrePago)));
                 $cuota->setFechaPago(new \DateTime($fechaCuota));
                 $cuota->setMonto($contrato->getValorCuota());
 
@@ -299,26 +302,9 @@ class ContratoController extends AbstractController
                 $entityManager->flush();
                 $numeroCuota++;
             }
-                        
-            $filename = sprintf('Contrato-'.$contrato->getId().'-%s.pdf',rand(0,9000));
-       
+
+             
            
-
-            $entityManager = $this->getDoctrine()->getManager();
-            $contrato->setPdf($filename);
-            $entityManager->persist($contrato);
-            $entityManager->flush();
-
-            $html = $this->renderView('contrato/print.html.twig', array(
-                'contrato' => $contrato,
-                'Titulo'=>"Contrato"
-            ));
-            
-            $snappy->generateFromHtml(
-                $html,
-                $this->getParameter('url_root'). $this->getParameter('pdf_contratos').$filename
-            );
-
             return $this->redirectToRoute('contrato_index');
         }
 
@@ -416,14 +402,15 @@ class ContratoController extends AbstractController
             $timePrimerPago=strtotime($primerPago);
 
             $timeFechaActual=strtotime(date("Y-m-d"));
-            echo $timeFechaActual."<br>".$timePrimerPago;
+
             if($timeFechaActual>=$timePrimerPago){
 
                 $sumames=1;
             }
             for($i=0;$i<$countCuotas;$i++){
                 $cuota=new Cuota();
-                $i_aux=$i-1;
+                $i_aux=$i;
+                
                 $cuota->setContrato($contrato);
                 $cuota->setNumero($numeroCuota);
 
@@ -434,7 +421,7 @@ class ContratoController extends AbstractController
                         $dia=date("d",mktime(0,0,0,date('m',$timePrimerPago)+ $sumames+$i_aux+1,1,date('Y',$timePrimerPago))-24);
                     }
                 }
-                $fechaCuota=date("d-m-Y", mktime(0,0,0,date('m',$timePrimerPago) + $sumames+$i_aux,$dia,date('Y',$timePrimerPago)));
+                $fechaCuota=date("Y-m-d", mktime(0,0,0,date('m',$timePrimerPago) + $sumames+$i_aux,$dia,date('Y',$timePrimerPago)));
                 $cuota->setFechaPago(new \DateTime($fechaCuota));
                 $cuota->setMonto($contrato->getValorCuota());
 
@@ -442,8 +429,7 @@ class ContratoController extends AbstractController
                 $entityManager->flush();
                 $numeroCuota++;
             }
-
-            return $this->redirectToRoute('contrato_index');
+         return $this->redirectToRoute('contrato_index');
         }
 
         return $this->render('contrato/finalizar.html.twig', [
