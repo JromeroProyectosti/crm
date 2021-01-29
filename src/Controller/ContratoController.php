@@ -237,7 +237,9 @@ class ContratoController extends AbstractController
 
             $detalleCuotas=$contrato->getDetalleCuotas();
             foreach($detalleCuotas as $detalleCuota){
-                $contrato->removeDetalleCuota($detalleCuota);
+               // $contrato->removeDetalleCuota($detalleCuota);
+                $entityManager->remove($detalleCuota);
+                $entityManager->flush();
             }
 
             $entityManager = $this->getDoctrine()->getManager();
