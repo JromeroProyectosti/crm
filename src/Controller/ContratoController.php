@@ -281,14 +281,14 @@ class ContratoController extends AbstractController
                 $cuota->setContrato($contrato);
                 $cuota->setNumero($numeroCuota);
 
-                $ts = mktime(0, 0, 0, date('m',$timeFechaActual) + $sumames+$i, 1,date('Y',$timeFechaActual));
-
+                $ts = mktime(0, 0, 0, date('m',$timePrimrePago) + $sumames+$i, 1,date('Y',$timePrimrePago));
+                $dia=$diaPago;
                 if(date("n",$ts)==2){
                     if($diaPago==30){
-                        $diaPago=date("d",mktime(0,0,0,date('m',$timeFechaActual)+ $sumames+$i+1,1,date('Y',$timeFechaActual))-24);
+                        $dia=date("d",mktime(0,0,0,date('m',$timePrimrePago)+ $sumames+$i+1,1,date('Y',$timePrimrePago))-24);
                     }
                 }
-                $fechaCuota=date("d-m-Y", mktime(0,0,0,date('m',$timeFechaActual) + $sumames+$i,$diaPago,date('Y',$timeFechaActual)));
+                $fechaCuota=date("d-m-Y", mktime(0,0,0,date('m',$timePrimrePago) + $sumames+$i,$dia,date('Y',$timePrimrePago)));
                 $cuota->setFechaPago(new \DateTime($fechaCuota));
                 $cuota->setMonto($contrato->getValorCuota());
 
@@ -305,7 +305,7 @@ class ContratoController extends AbstractController
             $contrato->setPdf($filename);
             $entityManager->persist($contrato);
             $entityManager->flush();
-            
+
             $html = $this->renderView('contrato/print.html.twig', array(
                 'contrato' => $contrato,
                 'Titulo'=>"Contrato"
@@ -424,14 +424,14 @@ class ContratoController extends AbstractController
                 $cuota->setContrato($contrato);
                 $cuota->setNumero($numeroCuota);
 
-                $ts = mktime(0, 0, 0, date('m',$timeFechaActual) + $sumames+$i, 1,date('Y',$timeFechaActual));
-
+                $ts = mktime(0, 0, 0, date('m',$timePrimrePago) + $sumames+$i, 1,date('Y',$timePrimrePago));
+                $dia=$diaPago;
                 if(date("n",$ts)==2){
-                    if($diaPago==30){
-                        $diaPago=date("d",mktime(0,0,0,date('m',$timeFechaActual)+ $sumames+$i+1,1,date('Y',$timeFechaActual))-24);
+                    if($dia==30){
+                        $dia=date("d",mktime(0,0,0,date('m',$timePrimrePago)+ $sumames+$i+1,1,date('Y',$timePrimrePago))-24);
                     }
                 }
-                $fechaCuota=date("d-m-Y", mktime(0,0,0,date('m',$timeFechaActual) + $sumames+$i,$diaPago,date('Y',$timeFechaActual)));
+                $fechaCuota=date("d-m-Y", mktime(0,0,0,date('m',$timePrimrePago) + $sumames+$i,$dia,date('Y',$timePrimrePago)));
                 $cuota->setFechaPago(new \DateTime($fechaCuota));
                 $cuota->setMonto($contrato->getValorCuota());
 
