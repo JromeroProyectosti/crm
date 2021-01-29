@@ -266,10 +266,13 @@ class ContratoController extends AbstractController
                 $entityManager->flush();
                 $numeroCuota++;
             }
-
             $primerPago=date("Y-m-".$diaPago,strtotime($fechaPrimerPago->format('Y-m-d')));
+            if(date("n",strtotime($fechaPrimerPago->format('Y-m-d')))==2){
+                if($diaPago==30)
+                    $primerPago=date("Y-m-28",strtotime($fechaPrimerPago->format('Y-m-d')));
 
-           
+            }
+         
             $timePrimrePago=strtotime($primerPago);
 
             $timeFechaActual=strtotime(date("Y-m-d"));
@@ -288,6 +291,7 @@ class ContratoController extends AbstractController
                 $cuota->setNumero($numeroCuota);
 
                 $ts = mktime(0, 0, 0, date('m',$timePrimrePago) + $sumames+$i_aux, 1,date('Y',$timePrimrePago));
+                
                 $dia=$diaPago;
                 if(date("n",$ts)==2){
                     if($diaPago==30){
@@ -397,8 +401,13 @@ class ContratoController extends AbstractController
                 $numeroCuota++;
             }
            
-            
             $primerPago=date("Y-m-".$diaPago,strtotime($fechaPrimerPago->format('Y-m-d')));
+            if(date("n",strtotime($fechaPrimerPago->format('Y-m-d')))==2){
+                if($diaPago==30)
+                    $primerPago=date("Y-m-28",strtotime($fechaPrimerPago->format('Y-m-d')));
+
+            }
+         
             $timePrimerPago=strtotime($primerPago);
 
             $timeFechaActual=strtotime(date("Y-m-d"));
