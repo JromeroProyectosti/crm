@@ -234,7 +234,7 @@ class ContratoController extends AbstractController
             $contrato->setDiaPago($request->request->get('chkDiasPago'));
             $contrato->setTramitador($usuarioRepository->find($request->request->get('cboTramitador')));
             $contrato->setFechaPrimerPago(new \DateTime(date($request->request->get('txtFechaPago')."-1 00:00:00")));
-
+            $entityManager = $this->getDoctrine()->getManager();
             $detalleCuotas=$contrato->getDetalleCuotas();
             foreach($detalleCuotas as $detalleCuota){
                // $contrato->removeDetalleCuota($detalleCuota);
@@ -242,7 +242,6 @@ class ContratoController extends AbstractController
                 $entityManager->flush();
             }
 
-            $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($contrato);
             $entityManager->flush();
 
@@ -272,25 +271,27 @@ class ContratoController extends AbstractController
             $timePrimrePago=strtotime($primerPago);
 
             $timeFechaActual=strtotime(date("Y-m-d"));
-
+           
+           
             if($timeFechaActual>=$timePrimrePago){
 
                 $sumames=1;
             }
-            for($i=0;$i<$countCuotas;$i++){
+            for($i=0;$i<=$countCuotas;$i++){
                 $cuota=new Cuota();
-
+         
+                $i_aux=$i-1;
                 $cuota->setContrato($contrato);
                 $cuota->setNumero($numeroCuota);
 
-                $ts = mktime(0, 0, 0, date('m',$timePrimrePago) + $sumames+$i, 1,date('Y',$timePrimrePago));
+                $ts = mktime(0, 0, 0, date('m',$timePrimrePago) + $sumames+$i_aux, 1,date('Y',$timePrimrePago));
                 $dia=$diaPago;
                 if(date("n",$ts)==2){
                     if($diaPago==30){
-                        $dia=date("d",mktime(0,0,0,date('m',$timePrimrePago)+ $sumames+$i+1,1,date('Y',$timePrimrePago))-24);
+                        $dia=date("d",mktime(0,0,0,date('m',$timePrimrePago)+ $sumames+$i_aux+1,1,date('Y',$timePrimrePago))-24);
                     }
                 }
-                $fechaCuota=date("d-m-Y", mktime(0,0,0,date('m',$timePrimrePago) + $sumames+$i,$dia,date('Y',$timePrimrePago)));
+                $fechaCuota=date("d-m-Y", mktime(0,0,0,date('m',$timePrimrePago) + $sumames+$i_aux,$dia,date('Y',$timePrimrePago)));
                 $cuota->setFechaPago(new \DateTime($fechaCuota));
                 $cuota->setMonto($contrato->getValorCuota());
 
@@ -298,7 +299,7 @@ class ContratoController extends AbstractController
                 $entityManager->flush();
                 $numeroCuota++;
             }
-            
+                        
             $filename = sprintf('Contrato-'.$contrato->getId().'-%s.pdf',rand(0,9000));
        
            
@@ -412,11 +413,11 @@ class ContratoController extends AbstractController
            
             
             $primerPago=date("Y-m-".$diaPago,strtotime($fechaPrimerPago->format('Y-m-d')));
-            $timePrimrePago=strtotime($primerPago);
+            $timePrimerPago=strtotime($primerPago);
 
             $timeFechaActual=strtotime(date("Y-m-d"));
-
-            if($timeFechaActual>=$timePrimrePago){
+            echo $timeFechaActual."<br>".$timePrimerPago;
+            if($timeFechaActual>=$timePrimerPago){
 
                 $sumames=1;
             }
@@ -426,14 +427,14 @@ class ContratoController extends AbstractController
                 $cuota->setContrato($contrato);
                 $cuota->setNumero($numeroCuota);
 
-                $ts = mktime(0, 0, 0, date('m',$timePrimrePago) + $sumames+$i, 1,date('Y',$timePrimrePago));
+                $ts = mktime(0, 0, 0, date('m',$timePrimerPago) + $sumames+$i, 1,date('Y',$timePrimerPago));
                 $dia=$diaPago;
                 if(date("n",$ts)==2){
                     if($dia==30){
-                        $dia=date("d",mktime(0,0,0,date('m',$timePrimrePago)+ $sumames+$i+1,1,date('Y',$timePrimrePago))-24);
+                        $dia=date("d",mktime(0,0,0,date('m',$timePrimerPago)+ $sumames+$i+1,1,date('Y',$timePrimerPago))-24);
                     }
                 }
-                $fechaCuota=date("d-m-Y", mktime(0,0,0,date('m',$timePrimrePago) + $sumames+$i,$dia,date('Y',$timePrimrePago)));
+                $fechaCuota=date("d-m-Y", mktime(0,0,0,date('m',$timePrimerPago) + $sumames+$i,$dia,date('Y',$timePrimerPago)));
                 $cuota->setFechaPago(new \DateTime($fechaCuota));
                 $cuota->setMonto($contrato->getValorCuota());
 
