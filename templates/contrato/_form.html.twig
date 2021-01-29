@@ -287,10 +287,10 @@
         $('.primer-pago').daterangepicker({
             "singleDatePicker": true,
             "drops": "up",
-            "defaultDate": "{{contrato.fechaPrimerPago|date('Y-m-d')}}",
-            
+            "startDate": "{{contrato.fechaPrimerPago|date('Y-m-d')}}",
+            "minDate":"{{contrato.fechaCreacion|date('Y-m-d')}}",
             "locale": {
-                "format": "YYYY-MM",
+                "format": "YYYY-MM-DD",
                 "applyLabel": "Apply",
                 "cancelLabel": "Cancel",
             }
@@ -380,10 +380,10 @@
             $('.primer-pago').daterangepicker({
                 "singleDatePicker": true,
                 "drops": "up",
-                "defaultDate": "{{contrato.fechaPrimerPago|date('Y-m-d')}}",
-                
+                "startDate": "{{contrato.fechaPrimerPago|date('Y-m-d')}}",
+                "minDate":"{{contrato.fechaCreacion|date('Y-m-d')}}",
                 "locale": {
-                    "format": "YYYY-MM",
+                    "format": "YYYY-MM-DD",
                     "applyLabel": "Apply",
                     "cancelLabel": "Cancel",
                 }
@@ -399,10 +399,10 @@
             $('.primer-pago').daterangepicker({
                 "singleDatePicker": true,
                 "drops": "up",
-                "defaultDate": "{{contrato.fechaPrimerPago|date('Y-m-d')}}",
-               
+                "startDate": "{{contrato.fechaPrimerPago|date('Y-m-d')}}",
+                "minDate":"{{contrato.fechaCreacion|date('Y-m-d')}}",
                 "locale": {
-                    "format": "YYYY-MM",
+                    "format": "YYYY-MM-DD",
                     "applyLabel": "Apply",
                     "cancelLabel": "Cancel",
                 }
@@ -410,6 +410,6 @@
             });
         }
     }
-    //$('.primer-pago').inputmask("9999-99");
+    $('.primer-pago').inputmask("9999-99");
 </script>
 
