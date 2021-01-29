@@ -245,14 +245,7 @@ class ContratoController extends AbstractController
             $entityManager->flush();
 
 
-            $filename = sprintf('Contrato-'.$contrato->getId().'-%s.pdf',rand(0,9000));
-       
            
-
-            $entityManager = $this->getDoctrine()->getManager();
-            $contrato->setPdf($filename);
-            $entityManager->persist($contrato);
-            $entityManager->flush();
 
             $countCuotas=$contrato->getCuotas();
             $fechaPrimerPago=$contrato->getFechaPrimerPago();
@@ -272,7 +265,7 @@ class ContratoController extends AbstractController
                 $entityManager->flush();
                 $numeroCuota++;
             }
-            
+
             $primerPago=date("Y-m-".$diaPago,strtotime($fechaPrimerPago->format('Y-m-d')));
             $timePrimrePago=strtotime($primerPago);
 
@@ -303,6 +296,15 @@ class ContratoController extends AbstractController
                 $entityManager->flush();
                 $numeroCuota++;
             }
+            
+            $filename = sprintf('Contrato-'.$contrato->getId().'-%s.pdf',rand(0,9000));
+       
+           
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $contrato->setPdf($filename);
+            $entityManager->persist($contrato);
+            $entityManager->flush();
             
             $html = $this->renderView('contrato/print.html.twig', array(
                 'contrato' => $contrato,
