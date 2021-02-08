@@ -5,7 +5,7 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     url_root: '%kernel.project_dir%/public'
-    url_web: 'http://localhost:80000'
+    url_web: 'http://crm.ejam.cl'
     pdf_contratos: '/build/contratos/pdf/'
     logos_empresa: '%kernel.project_dir%/public/build/img/empresas/'
     csv_importacion: '%kernel.project_dir%/public/build/csv/'

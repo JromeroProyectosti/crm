@@ -135,7 +135,35 @@ class ContratoController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
-    
+    /**
+     * @Route("/regenerapdfs", name="contrato_regenerapdfs", methods={"GET","POST"})
+     */
+    public function regenerapdfs(\Knp\Snappy\Pdf $snappy,ContratoRepository $contratoRepository): Response
+    {
+        $this->denyAccessUnlessGranted('edit','contrato');
+
+        $contratos=$contratoRepository->findBy(['pdf'=>null]);
+
+        foreach($contratos as $contrato){
+            $filename = sprintf('Contrato-'.$contrato->getId().'-%s.pdf',rand(0,9000));
+        
+            $html = $this->renderView('contrato/print.html.twig', array(
+                'contrato' => $contrato,
+                'Titulo'=>"Contrato"
+            ));
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $contrato->setPdf($filename);
+            $entityManager->persist($contrato);
+            $entityManager->flush();
+
+            $snappy->generateFromHtml(
+            $html,
+            $this->getParameter('url_root'). $this->getParameter('pdf_contratos').$filename
+            );
+        }
+        return $this->redirectToRoute('contrato_index');
+    }
     /**
      * @Route("/{id}", name="contrato_show", methods={"GET"})
      */
@@ -483,6 +511,8 @@ class ContratoController extends AbstractController
             $filename
         );
     }
+
+    
     /**
      * @Route("/{id}", name="contrato_delete", methods={"DELETE"})
      */
