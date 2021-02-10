@@ -18,7 +18,46 @@ class ContratoRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Contrato::class);
     }
-    public function findByPers($usuario=null,$empresa=null,$compania=null,$filtro=null,$agendador=null, $otros=null)
+    public function findByPers($usuario=null,$empresa=null,$compania=null,$filtro=null,$agendador=null, $otros=null, $deuda = false)
+    {
+        echo $usuario;
+
+        $query=$this->createQueryBuilder('c');
+        $query->join('c.agenda','a');
+        $query->join('a.cuenta','cu');
+        if(!is_null($empresa)){
+            
+            $query->andWhere('cu.empresa = '.$empresa);
+        }
+        if(!is_null($usuario)){
+            $query->andWhere('a.abogado = '.$usuario);
+        }
+        if(!is_null($agendador)){
+            
+            $query->andWhere('a.agendador = '.$agendador);
+        }
+        if(!is_null($filtro)){ 
+            $query->andWhere("(c.nombre like '%$filtro%')")
+         ;
+
+        }
+        if(!is_null($compania)){
+            $query->andWhere('a.cuenta = '.$compania);
+        }
+        if(!is_null($otros)){ 
+            $query->andWhere($otros)
+         ;
+
+        }
+        
+        return $query
+            ->orderBy('c.id', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    public function findByPersDeuda($usuario=null,$empresa=null,$compania=null,$filtro=null,$agendador=null, $otros=null)
     {
         echo $usuario;
 
@@ -55,6 +94,7 @@ class ContratoRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+
 
     // /**
     //  * @return Contrato[] Returns an array of Contrato objects

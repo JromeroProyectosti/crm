@@ -207,6 +207,11 @@ class Contrato
      */
     private $detalleCuotas;
 
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $fechaUltimoPago;
+
     
 
     public function __construct()
@@ -700,6 +705,18 @@ class Contrato
                 $detalleCuota->setContrato(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getFechaUltimoPago(): ?\DateTimeInterface
+    {
+        return $this->fechaUltimoPago;
+    }
+
+    public function setFechaUltimoPago(?\DateTimeInterface $fechaUltimoPago): self
+    {
+        $this->fechaUltimoPago = $fechaUltimoPago;
 
         return $this;
     }
