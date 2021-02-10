@@ -59,8 +59,8 @@ class PagoController extends AbstractController
             break;
             
             default:
-                $query=$contratoRepository->findByPers($user->getId(),null,$compania,$filtro,null,$fecha,true);
-                $companias=$cuentaRepository->findByPers($user->getId());
+                $query=$contratoRepository->findByPers(null,null,$compania,$filtro,null,$fecha,true);
+                $companias=$cuentaRepository->findByPers(null);
                 
             break;
         }
