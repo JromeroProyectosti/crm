@@ -1,0 +1,5 @@
+.env
+.env.local.php.pp
+vendor/
+var/
+public/
