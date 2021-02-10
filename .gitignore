@@ -3,3 +3,4 @@
 vendor/
 var/
 public/
+config/
