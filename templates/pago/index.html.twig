@@ -43,6 +43,8 @@
                         <th>{{ knp_pagination_sortable(contratos, 'Folio', 'id') }} {% if contratos.isSorted('id') %} <i class="fas fa-sort"></i>{% endif %}</th>
                         <th>{{ knp_pagination_sortable(contratos, 'Sucursal', 'sucursal') }} {% if contratos.isSorted('sucursal') %} <i class="fas fa-sort"></i>{% endif %}</th>
                         <th>{{ knp_pagination_sortable(contratos, 'Abogado', 'agenda.abogado') }} {% if contratos.isSorted('agenda.abogado') %} <i class="fas fa-sort"></i>{% endif %}</th>
+                        <th>{{ knp_pagination_sortable(contratos, 'Tramitador', 'agenda.tramitador') }} {% if contratos.isSorted('agenda.tramitador') %} <i class="fas fa-sort"></i>{% endif %}</th>
+                        
                         <th>{{ knp_pagination_sortable(contratos, 'Cliente', 'nombre') }} {% if contratos.isSorted('nombre') %} <i class="fas fa-sort"></i>{% endif %}</th>
                         <th>{{ knp_pagination_sortable(contratos, 'Rut', 'rut') }} {% if contratos.isSorted('rut') %} <i class="fas fa-sort"></i>{% endif %}</th>
                         <th>{{ knp_pagination_sortable(contratos, 'Fecha Contrato', 'fechaCreacion') }} {% if contratos.isSorted('fechaCreacion') %} <i class="fas fa-sort"></i>{% endif %}</th>
@@ -59,6 +61,7 @@
                         <td>{{ contrato.id }}</td>
                         <td>{{ contrato.sucursal}}</td>
                         <td>{{ contrato.agenda.abogado.nombre }}</td>
+                        <td>{{ contrato.agenda.tramitador.nombre }}</td>
                         <td>{{ contrato.nombre }}</td>
                         <td>{{ contrato.rut }}</td>
                         <td>{{ contrato.fechaCreacion|date('d-m-Y H:i') }}</td>
