@@ -21,11 +21,13 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 use Knp\Component\Pager\PaginatorInterface;
-
+/**
+ * @Route("/administrativo")
+ */
 class AdministrativoController extends AbstractController
 {
     /**
-     * @Route("/administrativo", name="administrativo")
+     * @Route("/", name="administrativo_index", methods={"GET"})
      */
     
     public function index(UsuarioRepository $usuarioRepository,
