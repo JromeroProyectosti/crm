@@ -248,8 +248,8 @@ class AdministradorCuentasController extends AbstractController
 
             $usuario->setTipoDocumento($tipoDocumento->find($request->request->get('cboTipoDocumento')));
 
-            $status=$this->getDoctrine()->getRepository(UsuarioStatus::class)->find($request->request->get('cboStatues'));
-            $usuario->setStatus($status);
+            //$status=$this->getDoctrine()->getRepository(UsuarioStatus::class)->find($request->request->get('cboStatues'));
+            //$usuario->setStatus($status);
             
 
             $usuarioCuentas=$usuario->getUsuarioCuentas();
