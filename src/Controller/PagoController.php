@@ -26,7 +26,7 @@ class PagoController extends AbstractController
     /**
      * @Route("/", name="pago_index", methods={"GET"})
      */
-    public function index(ContratoRepository $contratoRepository,PagoRepository $pagoRepository,PaginatorInterface $paginator,ModuloPerRepository $moduloPerRepository,Request $request,CuentaRepository $cuentaRepository): Response
+    public function index(ContratoRepository $contratoRepository, CuotaRepository $cuotaRepository,PagoRepository $pagoRepository,PaginatorInterface $paginator,ModuloPerRepository $moduloPerRepository,Request $request,CuentaRepository $cuentaRepository): Response
     {
         $this->denyAccessUnlessGranted('view','pago');
         $user=$this->getUser();
@@ -54,7 +54,8 @@ class PagoController extends AbstractController
             case 3:
             case 4:
             case 1:
-                $query=$contratoRepository->findByPers(null,$user->getEmpresaActual(),$compania,$filtro,null,$fecha,true);
+                //$query=$contratoRepository->findByPers(null,$user->getEmpresaActual(),$compania,$filtro,null,$fecha,true);
+                $query=$cuotaRepository->findVencimiento();
                 $companias=$cuentaRepository->findByPers(null,$user->getEmpresaActual());
             break;
             
@@ -66,14 +67,14 @@ class PagoController extends AbstractController
         }
         //$companias=$cuentaRepository->findByPers($user->getId());
         //$query=$contratoRepository->findAll();
-        $contratos=$paginator->paginate(
+        $cuotas=$paginator->paginate(
             $query, /* query NOT result */
             $request->query->getInt('page', 1), /*page number*/
             20 /*limit per page*/,
             array('defaultSortFieldName' => 'id', 'defaultSortDirection' => 'desc'));
         
         return $this->render('pago/index.html.twig', [
-            'contratos' => $contratos,
+            'cuotas' => $cuotas,
             'bFiltro'=>$filtro,
             'companias'=>$companias,
             'bCompania'=>$compania,

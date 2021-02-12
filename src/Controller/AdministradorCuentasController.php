@@ -242,8 +242,8 @@ class AdministradorCuentasController extends AbstractController
             
             $entityManager = $this->getDoctrine()->getManager();
 
-            $categoria=$this->getDoctrine()->getRepository(UsuarioCategoria::class)->find($request->request->get('cboUsuarioCategoria'));
-            $usuario->setCategoria($categoria);
+            //$categoria=$this->getDoctrine()->getRepository(UsuarioCategoria::class)->find($request->request->get('cboUsuarioCategoria'));
+            //$usuario->setCategoria($categoria);
 
 
             $usuario->setTipoDocumento($tipoDocumento->find($request->request->get('cboTipoDocumento')));

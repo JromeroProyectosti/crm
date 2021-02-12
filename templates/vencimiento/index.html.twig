@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Vencimiento index{% endblock %}
+
+{% block body %}
+    <h1>Vencimiento index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>ValMin</th>
+                <th>ValMax</th>
+                <th>Color</th>
+                <th>Icono</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for vencimiento in vencimientos %}
+            <tr>
+                <td>{{ vencimiento.id }}</td>
+                <td>{{ vencimiento.valMin }}</td>
+                <td>{{ vencimiento.valMax }}</td>
+                <td>{{ vencimiento.color }}</td>
+                <td>{{ vencimiento.icono }}</td>
+                <td>
+                    <a href="{{ path('vencimiento_show', {'id': vencimiento.id}) }}">show</a>
+                    <a href="{{ path('vencimiento_edit', {'id': vencimiento.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('vencimiento_new') }}">Create new</a>
+{% endblock %}

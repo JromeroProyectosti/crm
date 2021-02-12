@@ -20,7 +20,7 @@ class ContratoRepository extends ServiceEntityRepository
     }
     public function findByPers($usuario=null,$empresa=null,$compania=null,$filtro=null,$agendador=null, $otros=null, $deuda = false)
     {
-        echo $usuario;
+
 
         $query=$this->createQueryBuilder('c');
         $query->join('c.agenda','a');

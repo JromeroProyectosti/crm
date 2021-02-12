@@ -1,13 +1,20 @@
 <?php
 
 namespace App\Twig;
-
+use App\Entity\Vencimiento;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class AppExtension extends AbstractExtension
 {
+    protected $container;
+
+    public function __construct(ContainerInterface $container)
+    {
+        $this->container = $container;
+    }
     public function getFilters(): array
     {
         return [
@@ -23,6 +30,7 @@ class AppExtension extends AbstractExtension
         return [
             new TwigFunction('special_chars_func', [$this, 'decode_utf8']),
             new TwigFunction('suma_mes',[$this,'suma_mes']),
+            new TwigFunction('semaforo',[$this,'semaforo']),
         ];
     }
 
@@ -43,5 +51,51 @@ class AppExtension extends AbstractExtension
         }
         
         return date("d-m-Y", mktime(0,0,0,$mes+$suma,$dia,$anio));
+    }
+
+    public function semaforo($fecha){
+
+        $color="";
+        $icono="";
+        $inicio=strtotime($fecha);
+        $fin=strtotime(date("now"));
+        $dif=($fin-$inicio);
+        if($dif<0){
+            $dif=0;
+
+        }else{
+
+            $dif = round($dif/60/60/24);
+        }
+        $em=$this->container->get('doctrine');
+        $vencimientos=$em->getRepository(Vencimiento::class)->findAll();
+
+        
+        foreach($vencimientos as $vencimiento){
+            $statusMin=false;
+            $statusMax=false;
+
+            if(null != $vencimiento->getValMin()){
+                if($vencimiento->getValMin() <= $dif ){
+                    $statusMin=true;
+                }
+            }else{
+                $statusMin=true;
+            }
+            if(null != $vencimiento->getValMax()){
+                if($vencimiento->getValMax()>=$dif){
+                    $statusMax=true;
+                }
+            }else{
+                $statusMax=true;
+            }
+            if($statusMax && $statusMin){
+                $color = $vencimiento->getColor();
+                $icono= $vencimiento->getIcono();
+            }
+        }
+    
+        
+        return "<p class='$color' ><i class='$icono' ></i></p>";
     }
 }

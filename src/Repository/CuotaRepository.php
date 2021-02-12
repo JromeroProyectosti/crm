@@ -18,7 +18,16 @@ class CuotaRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Cuota::class);
     }
+    public function findVencimiento(){
+        $query=$this->createQueryBuilder('c');
+        $query->join('c.contrato','co');
+        $query->andWhere('c.monto>c.pagado or c.pagado is null');
+        $query->groupBy('c.contrato');
 
+        return $query->getQuery()
+            ->getResult()
+        ;
+    }
     // /**
     //  * @return Cuota[] Returns an array of Cuota objects
     //  */
