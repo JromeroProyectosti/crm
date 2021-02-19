@@ -34,7 +34,13 @@
                     <td>{{pago.cuentaCorriente.nombre}}</td>
                     <td>{{pago.pagoCanal.nombre}}</td>
                     <td>
-                        <a href="{{url_web}}{{img_pagos}}{{pago.comprobante}}" class="btn btn-primary"><i class="far fa-file-image"></i></a>
+                        <div class="btn-group" role="group" aria-label="Basic example">
+                            <a href="{{url_web}}{{img_pagos}}{{pago.comprobante}}" class="btn btn-primary"><i class="far fa-file-image"></i></a>
+                            {% if loop.last %}
+                                <a href="" class="btn btn-warning"><i class="fas fa-edit"></i></a>
+                                {{ include('pago/_delete_form.html.twig') }}
+                            {% endif %}
+                        </div>
                     </td>
                 </tr>
 

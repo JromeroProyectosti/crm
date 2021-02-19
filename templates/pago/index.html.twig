@@ -20,7 +20,7 @@
                         </select>
                     </div>
                     <div class="col-sm-12 col-md-3">
-                        <input type="text" class="form-control" name="bFiltro" placeholder="Nombre/Email/Telefono" value="">
+                        <input type="text" class="form-control" name="bFiltro" placeholder="Nombre/Rut" value="">
                     </div>
                     <div class="col-sm-12 col-md-3">
                         <input type="text" class="form-control" name="bFecha" id="bFecha"  value="">
@@ -48,7 +48,7 @@
                         <th>{{ knp_pagination_sortable(cuotas, 'Cliente', 'contrato.nombre') }} {% if cuotas.isSorted('contrato.nombre') %} <i class="fas fa-sort"></i>{% endif %}</th>
                         <th>{{ knp_pagination_sortable(cuotas, 'Rut', 'contrato.rut') }} {% if cuotas.isSorted('contrato.rut') %} <i class="fas fa-sort"></i>{% endif %}</th>
                         <th>{{ knp_pagination_sortable(cuotas, 'Fecha Contrato', 'contrato.fechaCreacion') }} {% if cuotas.isSorted('contrato.fechaCreacion') %} <i class="fas fa-sort"></i>{% endif %}</th>
-                        <th>{{ knp_pagination_sortable(cuotas, 'Fecha Vencimiento', 'fechaPago') }} {% if cuotas.isSorted('fechaPago') %} <i class="fas fa-sort"></i>{% endif %}</th>
+                        <th>{{ knp_pagination_sortable(cuotas, 'Vencimiento', 'fechaPago') }} {% if cuotas.isSorted('fechaPago') %} <i class="fas fa-sort"></i>{% endif %}</th>
                         <th>Último Pago</th>
                         <th><i class="fas fa-traffic-light"></i></th>
                         {% if sesion.getSesion.usuarioTipo.id in [1,4,8,7] %}
@@ -65,10 +65,11 @@
                         <td>{{ contrato.agenda.abogado.nombre }}</td>
                         <td>{{ contrato.tramitador.nombre }}</td>
                         <td>{{ contrato.nombre }}</td>
-                        <td>{{ contrato.rut }}</td>
+                        <td align="center">{{ contrato.rut }}</td>
                         <td>{{ contrato.fechaCreacion|date('d-m-Y H:i') }}</td>
                         <td>{{ cuota.fechaPago|date('d-m-Y') }}</td>
-                        <td>{{ contrato.fechaUltimoPago ? contrato.fechaUltimoPago|date('d-m-Y') : '' }}
+                        <td>{{ ultimoPago(contrato.id) ? ultimoPago(contrato.id) |date('d-m-Y') : '' }}
+                            
                         </td>
                         <td>
                             {{semaforo(cuota.fechaPago|date('Y-m-d'))|raw}}

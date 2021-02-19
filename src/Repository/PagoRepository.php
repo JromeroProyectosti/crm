@@ -32,6 +32,20 @@ class PagoRepository extends ServiceEntityRepository
         ;
     }
 
+    public function findUPByContrato($value)
+    {
+        return $this->createQueryBuilder('p')
+            ->join('p.pagoCuotas','pc')
+            ->join('pc.cuota','c')
+            ->andWhere('c.contrato = :val')
+            ->setParameter('val', $value)
+            ->orderBy('p.fechaPago', 'Desc')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult()
+
+        ;
+    }
     // /**
     //  * @return Pago[] Returns an array of Pago objects
     //  */

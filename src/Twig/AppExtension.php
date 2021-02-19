@@ -2,6 +2,7 @@
 
 namespace App\Twig;
 use App\Entity\Vencimiento;
+use App\Entity\Pago;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -31,6 +32,7 @@ class AppExtension extends AbstractExtension
             new TwigFunction('special_chars_func', [$this, 'decode_utf8']),
             new TwigFunction('suma_mes',[$this,'suma_mes']),
             new TwigFunction('semaforo',[$this,'semaforo']),
+            new TwigFunction('ultimoPago',[$this,'ultimoPago']),
         ];
     }
 
@@ -97,5 +99,14 @@ class AppExtension extends AbstractExtension
     
         
         return "<p class='$color' ><i class='$icono' ></i></p>";
+    }
+    public function ultimoPago($contrato){
+        $em=$this->container->get('doctrine');
+        $pago=$em->getRepository(Pago::class)->findUPByContrato($contrato);
+        $ultimoPago='';
+        if($pago){
+            $ultimoPago=$pago->getFechaPago();
+        }
+        return $ultimoPago;
     }
 }

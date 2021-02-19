@@ -53,20 +53,20 @@ class PagoController extends AbstractController
             $dateInicio=date('Y-m-d',mktime(0,0,0,date('m'),date('d'),date('Y'))-60*60*24*30);
             $dateFin=date('Y-m-d');
         }
-        $fecha="c.fechaCreacion between '$dateInicio' and '$dateFin 23:59:59'" ;
+        $fecha="co.fechaCreacion between '$dateInicio' and '$dateFin 23:59:59'" ;
       
         switch($user->getUsuarioTipo()->getId()){
             case 3:
             case 4:
             case 1:
                 //$query=$contratoRepository->findByPers(null,$user->getEmpresaActual(),$compania,$filtro,null,$fecha,true);
-                $query=$cuotaRepository->findVencimiento();
+                $query=$cuotaRepository->findVencimiento(null,null,null,$filtro,null,$fecha);
                 $companias=$cuentaRepository->findByPers(null,$user->getEmpresaActual());
             break;
             
             default:
                 //$query=$contratoRepository->findByPers(null,null,$compania,$filtro,null,$fecha,true);
-                $query=$cuotaRepository->findVencimiento();
+                $query=$cuotaRepository->findVencimiento(null,null,null,$filtro,null,$fecha);
                 $companias=$cuentaRepository->findByPers(null);
                 
             break;
@@ -150,7 +150,7 @@ class PagoController extends AbstractController
 
         return $this->render('pago/verpagos.html.twig', [
             'pagos' => $pagos,
-            'pagina'=>$pagina->getNombre()."/ Ingreso",
+            'pagina'=>"Ingreso ". $pagina->getNombre(),
             'contrato'=>$contrato,
         ]);
     }
@@ -165,7 +165,7 @@ class PagoController extends AbstractController
         $pagina=$moduloPerRepository->findOneByName('pago',$user->getEmpresaActual());
     
         return $this->render('pago/verpagos_show.html.twig', [
-            'pagina'=>$pagina->getNombre()."/ Detalle pagos",
+            'pagina'=>"Agregar ".$pagina->getNombre(),
             'contrato'=>$contrato,
         ]);
 
@@ -312,12 +312,17 @@ class PagoController extends AbstractController
      */
     public function delete(Request $request, Pago $pago): Response
     {
+        $this->denyAccessUnlessGranted('full','pago');
+        $user=$this->getUser();
         if ($this->isCsrfTokenValid('delete'.$pago->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($pago);
+            $pago->setUsuarioAnulacion($user);
+            $pago->setFechaAnulacion(new \DateTime(date("Y-m-d H:i")));
+            $pago->setAnulado(true);
+            $entityManager->persist($pago);
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('pago_index');
+        return $this->redirectToRoute('verpagos_index',['id'=>$contrato->getId()]);
     }
 }

@@ -93,6 +93,21 @@ class Pago
      */
     private $cuentaCorriente;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $anulado;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=usuario::class)
+     */
+    private $usuarioAnulacion;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $fechaAnulacion;
+
     public function __construct()
     {
         $this->pagoCuotas = new ArrayCollection();
@@ -286,6 +301,42 @@ class Pago
     public function setCuentaCorriente(?CuentaCorriente $cuentaCorriente): self
     {
         $this->cuentaCorriente = $cuentaCorriente;
+
+        return $this;
+    }
+
+    public function getAnulado(): ?bool
+    {
+        return $this->anulado;
+    }
+
+    public function setAnulado(?bool $anulado): self
+    {
+        $this->anulado = $anulado;
+
+        return $this;
+    }
+
+    public function getUsuarioAnulacion(): ?usuario
+    {
+        return $this->usuarioAnulacion;
+    }
+
+    public function setUsuarioAnulacion(?usuario $usuarioAnulacion): self
+    {
+        $this->usuarioAnulacion = $usuarioAnulacion;
+
+        return $this;
+    }
+
+    public function getFechaAnulacion(): ?\DateTimeInterface
+    {
+        return $this->fechaAnulacion;
+    }
+
+    public function setFechaAnulacion(?\DateTimeInterface $fechaAnulacion): self
+    {
+        $this->fechaAnulacion = $fechaAnulacion;
 
         return $this;
     }
