@@ -165,7 +165,7 @@ class PagoController extends AbstractController
         $pagina=$moduloPerRepository->findOneByName('pago',$user->getEmpresaActual());
     
         return $this->render('pago/verpagos_show.html.twig', [
-            'pagina'=>"Agregar ".$pagina->getNombre(),
+            'pagina'=>"Detalle ".$pagina->getNombre(),
             'contrato'=>$contrato,
         ]);
 
@@ -281,7 +281,7 @@ class PagoController extends AbstractController
         return $this->render('pago/new.html.twig', [
             'pago' => $pago,
             'contrato'=>$contrato,
-            'pagina'=>$pagina->getNombre()."/ Ingreso Pagos",
+            'pagina'=>"Agregar ".$pagina->getNombre(),
             'form' => $form->createView(),
         ]);
     }
