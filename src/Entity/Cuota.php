@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CuotaRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -57,6 +59,16 @@ class Cuota
      * @ORM\JoinColumn(nullable=false)
      */
     private $contrato;
+
+    /**
+     * @ORM\OneToMany(targetEntity=PagoCuotas::class, mappedBy="cuota")
+     */
+    private $pagoCuotas;
+
+    public function __construct()
+    {
+        $this->pagoCuotas = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -155,6 +167,36 @@ class Cuota
     public function setContrato(?Contrato $contrato): self
     {
         $this->contrato = $contrato;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PagoCuotas[]
+     */
+    public function getPagoCuotas(): Collection
+    {
+        return $this->pagoCuotas;
+    }
+
+    public function addPagoCuota(PagoCuotas $pagoCuota): self
+    {
+        if (!$this->pagoCuotas->contains($pagoCuota)) {
+            $this->pagoCuotas[] = $pagoCuota;
+            $pagoCuota->setCuota($this);
+        }
+
+        return $this;
+    }
+
+    public function removePagoCuota(PagoCuotas $pagoCuota): self
+    {
+        if ($this->pagoCuotas->removeElement($pagoCuota)) {
+            // set the owning side to null (unless already changed)
+            if ($pagoCuota->getCuota() === $this) {
+                $pagoCuota->setCuota(null);
+            }
+        }
 
         return $this;
     }

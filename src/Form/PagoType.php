@@ -6,6 +6,7 @@ use App\Entity\Pago;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 
 class PagoType extends AbstractType
 {
@@ -18,9 +19,11 @@ class PagoType extends AbstractType
             ->add('fechaPago')
             ->add('horaPago')
             ->add('fechaRegistro')
+            ->add('ncomprobante')
             ->add('pagoTipo')
             ->add('pagoCanal')
-            ->add('usuarioRegistro')
+            ->add('cuentaCorriente')
+            ->add('comprobante')
         ;
     }
 

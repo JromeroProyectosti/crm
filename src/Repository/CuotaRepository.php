@@ -28,6 +28,29 @@ class CuotaRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+
+    public function findOneByPrimeraVigente($contrato): ?Cuota
+    {
+        $query=$this->createQueryBuilder('c')
+        ->andWhere('c.contrato=:contra')
+        ->setParameter('contra', $contrato)
+        ->andWhere('c.monto>c.pagado or c.pagado is null')
+        ->setMaxResults(1);
+        return $query->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+    public function findOneByUltimaPagada($contrato): ?Cuota
+    {
+        $query=$this->createQueryBuilder('c')
+        ->andWhere('c.contrato=:contra')
+        ->setParameter('contra', $contrato)
+        ->orderBy('c.numero', 'Desc')
+        ->setMaxResults(1);
+        return $query->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
     // /**
     //  * @return Cuota[] Returns an array of Cuota objects
     //  */

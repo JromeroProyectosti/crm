@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\PagoRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -64,6 +66,38 @@ class Pago
      * @ORM\JoinColumn(nullable=false)
      */
     private $usuarioRegistro;
+
+    /**
+     * @ORM\Column(type="text")
+     */
+    private $comprobante;
+
+    /**
+     * @ORM\OneToMany(targetEntity=PagoCuotas::class, mappedBy="pago", orphanRemoval=true)
+     */
+    private $pagoCuotas;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $fechaIngreso;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $ncomprobante;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=CuentaCorriente::class)
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $cuentaCorriente;
+
+    public function __construct()
+    {
+        $this->pagoCuotas = new ArrayCollection();
+    }
+
 
     public function getId(): ?int
     {
@@ -177,4 +211,84 @@ class Pago
 
         return $this;
     }
+
+    public function getComprobante(): ?string
+    {
+        return $this->comprobante;
+    }
+
+    public function setComprobante(string $comprobante): self
+    {
+        $this->comprobante = $comprobante;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PagoCuotas[]
+     */
+    public function getPagoCuotas(): Collection
+    {
+        return $this->pagoCuotas;
+    }
+
+    public function addPagoCuota(PagoCuotas $pagoCuota): self
+    {
+        if (!$this->pagoCuotas->contains($pagoCuota)) {
+            $this->pagoCuotas[] = $pagoCuota;
+            $pagoCuota->setPago($this);
+        }
+
+        return $this;
+    }
+
+    public function removePagoCuota(PagoCuotas $pagoCuota): self
+    {
+        if ($this->pagoCuotas->removeElement($pagoCuota)) {
+            // set the owning side to null (unless already changed)
+            if ($pagoCuota->getPago() === $this) {
+                $pagoCuota->setPago(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getFechaIngreso(): ?\DateTimeInterface
+    {
+        return $this->fechaIngreso;
+    }
+
+    public function setFechaIngreso(?\DateTimeInterface $fechaIngreso): self
+    {
+        $this->fechaIngreso = $fechaIngreso;
+
+        return $this;
+    }
+
+    public function getNcomprobante(): ?string
+    {
+        return $this->ncomprobante;
+    }
+
+    public function setNcomprobante(string $ncomprobante): self
+    {
+        $this->ncomprobante = $ncomprobante;
+
+        return $this;
+    }
+
+    public function getCuentaCorriente(): ?CuentaCorriente
+    {
+        return $this->cuentaCorriente;
+    }
+
+    public function setCuentaCorriente(?CuentaCorriente $cuentaCorriente): self
+    {
+        $this->cuentaCorriente = $cuentaCorriente;
+
+        return $this;
+    }
+
+   
 }

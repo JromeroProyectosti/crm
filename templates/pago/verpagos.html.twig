@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Pago{% endblock %}
+
+{% block body %}
+<div class="card">
+    <div class="card-header">
+    </div>
+    <div class="card-body table-responsive p-0" style="height: 500px;">
+            
+        <table class="table table-head-fixed text-nowrap table-striped table-sm">
+            <thead>
+                <tr>
+                    <th>Monto Pagado</th>
+                    <th>Fecha Comprobante</th>
+                    <th>Fecha Ingreso</th>
+                    <th>N° Comprobante</th>
+                    <th>N° Boleta</th>
+                    <th>Tipo Deposito</th>
+                    <th>Cta. Cte.</th>
+                    <th>Canal</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for pago in pagos %}
+                <tr>
+                    <td>{{pago.monto|number_format(0,',','.')}}</td>
+                    <td>{{pago.fechaPago|date('Y-m-d')}} {{pago.horaPago|date('H:i')}}</td>
+                    <td>{{pago.fechaRegistro|date('Y-m-d')}}</td>
+                    <td>{{pago.ncomprobante}}</td>
+                    <td>{{pago.boleta}}</td>
+                    <td>{{pago.pagotipo.nombre}}</td>
+                    <td>{{pago.cuentaCorriente.nombre}}</td>
+                    <td>{{pago.pagoCanal.nombre}}</td>
+                    <td>
+                        <a href="{{url_web}}{{img_pagos}}{{pago.comprobante}}" class="btn btn-primary"><i class="far fa-file-image"></i></a>
+                    </td>
+                </tr>
+
+            {% endfor %}
+        </tbody>
+        </table>
+        </div>
+        <div class="card-footer">
+            <a href="{{path('pago_new',{'id':contrato.id})}}" class="btn btn-primary" >Ingresar pago</a>
+        </div>
+    </div>
+    
+{% endblock %}

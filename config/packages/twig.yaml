@@ -7,3 +7,4 @@ twig:
         url_root: '%url_root%'
         url_web: '%url_web%'
         pdf_contrato: '%pdf_contratos%'
+        img_pagos: '%img_pagos%'

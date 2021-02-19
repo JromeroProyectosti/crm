@@ -1,0 +1,105 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Pago{% endblock %}
+
+{% block body %}
+<div class="card">
+    <div class="card-header">
+        <h1>Folio: {{contrato.id}}</h1>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-12 col-md-4">
+                <small class="text-muted">Compañia</small><br>
+                <label>{{contrato.agenda.cuenta.nombre}}</label>
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <small class="text-muted">Sucursal</small><br>
+                <label>{{contrato.sucursal.nombre}}</label>
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <small class="text-muted">Estado</small><br>
+                <label>. </label>
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <small class="text-muted">Abogado</small><br>
+                <label>{{contrato.agenda.abogado.nombre}}</label>
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <small class="text-muted">Tramitador</small><br>
+                <label>{{contrato.tramitador.nombre}}</label>
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <small class="text-muted">Fecha Contrato</small><br>
+                <label>{{contrato.fechaCreacion|date('Y-m-d')}}</label>
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <small class="text-muted">Nombre Cliente</small><br>
+                <label>{{contrato.nombre}}</label>
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <small class="text-muted">Rut Cliente</small><br>
+                <label>{{contrato.rut}}</label>
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <small class="text-muted">Teléfono Cliente</small><br>
+                <label>{{contrato.telefono}}</label>
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <small class="text-muted">Teléfono Recado Cliente</small><br>
+                <label>{{contrato.telefonoRecado}}</label>
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <small class="text-muted">Correo Cliente</small><br>
+                <label>{{contrato.email}}</label>
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <small class="text-muted">Dirección Cliente</small><br>
+                <label>{{contrato.direccion}}</label>
+            </div>
+        </div>
+        <hr>
+        <h2>Detalle</h2>
+        <div class="col-sm-12 col-md-6">
+            <table class="table table-sm table-border">
+                <tr>
+                    <th>N° Cuota</th>
+                    <th>Fecha Vcto</th>
+
+                    <th>Valor Cuota</th>
+                    <th>Monto Pgdo</th>
+                    <th>Saldo</th>
+
+                </tr>
+
+                {% set total=0 %}
+                {% set total_pagado=0 %}
+                {% set total_deuda=0 %}
+            {% for cuota in contrato.detalleCuotas %}
+                <tr>
+                    <td>{{cuota.numero|number_format(0,",",".")}}</td>
+                    <td>{{cuota.fechaPago|date('Y-m-d')}}</td>
+                    <td>{{cuota.monto|number_format(0,",",".")}}</td>
+                    <td>{{cuota.pagado|number_format(0,",",".")}}</td>
+                    <td>{{(cuota.monto - cuota.pagado)|number_format(0,",",".")}}</td>
+                    {% set total = total + cuota.monto %}
+                    {% set total_pagado = total_pagado + cuota.pagado %}
+                    {% set total_deuda = total_deuda + (cuota.monto - cuota.pagado)%}
+                </tr>
+            {% endfor %}
+                <tr>
+                    <th colspan="2">Totales</th>
+                    <th>{{total|number_format(0,",",".")}}</th>
+                    <th>
+                        {{total_pagado|number_format(0,",",".")}}
+                    </th>
+                    <th>
+                        {{total_deuda|number_format(0,",",".")}}
+                    </th>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
