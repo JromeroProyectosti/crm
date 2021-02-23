@@ -105,7 +105,7 @@ class AppExtension extends AbstractExtension
         $pago=$em->getRepository(Pago::class)->findUPByContrato($contrato);
         $ultimoPago='';
         if($pago){
-            $ultimoPago=$pago->getFechaPago();
+            $ultimoPago=$pago->getFechaPago()->format('Y-m-d')." ".$pago->getHoraPago()->format('H:i');
         }
         return $ultimoPago;
     }

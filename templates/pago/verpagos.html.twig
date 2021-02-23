@@ -5,6 +5,7 @@
 {% block body %}
 <div class="card">
     <div class="card-header">
+        <h1>Folio: {{contrato.id}}</h1>
     </div>
     <div class="card-body table-responsive p-0" style="height: 500px;">
             
@@ -26,8 +27,8 @@
             {% for pago in pagos %}
                 <tr>
                     <td>{{pago.monto|number_format(0,',','.')}}</td>
-                    <td>{{pago.fechaPago|date('Y-m-d')}} {{pago.horaPago|date('H:i')}}</td>
-                    <td>{{pago.fechaRegistro|date('Y-m-d')}}</td>
+                    <td align="center">{{pago.fechaPago|date('Y-m-d')}} {{pago.horaPago|date('H:i')}}</td>
+                    <td align="center">{{pago.fechaRegistro|date('Y-m-d H:i')}}</td>
                     <td>{{pago.ncomprobante}}</td>
                     <td>{{pago.boleta}}</td>
                     <td>{{pago.pagotipo.nombre}}</td>
@@ -49,7 +50,7 @@
         </table>
         </div>
         <div class="card-footer">
-            <a href="{{path('pago_new',{'id':contrato.id})}}" class="btn btn-primary" >Ingresar pago</a>
+            <a href="{{path('pago_new',{'id':contrato.id})}}" class="btn btn-primary" >Agregar pago</a>
         </div>
     </div>
     

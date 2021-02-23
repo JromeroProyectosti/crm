@@ -13,12 +13,26 @@
                             <strong><label id="m-monto"></label></strong>
                         </div>
                         <div class="col-sm-12 col-md-4">
-                            <small class="text-muted">Fecha Comprobante</small>
-                            {{form_row(form.fechaPago,{'label':false,'attr':{'class':'form-control datetimepicker-pago'}})}}
+                            <small class="text-muted">Fecha Comprobante  </small>
+                            <div class="row">
+                                <div class="col-6">
+                                    
+                                    {{form_row(form.fechaPago,{'label':false,'attr':{'class':'form-control datetimepicker-pago'}})}}
+                                    <small align="center">Año-Mes-Dia</small> 
+                                </div>
+                                <div class="col-6">
+                                    
+                                    {{form_row(form.horaPago,{'label':false,'attr':{'class':'form-control '}})}}
+                                    <small align="center">Hora:Minutos</small>
+                                </div>
+                            </div>
+                            
                         </div>
                         <div class="col-sm-12 col-md-4">
                             <small class="text-muted">Fecha Ingreso Comprobante</small>
-                            {{form_row(form.fechaRegistro,{'label':false,'attr':{'class':'form-control datetimepicker-registro'}})}}
+                            <br>
+                            {{"now"|date('Y-m-d')}}
+                            {{form_row(form.fechaRegistro,{'label':false,'attr':{'class':'form-control datetimepicker-registro','style':'display:none'}})}}
                         </div>
                         <div class="col-sm-12 col-md-4">
                             <small class="text-muted">N° Comprobante</small>
@@ -44,7 +58,7 @@
                             <small class="text-muted">Observación</small>
                             {{form_row(form.observacion,{'label':false,'attr':{'class':'form-control'}})}}
                             {{form_row(form.comprobante,{'label':false,'attr':{'class':'form-control comprobante','style':'display:none'}})}}
-                            {{form_row(form.horaPago,{'label':false,'attr':{'class':'form-control ','style':'display:none'}})}}
+                            
                         </div>
                     </div> 
                 </div>

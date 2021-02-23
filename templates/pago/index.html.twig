@@ -20,7 +20,7 @@
                         </select>
                     </div>
                     <div class="col-sm-12 col-md-3">
-                        <input type="text" class="form-control" name="bFiltro" placeholder="Nombre/Rut" value="{{bFiltro}}">
+                        <input type="text" class="form-control" name="bFiltro" placeholder="Folio/Nombre/Rut" value="{{bFiltro}}">
                     </div>
                     <div class="col-sm-12 col-md-3">
                         <input type="text" class="form-control" name="bFecha" id="bFecha"  value="">
@@ -66,9 +66,9 @@
                         <td>{{ contrato.tramitador.nombre }}</td>
                         <td>{{ contrato.nombre }}</td>
                         <td align="center">{{ contrato.rut }}</td>
-                        <td>{{ contrato.fechaCreacion|date('d-m-Y H:i') }}</td>
-                        <td>{{ cuota.fechaPago|date('d-m-Y') }}</td>
-                        <td>{{ ultimoPago(contrato.id) ? ultimoPago(contrato.id) |date('d-m-Y') : '' }}
+                        <td align="center">{{ contrato.fechaCreacion|date('d-m-Y H:i') }}</td>
+                        <td align="center">{{ cuota.fechaPago|date('d-m-Y') }}</td>
+                        <td align="center">{{ ultimoPago(contrato.id) ? ultimoPago(contrato.id) |date('d-m-Y H:i') : '' }}
                             
                         </td>
                         <td>
