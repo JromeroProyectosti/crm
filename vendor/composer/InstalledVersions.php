@@ -19,7 +19,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => 'd27c2d199298a711ed814e7a4090fae51748207f',
+    'reference' => 'b31f6a25877c11ab727e2845215fe8873c46537b',
     'name' => '__root__',
   ),
   'versions' => 
@@ -31,7 +31,16 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => 'd27c2d199298a711ed814e7a4090fae51748207f',
+      'reference' => 'b31f6a25877c11ab727e2845215fe8873c46537b',
+    ),
+    'beberlei/doctrineextensions' => 
+    array (
+      'pretty_version' => 'v1.3.0',
+      'version' => '1.3.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '008f162f191584a6c37c03a803f718802ba9dd9a',
     ),
     'composer/package-versions-deprecated' => 
     array (

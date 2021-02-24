@@ -38,8 +38,12 @@
                         <div class="btn-group" role="group" aria-label="Basic example">
                             <a href="{{url_web}}{{img_pagos}}{{pago.comprobante}}" class="btn btn-primary"><i class="far fa-file-image"></i></a>
                             {% if loop.last %}
-                                <a href="" class="btn btn-warning"><i class="fas fa-edit"></i></a>
-                                {{ include('pago/_delete_form.html.twig') }}
+                                <a href="{{ path('pago_edit', {'id': pago.id}) }}" class="btn btn-warning"><i class="fas fa-edit"></i></a>
+                                <form method="post" action="{{ path('pago_delete', {'id': pago.id}) }}" onsubmit="return confirm('Estas seguro de eliminar este comprobante?');">
+                                    <input type="hidden" name="_method" value="DELETE">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ pago.id) }}">
+                                    <button class="btn btn-danger"><i class="fas fa-trash"></i></button>
+                                </form>
                             {% endif %}
                         </div>
                     </td>

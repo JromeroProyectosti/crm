@@ -58,6 +58,7 @@
                 </thead>
                 <tbody>
                 {% for cuota in cuotas %}
+              
                 {% set contrato = cuota.contrato %}
                     <tr>
                         <td>{{ contrato.id }}</td>
@@ -72,7 +73,7 @@
                             
                         </td>
                         <td>
-                            {{semaforo(cuota.fechaPago|date('Y-m-d'))|raw}}
+                           {{semaforo(cuota.fechaPago|date('Y-m-d'))|raw}}
                         </td>
                         
                         

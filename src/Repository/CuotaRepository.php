@@ -18,7 +18,7 @@ class CuotaRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Cuota::class);
     }
-    public function findVencimiento($usuario=null,$empresa=null,$compania=null,$filtro=null,$agendador=null, $otros=null){
+    public function findVencimiento($usuario=null,$empresa=null,$compania=null,$filtro=null,$tipoUsuario=null, $otros=null){
         $query=$this->createQueryBuilder('c');
         $query->join('c.contrato','co');
         $query->join('co.agenda','a');
@@ -30,13 +30,22 @@ class CuotaRepository extends ServiceEntityRepository
             
             $query->andWhere('cu.empresa = '.$empresa);
         }
-        if(!is_null($usuario)){
-            $query->andWhere('a.abogado = '.$usuario);
+        switch($tipoUsuario){
+            case 6://Abogado
+                if(!is_null($usuario)){
+                    $query->andWhere('a.abogado = '.$usuario)
+                    ->andWhere("DATEDIFF(now(),c.fechaPago)<=60");
+
+                }
+                break;
+            case 7://Tramitador
+                if(!is_null($usuario))
+                    $query->andWhere('c.tramitador = '.$usuario);
+                break;
+
         }
-        if(!is_null($agendador)){
-            
-            $query->andWhere('a.agendador = '.$agendador);
-        }
+        
+        
         if(!is_null($filtro)){ 
             $query->andWhere("(co.nombre like '%$filtro%' or co.rut like '%$filtro%')")
          ;
