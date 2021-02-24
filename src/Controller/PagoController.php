@@ -171,7 +171,7 @@ class PagoController extends AbstractController
             'bCompania'=>$compania,
             'dateInicio'=>$dateInicio,
             'dateFin'=>$dateFin,
-            'pagina'=>$pagina->getNombre(). " Finalizados",
+            'pagina'=>$pagina->getNombre(),
             'finalizado'=>true,
         ]);
     }
@@ -239,7 +239,7 @@ class PagoController extends AbstractController
             'bCompania'=>$compania,
             'dateInicio'=>$dateInicio,
             'dateFin'=>$dateFin,
-            'pagina'=>$pagina->getNombre(). " Resumen",
+            'pagina'=>$pagina->getNombre(),
         ]);
     }
     /**
