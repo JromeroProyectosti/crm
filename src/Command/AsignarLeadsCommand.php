@@ -43,7 +43,7 @@ class AsignarLeadsCommand extends Command
 
         //buscamos leads sin asignar::::
 
-        $agendas=$em->getRepository(Agenda::class)->findBy(['agendador'=>null]);
+        $agendas=$em->getRepository(Agenda::class)->findBy(['agendador'=>null,'estado'=>1]);
         foreach($agendas as $agenda){
             
             $io->note(sprintf(" agenda: %s",$agenda->getId()));
