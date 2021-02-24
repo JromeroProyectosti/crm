@@ -23,6 +23,8 @@ class CuotaRepository extends ServiceEntityRepository
         $query->join('c.contrato','co');
         $query->join('co.agenda','a');
         $query->join('a.cuenta','cu');
+        $query->andWhere('c.monto>c.pagado or c.pagado is null');
+
 
         if(!is_null($empresa)){
             
