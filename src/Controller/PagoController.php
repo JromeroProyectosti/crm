@@ -199,7 +199,7 @@ class PagoController extends AbstractController
             $dateInicio=$aux_fecha[0];
             $dateFin=$aux_fecha[1];
         }else{
-            $dateInicio=date('Y-m-d',mktime(0,0,0,date('m'),date('d'),date('Y'))-60*60*24*30);
+            $dateInicio=date('Y-m-d');
             $dateFin=date('Y-m-d');
         }
         $fecha="p.fechaRegistro between '$dateInicio' and '$dateFin 23:59:59'";
