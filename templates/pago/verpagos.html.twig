@@ -36,6 +36,7 @@
                     <td>{{pago.pagoCanal.nombre}}</td>
                     <td>
                         <div class="btn-group" role="group" aria-label="Basic example">
+                            <a href="{{path('pago_show',{'id':pago.id})}}" class="btn btn-success"><i class="fas fa-eye"></i></a>
                             <a href="{{url_web}}{{img_pagos}}{{pago.comprobante}}" class="btn btn-primary"><i class="far fa-file-image"></i></a>
                             {% if loop.last %}
                                 <a href="{{ path('pago_edit', {'id': pago.id}) }}" class="btn btn-warning"><i class="fas fa-edit"></i></a>

@@ -19,19 +19,19 @@
                             {% endfor %}
                         </select>
                     </div>
-                    <div class="col-sm-12 col-md-3">
-                        <input type="text" class="form-control" name="bFiltro" placeholder="Folio/Nombre/Rut" value="{{bFiltro}}">
+                    <div class="col-sm-12 col-md-2">
+                        <input type="text" class="form-control" name="bFolio"  placeholder="Folio" value="{{bFolio}}">
+                    </div>
+                    <div class="col-sm-12 col-md-2">
+                        <input type="text" class="form-control" name="bFiltro" placeholder="Nombre/Rut" value="{{bFiltro}}">
                     </div>
                     <div class="col-sm-12 col-md-3">
                         <input type="text" class="form-control" name="bFecha" id="bFecha"  value="">
                     </div>
-                    <div class="col-sm-12 col-md-3">
+                    <div class="col-sm-12 col-md-2">
                         <button class="btn btn-primary"><i class="fas fa-search"></i></button>
                     </div>
-                    <div class="col-sm-12 col-md-3">
-                        
-                    </div>
-    
+                   
                 </div>
                 </form>
         </div>
@@ -50,10 +50,13 @@
                         <th>{{ knp_pagination_sortable(cuotas, 'Fecha Contrato', 'contrato.fechaCreacion') }} {% if cuotas.isSorted('contrato.fechaCreacion') %} <i class="fas fa-sort"></i>{% endif %}</th>
                         <th>{{ knp_pagination_sortable(cuotas, 'Vencimiento', 'fechaPago') }} {% if cuotas.isSorted('fechaPago') %} <i class="fas fa-sort"></i>{% endif %}</th>
                         <th>Último Pago</th>
+                        {% if finalizado is null or not finalizado %}
+                            
                         <th><i class="fas fa-traffic-light"></i></th>
-                        {% if sesion.getSesion.usuarioTipo.id in [1,4,8,7] %}
-                        <th>Acciones</th>
+                        
+                        
                         {% endif %}
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -72,16 +75,22 @@
                         <td align="center">{{ ultimoPago(contrato.id) ? ultimoPago(contrato.id) |date('d-m-Y H:i') : '' }}
                             
                         </td>
+                        {{finalizado}}
+                        {% if finalizado is null or not finalizado %}
                         <td>
                            {{semaforo(cuota.fechaPago|date('Y-m-d'))|raw}}
                         </td>
-                        
-                        
                         <td>
 
                                 <a href="{{ path('verpagos_index', {'id': contrato.id}) }}" class="btn btn-primary btn-sm"><i class="far fa-plus-square"></i></a>
                                 <a href="{{ path('verpagos_view', {'id': contrato.id}) }}" class="btn btn-success btn-sm"><i class="fas fa-eye"></i></a>
                         </td>
+                        {% else %}
+                        <td>
+                            <a href="{{ path('verpagos_view', {'id': contrato.id}) }}" class="btn btn-success btn-sm"><i class="fas fa-eye"></i></a>
+          
+                        </td>
+                        {% endif %}
                         
                     </tr>
                 {% else %}

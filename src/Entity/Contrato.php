@@ -212,6 +212,11 @@ class Contrato
      */
     private $fechaUltimoPago;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $isFinalizado;
+
     
 
     public function __construct()
@@ -717,6 +722,18 @@ class Contrato
     public function setFechaUltimoPago(?\DateTimeInterface $fechaUltimoPago): self
     {
         $this->fechaUltimoPago = $fechaUltimoPago;
+
+        return $this;
+    }
+
+    public function getIsFinalizado(): ?bool
+    {
+        return $this->isFinalizado;
+    }
+
+    public function setIsFinalizado(?bool $isFinalizado): self
+    {
+        $this->isFinalizado = $isFinalizado;
 
         return $this;
     }

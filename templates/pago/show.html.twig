@@ -3,44 +3,79 @@
 {% block title %}Pago{% endblock %}
 
 {% block body %}
-    <h1>Pago</h1>
+<div class="row">
+    <div class="col-sm-12  col-md-8">
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ pago.id }}</td>
-            </tr>
-            <tr>
-                <th>Monto</th>
-                <td>{{ pago.monto }}</td>
-            </tr>
-            <tr>
-                <th>Boleta</th>
-                <td>{{ pago.boleta }}</td>
-            </tr>
-            <tr>
-                <th>Observacion</th>
-                <td>{{ pago.observacion }}</td>
-            </tr>
-            <tr>
-                <th>FechaPago</th>
-                <td>{{ pago.fechaPago ? pago.fechaPago|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>HoraPago</th>
-                <td>{{ pago.horaPago ? pago.horaPago|date('H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>FechaRegistro</th>
-                <td>{{ pago.fechaRegistro ? pago.fechaRegistro|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <a href="{{ path('pago_index') }}">back to list</a>
-
-    <a href="{{ path('pago_edit', {'id': pago.id}) }}">edit</a>
-
-    {{ include('pago/_delete_form.html.twig') }}
+        <div class="card">
+            <div class="card-body table-responsive pad">
+            
+        
+                <div class="row">
+                    <div class="col-sm-12 col-md-4">
+                        <small class="text-muted">Monto Pagado (*)</small>
+                        <br>
+                        {{pago.monto|number_format(0,",",".")}}
+                    </div>
+                    <div class="col-sm-12 col-md-4">
+                        <small class="text-muted">Fecha Comprobante (*)</small>
+                        <br>
+                        {{pago.fechaPago|date('Y-m-d H:i')}}
+                    </div>
+                    <div class="col-sm-12 col-md-4">
+                        <small class="text-muted">Fecha Ingreso Comprobante</small>
+                        <br>
+                        {{pago.fechaRegistro|date('Y-m-d H:i')}}
+                    </div>
+                    <div class="col-sm-12 col-md-4">
+                        <small class="text-muted">N° Comprobante</small>
+                        <br>
+                        {{pago.ncomprobante}}
+                        
+                    </div>
+                    <div class="col-sm-12 col-md-4">
+                        <small class="text-muted">N° Boleta</small>
+                        <br>
+                        {{pago.boleta}}
+                    
+                    </div>
+                    <div class="col-sm-12 col-md-4">
+                        <small class="text-muted">Tipo Deposito (*)</small>
+                        <br>
+                        {{pago.pagoTipo}}
+                        
+                    </div>
+                    <div class="col-sm-12 col-md-4">
+                        <small class="text-muted">Cta. Cte. (*)</small>
+                        <br>
+                        {{pago.cuentaCorriente}}
+                        
+                    </div>
+                    <div class="col-sm-12 col-md-4">
+                        <small class="text-muted">Canal (*)</small>
+                        <br>
+                        {{pago.pagoCanal}}
+                       
+                    </div>
+                    <div class="col-sm-12 col-md-12">
+                        <small class="text-muted">Observación</small>
+                        {{pago.observacion}}
+                       
+                        
+                    </div>
+                </div> 
+            </div>
+            {% if pago.comprobante is not empty %}
+            
+        
+                <div class="card">
+                    <div class="card-body table-responsive pad">
+                        <img src="{{url_web}}{{img_pagos}}{{pago.comprobante}}">
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        
+    </div>
+    
+</div>   
 {% endblock %}

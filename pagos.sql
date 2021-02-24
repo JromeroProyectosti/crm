@@ -12,3 +12,9 @@ ALTER TABLE pago ADD usuario_anulacion_id INT DEFAULT NULL, ADD anulado TINYINT(
 ALTER TABLE pago ADD CONSTRAINT FK_F4DF5F3EBAF036CE FOREIGN KEY (usuario_anulacion_id) REFERENCES usuario (id);
 CREATE INDEX IDX_F4DF5F3EBAF036CE ON pago (usuario_anulacion_id);
 
+ALTER TABLE contrato ADD is_finalizado TINYINT(1) DEFAULT NULL;
+
+Macarrona069
+
+
+ALTER TABLE `pago` CHANGE `boleta` `boleta` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL, CHANGE `ncomprobante` `ncomprobante` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL;

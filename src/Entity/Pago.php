@@ -37,7 +37,7 @@ class Pago
     private $monto;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $boleta;
 
@@ -83,7 +83,7 @@ class Pago
     private $fechaIngreso;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $ncomprobante;
 
@@ -160,7 +160,7 @@ class Pago
         return $this->boleta;
     }
 
-    public function setBoleta(string $boleta): self
+    public function setBoleta(?string $boleta): self
     {
         $this->boleta = $boleta;
 
@@ -286,7 +286,7 @@ class Pago
         return $this->ncomprobante;
     }
 
-    public function setNcomprobante(string $ncomprobante): self
+    public function setNcomprobante(?string $ncomprobante): self
     {
         $this->ncomprobante = $ncomprobante;
 
