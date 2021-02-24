@@ -165,12 +165,12 @@
             this.on("sendingmultiple", function() {
             // Gets triggered when the form is actually being sent.
             // Hide the success button or the complete form.
-            alert('sendingmultiple');
+
             });
             this.on("successmultiple", function(files, response) {
             // Gets triggered when the files have successfully been sent.
             // Redirect user or notify of success
-            alert('successmultiple');
+        
             });
             this.on("errormultiple", function(files, response) {
                 // Gets triggered when there was an error sending the files.
