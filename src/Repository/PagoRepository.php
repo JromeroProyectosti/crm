@@ -46,6 +46,43 @@ class PagoRepository extends ServiceEntityRepository
 
         ;
     }
+
+    public function findByPers($usuario=null,$empresa=null,$compania=null,$filtro=null,$otros=null){
+        $query=$this->createQueryBuilder('p');
+        $query->join('p.pagoCuotas','pc');
+        $query->join('pc.cuota','c');
+        $query->join('c.contrato','co');
+        $query->join('co.agenda','a');
+        $query->join('a.cuenta','cu');
+        if(!is_null($empresa)){
+            
+            $query->andWhere('cu.empresa = '.$empresa);
+        }
+        if(!is_null($usuario)){
+            
+            $query->andWhere('p.usuarioRegistro = '.$usuario);
+        }
+        if(!is_null($filtro)){ 
+            $query->andWhere("(co.nombre like '%$filtro%' or co.rut like '%$filtro%')")
+         ;
+
+        }
+        if(!is_null($compania)){
+            $query->andWhere('a.cuenta = '.$compania);
+        }
+        
+        if(!is_null($otros)){ 
+            $query->andWhere($otros)
+         ;
+
+        }
+
+
+        return $query->getQuery()
+            ->getResult()
+        ;
+
+    }
     // /**
     //  * @return Pago[] Returns an array of Pago objects
     //  */

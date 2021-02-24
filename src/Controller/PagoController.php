@@ -175,7 +175,73 @@ class PagoController extends AbstractController
             'finalizado'=>true,
         ]);
     }
-    
+
+    /**
+     * @Route("/resumen", name="pago_resumen", methods={"GET"})
+     */
+    public function resumen(ContratoRepository $contratoRepository, CuotaRepository $cuotaRepository,PagoRepository $pagoRepository,PaginatorInterface $paginator,ModuloPerRepository $moduloPerRepository,Request $request,CuentaRepository $cuentaRepository): Response
+    {
+
+        $this->denyAccessUnlessGranted('view','pago');
+        $user=$this->getUser();
+        $pagina=$moduloPerRepository->findOneByName('pago',$user->getEmpresaActual());
+        $filtro=null;
+        $folio=null;
+        $compania=null;
+        $otros='';
+        
+        
+        if(null !== $request->query->get('bCompania') && $request->query->get('bCompania')!=0){
+            $compania=$request->query->get('bCompania');
+        }
+        if(null !== $request->query->get('bFecha')){
+            $aux_fecha=explode(" - ",$request->query->get('bFecha'));
+            $dateInicio=$aux_fecha[0];
+            $dateFin=$aux_fecha[1];
+        }else{
+            $dateInicio=date('Y-m-d',mktime(0,0,0,date('m'),date('d'),date('Y'))-60*60*24*30);
+            $dateFin=date('Y-m-d');
+        }
+        $fecha="p.fechaRegistro between '$dateInicio' and '$dateFin 23:59:59'";
+      
+        switch($user->getUsuarioTipo()->getId()){
+            case 1://tramitador
+            case 3:
+            case 4:
+                $query=$pagoRepository->findByPers(null,null,null,$filtro,$fecha);
+                $companias=$cuentaRepository->findByPers(null,$user->getEmpresaActual());
+
+                break;
+            case 11://Administrativo
+                //$query=$contratoRepository->findByPers(null,$user->getEmpresaActual(),$compania,$filtro,null,$fecha,true);
+                $query=$pagoRepository->findByPers($user->getId(),null,null,$filtro,$fecha);
+                $companias=$cuentaRepository->findByPers(null,$user->getEmpresaActual());
+            break;
+            
+            default:
+                //$query=$contratoRepository->findByPers(null,null,$compania,$filtro,null,$fecha,true);
+                $query=$pagoRepository->findByPers($user->getId(),null,null,$filtro,$fecha);
+                $companias=$cuentaRepository->findByPers(null);
+                
+            break;
+        }
+        //$companias=$cuentaRepository->findByPers($user->getId());
+        //$query=$contratoRepository->findAll();
+        $pagos=$paginator->paginate(
+            $query, /* query NOT result */
+            $request->query->getInt('page', 1), /*page number*/
+            20 /*limit per page*/,
+            array('defaultSortFieldName' => 'id', 'defaultSortDirection' => 'desc'));
+        
+        return $this->render('pago/resumen.html.twig', [
+            'pagos' => $pagos,
+            'companias'=>$companias,
+            'bCompania'=>$compania,
+            'dateInicio'=>$dateInicio,
+            'dateFin'=>$dateFin,
+            'pagina'=>$pagina->getNombre(). " Resumen",
+        ]);
+    }
     /**
      * @Route("/upload", name="pago_upload", methods={"GET","POST"})
      */
@@ -269,7 +335,7 @@ class PagoController extends AbstractController
         $pago->setFechaRegistro(new \DateTime(date('Y-m-d H:i:s')));
         $pago->setUsuarioRegistro($user);
         $form = $this->createForm(PagoType::class, $pago);
-        $form->add('fechaRegistro',DateType::class,array('widget'=>'single_text','html5'=>false));
+       
         $form->add('fechaPago',DateType::class,array('widget'=>'single_text','html5'=>false));
         $form->handleRequest($request);
 
