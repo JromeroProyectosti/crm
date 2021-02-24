@@ -150,7 +150,7 @@ class ImportacionController extends AbstractController
                             $entityManager->persist($agenda);
                             $entityManager->flush();
 
-                            exec("/usr/local/bin/php  /home/fuicacl/public_html/crm/bin/console app:asignar-leads");
+                            exec("php  /var/www/html/crm/bin/console app:asignar-leads");
                             //exec("php  d:\htdocs\desarrollos_symfony\crm\bin\console app:asignar-leads");
 
                         }
