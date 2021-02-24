@@ -43,12 +43,12 @@ class AsignarLeadsCommand extends Command
 
         //buscamos leads sin asignar::::
 
-        $agendas=$em->getRepository(Agenda::class)->findBy(['agendador'=>null,'estado'=>1]);
+        $agendas=$em->getRepository(Agenda::class)->findBy(['agendador'=>null]);
         foreach($agendas as $agenda){
             
             $io->note(sprintf(" agenda: %s",$agenda->getId()));
             //seleccionamos la Cuenta de esta agenda y buscamos los agendadores disponibles
-            $agendadores=$em->getRepository(Usuario::class)->findByCuenta($agenda->getCuenta()->getId(),['usuarioTipo'=>5,'status'=>1]);
+            $agendadores=$em->getRepository(Usuario::class)->findByCuenta($agenda->getCuenta()->getId(),['usuarioTipo'=>5,'status'=>1,'estado'=>1]);
             $eliminar_asignaciones=true;
             foreach($agendadores as $agendador){
                 $leads=$agendador->getCategoria()->getNLeads();
