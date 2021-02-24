@@ -109,7 +109,7 @@ class PagoController extends AbstractController
     {
         $this->denyAccessUnlessGranted('view','pago');
         $user=$this->getUser();
-        $pagina=$moduloPerRepository->findOneByName('pago',$user->getEmpresaActual());
+        $pagina=$moduloPerRepository->findOneByName('pago_finalizado',$user->getEmpresaActual());
         $filtro=null;
         $folio=null;
         $compania=null;
@@ -184,7 +184,7 @@ class PagoController extends AbstractController
 
         $this->denyAccessUnlessGranted('view','pago');
         $user=$this->getUser();
-        $pagina=$moduloPerRepository->findOneByName('pago',$user->getEmpresaActual());
+        $pagina=$moduloPerRepository->findOneByName('pago_resumen',$user->getEmpresaActual());
         $filtro=null;
         $folio=null;
         $compania=null;
