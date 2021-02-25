@@ -58,25 +58,33 @@ class PagoController extends AbstractController
             $dateInicio=date('Y-m-d',mktime(0,0,0,date('m'),date('d'),date('Y'))-60*60*24*30);
             $dateFin=date('Y-m-d');
         }
-        $fecha="co.fechaCreacion between '$dateInicio' and '$dateFin 23:59:59' ".$otros. "  and (co.isFinalizado = false or co.isFinalizado is null)" ;
+        $fecha="co.fechaCreacion between '$dateInicio' and '$dateFin 23:59:59' ".$otros ;
       
         switch($user->getUsuarioTipo()->getId()){
+            case 1://tramitador
+            case 3:
+            case 4:
+            case 8:
+                $query=$cuotaRepository->findVencimiento(null,null,null,$filtro,null,true,$fecha);
+                $companias=$cuentaRepository->findByPers(null,$user->getEmpresaActual());
+                break;
             case 7://tramitador
-                $query=$cuotaRepository->findVencimiento($user->getId(),null,null,$filtro,7,$fecha);
+                $query=$cuotaRepository->findVencimiento($user->getId(),null,null,$filtro,7,true,$fecha);
                 $companias=$cuentaRepository->findByPers(null,$user->getEmpresaActual());
-
+                break;
             case 6: //abogado
-                $query=$cuotaRepository->findVencimiento($user->getId(),null,null,$filtro,6,$fecha);
+                $query=$cuotaRepository->findVencimiento($user->getId(),null,null,$filtro,6,true,$fecha);
                 $companias=$cuentaRepository->findByPers(null,$user->getEmpresaActual());
+                break;
             case 11://Administrativo
                 //$query=$contratoRepository->findByPers(null,$user->getEmpresaActual(),$compania,$filtro,null,$fecha,true);
-                $query=$cuotaRepository->findVencimiento(null,null,null,$filtro,null,$fecha);
+                $query=$cuotaRepository->findVencimiento(null,null,null,$filtro,null,true,$fecha);
                 $companias=$cuentaRepository->findByPers(null,$user->getEmpresaActual());
             break;
             
             default:
                 //$query=$contratoRepository->findByPers(null,null,$compania,$filtro,null,$fecha,true);
-                $query=$cuotaRepository->findVencimiento(null,null,null,$filtro,null,$fecha);
+                $query=$cuotaRepository->findVencimiento(null,null,null,$filtro,null,true,$fecha);
                 $companias=$cuentaRepository->findByPers(null);
                 
             break;
@@ -132,25 +140,34 @@ class PagoController extends AbstractController
             $dateInicio=date('Y-m-d',mktime(0,0,0,date('m'),date('d'),date('Y'))-60*60*24*30);
             $dateFin=date('Y-m-d');
         }
-        $fecha="co.fechaCreacion between '$dateInicio' and '$dateFin 23:59:59' ".$otros. " and co.isFinalizado=true" ;
+        $fecha="co.fechaCreacion between '$dateInicio' and '$dateFin 23:59:59' ".$otros ;
       
         switch($user->getUsuarioTipo()->getId()){
+            case 1://tramitador
+            case 3:
+            case 4:
+            case 8:
+                $query=$cuotaRepository->findVencimiento(null,null,null,$filtro,7,false,$fecha);
+                $companias=$cuentaRepository->findByPers(null,$user->getEmpresaActual());
+                break;
             case 7://tramitador
-                $query=$cuotaRepository->findVencimiento($user->getId(),null,null,$filtro,7,$fecha);
+                $query=$cuotaRepository->findVencimiento($user->getId(),null,null,$filtro,7,false,$fecha);
                 $companias=$cuentaRepository->findByPers(null,$user->getEmpresaActual());
-
+                break;
             case 6: //abogado
-                $query=$cuotaRepository->findVencimiento($user->getId(),null,null,$filtro,6,$fecha);
+                $query=$cuotaRepository->findVencimiento($user->getId(),null,null,$filtro,6,false,$fecha);
                 $companias=$cuentaRepository->findByPers(null,$user->getEmpresaActual());
+                break;
             case 11://Administrativo
                 //$query=$contratoRepository->findByPers(null,$user->getEmpresaActual(),$compania,$filtro,null,$fecha,true);
-                $query=$cuotaRepository->findVencimiento(null,null,null,$filtro,null,$fecha);
+                $query=$cuotaRepository->findVencimiento(null,null,null,$filtro,null,false,$fecha);
                 $companias=$cuentaRepository->findByPers(null,$user->getEmpresaActual());
-            break;
+
+                break;
             
             default:
                 //$query=$contratoRepository->findByPers(null,null,$compania,$filtro,null,$fecha,true);
-                $query=$cuotaRepository->findVencimiento(null,null,null,$filtro,null,$fecha);
+                $query=$cuotaRepository->findVencimiento($user->getId(),null,null,$filtro,null,false,$fecha);
                 $companias=$cuentaRepository->findByPers(null);
                 
             break;
@@ -208,6 +225,7 @@ class PagoController extends AbstractController
             case 1://tramitador
             case 3:
             case 4:
+            case 8:
                 $query=$pagoRepository->findByPers(null,null,null,$filtro,$fecha);
                 $companias=$cuentaRepository->findByPers(null,$user->getEmpresaActual());
 
@@ -216,7 +234,7 @@ class PagoController extends AbstractController
                 //$query=$contratoRepository->findByPers(null,$user->getEmpresaActual(),$compania,$filtro,null,$fecha,true);
                 $query=$pagoRepository->findByPers($user->getId(),null,null,$filtro,$fecha);
                 $companias=$cuentaRepository->findByPers(null,$user->getEmpresaActual());
-            break;
+             break;
             
             default:
                 //$query=$contratoRepository->findByPers(null,null,$compania,$filtro,null,$fecha,true);
@@ -322,7 +340,19 @@ class PagoController extends AbstractController
         ]);
 
     }
-    
+    /**
+     * @Route("/{id}/detallepagos", name="detallepagos_index", methods={"GET","POST"})
+     */
+    public function detallepagos(Request $request, Cuota $cuota,PagoRepository $pagoRepository,ModuloPerRepository $moduloPerRepository): Response
+    {
+        $pagoCuotas=$cuota->getPagoCuotas();
+
+        return $this->render('pago/detallepagos.html.twig', [
+            'pagocuotas' => $pagoCuotas,
+        ]);
+        
+
+    }
     /**
      * @Route("/{id}/new", name="pago_new", methods={"GET","POST"})
      */

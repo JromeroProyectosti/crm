@@ -32,38 +32,49 @@
         </div>
         <div class="card-body table-responsive p-0" style="height: 500px;">
         
+            <div class="col-md-6 col-sm-12">
+
+            
             <table class="table table-head-fixed text-nowrap table-striped table-sm">
                 <thead>
                     <tr>
-                        <th>{{ knp_pagination_sortable(pagos, 'Monto Pagado', 'pago.monto') }} {% if pagos.isSorted('pago.monto') %} <i class="fas fa-sort"></i>{% endif %}</th>
+                        <th></th>
                         <th>{{ knp_pagination_sortable(pagos, 'Fecha Comprobante', 'pago.fechaPago') }} {% if pagos.isSorted('pago.fechaPago') %} <i class="fas fa-sort"></i>{% endif %}</th>
                         <th>{{ knp_pagination_sortable(pagos, 'Fecha Ingreso', 'pago.fechaRegistro') }} {% if pagos.isSorted('pago.fechaRegistro') %} <i class="fas fa-sort"></i>{% endif %}</th>
+                        <th>{{ knp_pagination_sortable(pagos, 'Monto Pagado', 'pago.monto') }} {% if pagos.isSorted('pago.monto') %} <i class="fas fa-sort"></i>{% endif %}</th>
                         
                     </tr>
                 </thead>
                 <tbody>
                 {% set total=0 %}
+                {% set num=1 %}
                 {% for pago in pagos %}
               
                 
                     <tr>
-                        <td>${{ pago.monto|number_format(0, ',', '.') }}</td>
+
+                        <td>{{ num }}</td>
                         <td>{{ pago.fechaPago|date("Y-m-d H:i")}}</td>
                         <td>{{ pago.fechaRegistro|date("Y-m-d H:i") }}</td>
+                        <td align="right">${{ pago.monto|number_format(0, ',', '.') }}</td>
                         {% set total = total + pago.monto %}
+                        {% set num = num + 1 %}
                     </tr>
                 {% else %}
                     <tr>
-                        <td colspan="3">No hay contratos</td>
+                        <td colspan="4">No hay pagos</td>
                     </tr>
                 {% endfor %}
+                
+                    <tr>
+                    <td colspan="3" align="right">Total:</td>
+                    <td  align="right">
+                         <strong>${{ total|number_format(0,",",".") }}</strong>
+                    </td>
+                    </tr>
                 </tbody>
-                <tfoot>
-                    <th colspan="3">
-                        Total: ${{ total|number_format(0,",",".")}}
-                    </th>
-                </tfoot>
             </table>
+        </div>
         </div>
         <div class="card-footer">
             <div class="card-footer clearfix">

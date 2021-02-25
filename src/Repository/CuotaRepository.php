@@ -18,13 +18,17 @@ class CuotaRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Cuota::class);
     }
-    public function findVencimiento($usuario=null,$empresa=null,$compania=null,$filtro=null,$tipoUsuario=null, $otros=null){
+    public function findVencimiento($usuario=null,$empresa=null,$compania=null,$filtro=null,$tipoUsuario=null,$vigente=true, $otros=null){
         $query=$this->createQueryBuilder('c');
         $query->join('c.contrato','co');
         $query->join('co.agenda','a');
         $query->join('a.cuenta','cu');
-        $query->andWhere('c.monto>c.pagado or c.pagado is null');
-
+        if($vigente){
+            $query->andWhere('c.monto>c.pagado or c.pagado is null');
+        }else{
+            $query->andWhere(' co.isFinalizado=true');
+        }
+        
 
         if(!is_null($empresa)){
             
