@@ -95,7 +95,7 @@ class AsignarLeadsCommand extends Command
                 
                 }
                 //seleccionamos la Cuenta de esta agenda y buscamos los agendadores disponibles
-                $agendadores=$em->getRepository(Usuario::class)->findByCuenta($agenda->getCuenta()->getId(),['usuarioTipo'=>5,'status'=>1]);
+                $agendadores=$em->getRepository(Usuario::class)->findByCuenta($agenda->getCuenta()->getId(),['usuarioTipo'=>5,'status'=>1,'estado'=>1]);
                 $eliminar_asignaciones=true;
                 foreach($agendadores as $agendador){
                     $usuarioUsuariocategoria=new UsuarioUsuariocategoria();

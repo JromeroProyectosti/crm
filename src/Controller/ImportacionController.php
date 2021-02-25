@@ -133,7 +133,7 @@ class ImportacionController extends AbstractController
 
                             $campania=$datos[0];
                             $nombreCliente=$datos[1];
-                            $telefonoCliente=$datos[2];
+                            $telefonoCliente=$this->format_phone($datos[2]);
                             $emailCliente=$datos[3];
                             //$agendador=$datos[15];
                             $agenda=new Agenda();
@@ -293,7 +293,7 @@ class ImportacionController extends AbstractController
 
                             $campania=$datos[0];
                             $nombreCliente=$datos[1];
-                            $telefonoCliente=$datos[2];
+                            $telefonoCliente=$this->format_phone($datos[2]);
                             $emailCliente=$datos[3];
                             $usuario=$datos[4];
                             //$agendador=$datos[15];
@@ -399,5 +399,29 @@ class ImportacionController extends AbstractController
         }
 
         return $this->redirectToRoute('importacion_index');
+    }
+
+    public function format_phone($telefono){
+        $telefono=trim($telefono);
+
+        $largo=strlen($telefono);
+        if($largo>=9){
+            $pos=strpos($telefono,"+56");
+            if($pos!==false)
+            {
+                return $telefono;
+            }else{
+                return "+56".$telefono;
+            }
+        }else{
+            $pos=strpos($telefono,"+56");
+            if($pos!==false)
+            {
+                return $telefono;
+            }else{
+                return "+569".$telefono;
+            }
+        }
+
     }
 }
