@@ -304,8 +304,15 @@ class PagoController extends AbstractController
      */
     public function show(Pago $pago): Response
     {
+        $pagoCuotas=$pago->getPagoCuotas();
+        foreach($pagoCuotas as $pagoCuota){
+            $cuota=$pagoCuota->getCuota();
+            $contrato=$cuota->getContrato();
+        }
         return $this->render('pago/show.html.twig', [
             'pago' => $pago,
+            'contrato'=>$contrato,
+            'pagina'=>"Ver Pago",
         ]);
     }
     /**
@@ -393,8 +400,16 @@ class PagoController extends AbstractController
     /**
      * @Route("/{id}/edit", name="pago_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, Pago $pago,CuotaRepository $cuotaRepository,PagoCuotasRepository $pagoCuotasRepository): Response
+    public function edit(Request $request, Pago $pago,CuotaRepository $cuotaRepository,PagoCuotasRepository $pagoCuotasRepository,ModuloPerRepository $moduloPerRepository): Response
     {
+        $this->denyAccessUnlessGranted('view','pago');
+        $user=$this->getUser();
+        $pagina=$moduloPerRepository->findOneByName('pago',$user->getEmpresaActual());
+        $pagoCuotas=$pago->getPagoCuotas();
+        foreach($pagoCuotas as $pagoCuota){
+            $cuota=$pagoCuota->getCuota();
+            $contrato=$cuota->getContrato();
+        }
         $form = $this->createForm(PagoType::class, $pago);
         $form->add('fechaRegistro',DateType::class,array('widget'=>'single_text','html5'=>false));
         $form->add('fechaPago',DateType::class,array('widget'=>'single_text','html5'=>false));
@@ -424,7 +439,9 @@ class PagoController extends AbstractController
 
         return $this->render('pago/edit.html.twig', [
             'pago' => $pago,
+            'contrato'=>$contrato,
             'form' => $form->createView(),
+            'pagina'=>'Editar '.$pagina->getNombre(),
         ]);
     }
 

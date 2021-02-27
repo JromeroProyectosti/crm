@@ -242,19 +242,24 @@
         recalcula();
     });
     function recalcula()
-        {
-            var _montoContrato=$('.monto-contrato').val();
-            var _primeraCuota=$('.primera-cuota').val();
-            console.log(_montoContrato);
-            console.log(_primeraCuota);
-            var montoContrato=parseInt( _montoContrato)-parseInt(_primeraCuota);
-            console.log(montoContrato);
-            var cuotas=parseInt($('.cuotas').val());
-            var interes=0;
+    {
+        var _montoContrato=$('.monto-contrato').val();
+        var _primeraCuota=$('.primera-cuota').val();
+        console.log(_montoContrato);
+        console.log(_primeraCuota);
+        var montoContrato=parseInt( _montoContrato)-parseInt(_primeraCuota);
+        console.log(montoContrato);
+        var cuotas=parseInt($('.cuotas').val());
+        var interes=0;
+        if(cuotas < 1){
+            var valorCuota=0;
+        }else{
             var valorCuota=(montoContrato+(montoContrato/100*interes))/cuotas;
-            $('.valor-cuota').val(Math.round(valorCuota));
-            $("#m-valor-cuota").html($.number( $('.valor-cuota').val(), 0, ',', '.' ));
         }
+        
+        $('.valor-cuota').val(Math.round(valorCuota));
+        $("#m-valor-cuota").html($.number( $('.valor-cuota').val(), 0, ',', '.' ));
+    }
         
     $(".format-rut").rut();
     $("#m-monto-contrato").html($.number( $('.monto-contrato').val(), 0, ',', '.' ));

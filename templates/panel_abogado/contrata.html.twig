@@ -140,7 +140,7 @@
                 {% if contrato.diaPago == diasPago.dias %}
                             checked
                 {% endif %}
-                 value="{{diasPago.dias}}">{{diasPago.nombre}}
+                 value="{{diasPago.dias}}" required>{{diasPago.nombre}}
             </label>
             {% endfor %}
         </div>
@@ -261,7 +261,11 @@
         console.log(montoContrato);
         var cuotas=parseInt($('.cuotas').val());
         var interes=0;
-        var valorCuota=(montoContrato+(montoContrato/100*interes))/cuotas;
+        if(cuotas < 1){
+            var valorCuota=0;
+        }else{
+            var valorCuota=(montoContrato+(montoContrato/100*interes))/cuotas;
+        }
         $('.valor-cuota').val(Math.round(valorCuota));
         $("#m-valor-cuota").html($.number( $('.valor-cuota').val(), 0, ',', '.' ));
     }

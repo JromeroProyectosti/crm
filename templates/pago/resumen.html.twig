@@ -39,6 +39,7 @@
                 <thead>
                     <tr>
                         <th></th>
+                        <th>Colaborador</th>
                         <th>{{ knp_pagination_sortable(pagos, 'Fecha Comprobante', 'pago.fechaPago') }} {% if pagos.isSorted('pago.fechaPago') %} <i class="fas fa-sort"></i>{% endif %}</th>
                         <th>{{ knp_pagination_sortable(pagos, 'Fecha Ingreso', 'pago.fechaRegistro') }} {% if pagos.isSorted('pago.fechaRegistro') %} <i class="fas fa-sort"></i>{% endif %}</th>
                         <th>{{ knp_pagination_sortable(pagos, 'Monto Pagado', 'pago.monto') }} {% if pagos.isSorted('pago.monto') %} <i class="fas fa-sort"></i>{% endif %}</th>
@@ -54,6 +55,7 @@
                     <tr>
 
                         <td>{{ num }}</td>
+                        <td>{{pago.usuarioRegistro.nombre}}</td>
                         <td>{{ pago.fechaPago|date("Y-m-d H:i")}}</td>
                         <td>{{ pago.fechaRegistro|date("Y-m-d H:i") }}</td>
                         <td align="right">${{ pago.monto|number_format(0, ',', '.') }}</td>
@@ -62,12 +64,12 @@
                     </tr>
                 {% else %}
                     <tr>
-                        <td colspan="4">No hay pagos</td>
+                        <td colspan="5">No hay pagos</td>
                     </tr>
                 {% endfor %}
                 
                     <tr>
-                    <td colspan="3" align="right">Total:</td>
+                    <td colspan="4" align="right">Total:</td>
                     <td  align="right">
                          <strong>${{ total|number_format(0,",",".") }}</strong>
                     </td>

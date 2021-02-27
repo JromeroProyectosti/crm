@@ -3,6 +3,9 @@
         <div class="col-sm-12  col-md-8">
 
             <div class="card">
+                <div class="card-header">
+                    <h1>Folio: {{contrato.id}}</h1>
+                </div>
                 <div class="card-body table-responsive pad">
                 
             
@@ -71,7 +74,9 @@
                     </div>
                 {% endif %}
                 <div class="card-footer">
+                    {% if contrato.isFinalizado is null or not contrato.isFinalizado %}
                     <button class="btn btn-primary" type="submit">{{ button_label|default('Guardar') }}</button>
+                    {% endif %}
                 </div>
             </div>
             

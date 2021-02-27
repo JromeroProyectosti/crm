@@ -7,30 +7,30 @@
     <div class="card-header">
         <h1>Folio: {{contrato.id}}</h1>
     </div>
-    <div class="card-body table-responsive p-0" style="height: 500px;">
+    <div class="card-body table-responsive p-0" >
             
         <table class="table table-head-fixed text-nowrap table-striped table-sm">
             <thead>
                 <tr>
-                    <th>Monto Pagado</th>
-                    <th>Fecha Comprobante</th>
-                    <th>Fecha Ingreso</th>
-                    <th>N° Comprobante</th>
-                    <th>N° Boleta</th>
-                    <th>Tipo Deposito</th>
-                    <th>Cta. Cte.</th>
-                    <th>Canal</th>
-                    <th>Acciones</th>
+                    <th  align="center">Monto Pagado</th>
+                    <th align="center">Fecha Comprobante</th>
+                    <th align="center">Fecha Ingreso</th>
+                    <th  align="center">N° Comprobante</th>
+                    <th align="center">N° Boleta</th>
+                    <th align="center">Tipo Deposito</th>
+                    <th align="center">Cta. Cte.</th>
+                    <th align="center">Canal</th>
+                    <th align="center">Acciones</th>
                 </tr>
             </thead>
             <tbody>
             {% for pago in pagos %}
                 <tr>
-                    <td>{{pago.monto|number_format(0,',','.')}}</td>
+                    <td align="right">${{pago.monto|number_format(0,',','.')}}</td>
                     <td align="center">{{pago.fechaPago|date('Y-m-d')}} {{pago.horaPago|date('H:i')}}</td>
                     <td align="center">{{pago.fechaRegistro|date('Y-m-d H:i')}}</td>
-                    <td>{{pago.ncomprobante}}</td>
-                    <td>{{pago.boleta}}</td>
+                    <td align="right">{{pago.ncomprobante}}</td>
+                    <td align="right">{{pago.boleta}}</td>
                     <td>{{pago.pagotipo.nombre}}</td>
                     <td>{{pago.cuentaCorriente.nombre}}</td>
                     <td>{{pago.pagoCanal.nombre}}</td>
