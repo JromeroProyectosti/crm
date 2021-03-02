@@ -62,7 +62,9 @@ class AppExtension extends AbstractExtension
         $inicio=strtotime($fecha);
         $fin=strtotime(date("now"));
         $dif=($fin-$inicio);
+        echo "<br>fecha :".date("now");
         echo "<br>fecha :".$fecha;
+        echo "<br> inicio: $inicio - fin: $inicio";
         echo "<br>diferencia :".$dif;
         if($dif<0){
             $dif=0;
