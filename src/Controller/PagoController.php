@@ -58,7 +58,7 @@ class PagoController extends AbstractController
             $dateInicio=date('Y-m-d',mktime(0,0,0,date('m'),date('d'),date('Y'))-60*60*24*30);
             $dateFin=date('Y-m-d');
         }
-        $fecha="co.fechaCreacion between '$dateInicio' and '$dateFin 23:59:59' ".$otros ;
+        $fecha="c.fechaPago between '$dateInicio' and '$dateFin 23:59:59' ".$otros ;
       
         switch($user->getUsuarioTipo()->getId()){
             case 1://tramitador
