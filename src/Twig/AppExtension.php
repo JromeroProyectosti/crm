@@ -103,7 +103,7 @@ class AppExtension extends AbstractExtension
     public function ultimoPago($contrato){
         $em=$this->container->get('doctrine');
         $pago=$em->getRepository(Pago::class)->findUPByContrato($contrato);
-        $ultimoPago='';
+        $ultimoPago=false;
         if($pago){
             $ultimoPago=$pago->getFechaPago()->format('Y-m-d')." ".$pago->getHoraPago()->format('H:i');
         }

@@ -16,5 +16,6 @@ ALTER TABLE contrato ADD is_finalizado TINYINT(1) DEFAULT NULL;
 
 Macarrona069
 
+Macondofeliz17
 
 ALTER TABLE `pago` CHANGE `boleta` `boleta` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL, CHANGE `ncomprobante` `ncomprobante` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL;
