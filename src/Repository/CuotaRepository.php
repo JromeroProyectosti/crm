@@ -59,7 +59,7 @@ class CuotaRepository extends ServiceEntityRepository
             $query->andWhere('a.cuenta = '.$compania);
         }
         
-        if(!is_null($otros)){ 
+        if(!is_null($otros) && $otros!=''){ 
             $query->andWhere($otros)
          ;
 
