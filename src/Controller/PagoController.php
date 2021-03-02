@@ -64,7 +64,7 @@ class PagoController extends AbstractController
                 $dateFin=date('Y-m-d');
 
             }
-            $fecha="c.fechaPago between '$dateInicio' and '$dateFin 23:59:59' ".$otros;
+            //$fecha="c.fechaPago between '$dateInicio' and '$dateFin 23:59:59' ";
         }
       
         switch($user->getUsuarioTipo()->getId()){
