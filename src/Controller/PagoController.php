@@ -102,7 +102,7 @@ class PagoController extends AbstractController
             $query, /* query NOT result */
             $request->query->getInt('page', 1), /*page number*/
             20 /*limit per page*/,
-            array('defaultSortFieldName' => 'fechaPago', 'defaultSortDirection' => 'desc'));
+            array('defaultSortFieldName' => 'fechaPago', 'defaultSortDirection' => 'Asc'));
         
         return $this->render('pago/index.html.twig', [
             'cuotas' => $cuotas,
