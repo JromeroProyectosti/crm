@@ -40,6 +40,7 @@ class PagoController extends AbstractController
         $folio=null;
         $compania=null;
         $otros='';
+        $fecha='';
         if(null !== $request->query->get('bFolio') && $request->query->get('bFolio')!=''){
             $folio=$request->query->get('bFolio');
             $otros=" and co.id= $folio";
