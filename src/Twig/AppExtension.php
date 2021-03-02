@@ -62,13 +62,15 @@ class AppExtension extends AbstractExtension
         $inicio=strtotime($fecha);
         $fin=strtotime(date("now"));
         $dif=($fin-$inicio);
-        echo "diferencia :".$dif;
+        echo "<br>fecha :".$fecha;
+        echo "<br>diferencia :".$dif;
         if($dif<0){
             $dif=0;
         }else{
 
             $dif = round($dif/60/60/24);
         }
+        echo "<br>diferencia :".$dif;
         $em=$this->container->get('doctrine');
         $vencimientos=$em->getRepository(Vencimiento::class)->findAll();
 
