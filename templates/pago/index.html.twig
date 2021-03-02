@@ -20,10 +20,10 @@
                         </select>
                     </div>
                     <div class="col-sm-12 col-md-2">
-                        <input type="text" class="form-control" name="bFolio"  placeholder="Folio" value="{{bFolio}}">
+                        <input type="text" class="form-control bFolio" name="bFolio"  placeholder="Folio" value="{{bFolio}}">
                     </div>
                     <div class="col-sm-12 col-md-2">
-                        <input type="text" class="form-control" name="bFiltro" placeholder="Nombre/Rut" value="{{bFiltro}}">
+                        <input type="text" class="form-control bFiltro" name="bFiltro" placeholder="Nombre/Rut" value="{{bFiltro}}">
                     </div>
                     <div class="col-sm-12 col-md-3">
                         <input type="text" class="form-control" name="bFecha" id="bFecha"  value="" style="display: none;">
@@ -129,6 +129,12 @@
         }, function(start, end, label) {
         console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
         
+        });
+        $(".bFolio").onchange(function(){
+            $(".bFiltro").val('');
+        });
+        $(".bFiltro").onchange(function(){
+            $(".bFolio").val('');
         });
     </script>
 {% endblock %}
