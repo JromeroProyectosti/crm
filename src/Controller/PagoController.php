@@ -356,6 +356,7 @@ class PagoController extends AbstractController
      */
     public function show(Pago $pago): Response
     {
+        $this->denyAccessUnlessGranted('view','pago');
         $pagoCuotas=$pago->getPagoCuotas();
         foreach($pagoCuotas as $pagoCuota){
             $cuota=$pagoCuota->getCuota();
@@ -404,6 +405,7 @@ class PagoController extends AbstractController
      */
     public function detallepagos(Request $request, Cuota $cuota,PagoRepository $pagoRepository,ModuloPerRepository $moduloPerRepository): Response
     {
+        $this->denyAccessUnlessGranted('view','pago');
         $pagoCuotas=$cuota->getPagoCuotas();
 
         return $this->render('pago/detallepagos.html.twig', [
@@ -417,7 +419,7 @@ class PagoController extends AbstractController
      */
     public function new(Request $request,Contrato $contrato,CuotaRepository $cuotaRepository,PagoCuotasRepository $pagoCuotasRepository,ModuloPerRepository $moduloPerRepository): Response
     {
-        $this->denyAccessUnlessGranted('view','pago');
+        $this->denyAccessUnlessGranted('create','pago');
         $user=$this->getUser();
         $pagina=$moduloPerRepository->findOneByName('pago',$user->getEmpresaActual());
         $pago = new Pago();
@@ -454,7 +456,7 @@ class PagoController extends AbstractController
      */
     public function edit(Request $request, Pago $pago,CuotaRepository $cuotaRepository,PagoCuotasRepository $pagoCuotasRepository,ModuloPerRepository $moduloPerRepository): Response
     {
-        $this->denyAccessUnlessGranted('view','pago');
+        $this->denyAccessUnlessGranted('edit','pago');
         $user=$this->getUser();
         $pagina=$moduloPerRepository->findOneByName('pago',$user->getEmpresaActual());
         $pagoCuotas=$pago->getPagoCuotas();
