@@ -294,8 +294,8 @@ class PagoController extends AbstractController
             } else {
                 echo "¡Posible ataque de subida de ficheros!\n";
             }*/
-            
-            $imgInfo = getimagesize($_FILES['file']['tmp_name'][0]); 
+            $source=$_FILES['file']['tmp_name'][0];
+            $imgInfo = getimagesize($source); 
             $mime = $imgInfo['mime']; 
              
             // Creamos una imagen
