@@ -316,7 +316,7 @@ class PagoController extends AbstractController
                     $image = imagecreatefromjpeg($source); 
             } 
 
-            $quality=0;
+            $quality=100;
             if(filesize($_FILES['file']['tmp_name'][0])>1000000){
                 $quality=75;
             }
