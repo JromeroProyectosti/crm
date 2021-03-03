@@ -294,8 +294,11 @@ class PagoController extends AbstractController
             } else {
                 echo "¡Posible ataque de subida de ficheros!\n";
             }*/
+
+            echo filesize($_FILES['file']['tmp_name'][0]);
             $source=$_FILES['file']['tmp_name'][0];
             $imgInfo = getimagesize($source); 
+            
             $mime = $imgInfo['mime']; 
              
             // Creamos una imagen
@@ -312,9 +315,22 @@ class PagoController extends AbstractController
                 default: 
                     $image = imagecreatefromjpeg($source); 
             } 
-             
+
+            $quality=0;
+            if(filesize($_FILES['file']['tmp_name'][0])>1000000){
+                $quality=75;
+            }
+            if(filesize($_FILES['file']['tmp_name'][0])>2000000){
+                $quality=60;
+            }
+            if(filesize($_FILES['file']['tmp_name'][0])>3000000){
+                $quality=50;
+            }
+            if(filesize($_FILES['file']['tmp_name'][0])>4000000){
+                $quality=40;
+            }
             // Guardamos la imagen
-            imagejpeg($image, $fichero_subido, 75); 
+            imagejpeg($image, $fichero_subido, $quality); 
             /*
             $originalFilename = pathinfo($brochureFile->getClientOriginalName(), PATHINFO_FILENAME);
             // this is needed to safely include the file name as part of the URL
@@ -330,6 +346,7 @@ class PagoController extends AbstractController
             );
             */
         }
+
 
         return $this->redirectToRoute('pago_index');
     }
