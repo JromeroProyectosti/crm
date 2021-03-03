@@ -289,12 +289,32 @@ class PagoController extends AbstractController
             $fichero_subido = $this->getParameter('url_root').
             $this->getParameter('img_pagos') . basename($_FILES['file']['name'][0]);
             
-            if (move_uploaded_file($_FILES['file']['tmp_name'][0], $fichero_subido)) {
+           /* if (move_uploaded_file($_FILES['file']['tmp_name'][0], $fichero_subido)) {
                 echo "El fichero es válido y se subió con éxito.\n";
             } else {
                 echo "¡Posible ataque de subida de ficheros!\n";
-            }
+            }*/
             
+            $imgInfo = getimagesize($_FILES['file']['tmp_name'][0]); 
+            $mime = $imgInfo['mime']; 
+             
+            // Creamos una imagen
+            switch($mime){ 
+                case 'image/jpeg': 
+                    $image = imagecreatefromjpeg($source); 
+                    break; 
+                case 'image/png': 
+                    $image = imagecreatefrompng($source); 
+                    break; 
+                case 'image/gif': 
+                    $image = imagecreatefromgif($source); 
+                    break; 
+                default: 
+                    $image = imagecreatefromjpeg($source); 
+            } 
+             
+            // Guardamos la imagen
+            imagejpeg($image, $fichero_subido, 75); 
             /*
             $originalFilename = pathinfo($brochureFile->getClientOriginalName(), PATHINFO_FILENAME);
             // this is needed to safely include the file name as part of the URL
