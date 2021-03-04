@@ -272,7 +272,9 @@ class ContratoController extends AbstractController
             $contrato->setTramitador($usuarioRepository->find($request->request->get('cboTramitador')));
             $contrato->setFechaPrimerPago(new \DateTime(date($request->request->get('txtFechaPago')."-1 00:00:00")));
             $entityManager = $this->getDoctrine()->getManager();
-
+            $contrato->setPdf(null);
+            $entityManager->persist($contrato);
+            $entityManager->flush();
             if(!$tienePago){
                 $detalleCuotas=$contrato->getDetalleCuotas();
                 foreach($detalleCuotas as $detalleCuota){
@@ -280,9 +282,7 @@ class ContratoController extends AbstractController
                     $entityManager->remove($detalleCuota);
                     $entityManager->flush();
                 }
-                $contrato->setPdf(null);
-                $entityManager->persist($contrato);
-                $entityManager->flush();
+                
 
                 $countCuotas=$contrato->getCuotas();
                 $fechaPrimerPago=$contrato->getFechaPrimerPago();

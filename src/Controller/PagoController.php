@@ -7,7 +7,10 @@ use App\Entity\Usuario;
 use App\Entity\Cuota;
 use App\Entity\PagoCuotas;
 use App\Entity\Contrato;
+use App\Entity\Importacion;
 use App\Form\PagoType;
+use App\Form\ImportacionType;
+use App\Repository\ImportacionRepository;
 use App\Repository\ContratoRepository;
 use App\Repository\ContratoRolRepository;
 use App\Repository\PagoRepository;
@@ -15,7 +18,11 @@ use App\Repository\ModuloPerRepository;
 use App\Repository\CuotaRepository;
 use App\Repository\CuentaRepository;
 use App\Repository\PagoCuentasRepository;
+use App\Repository\PagoCanalRepository;
+use App\Repository\PagoTipoRepository;
+use App\Repository\CuentaCorrienteRepository;
 use App\Repository\PagoCuotasRepository;
+use App\Repository\UsuarioRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -48,7 +55,7 @@ class PagoController extends AbstractController
             $dateInicio=date('Y-m-d',mktime(0,0,0,date('m'),date('d'),date('Y'))-60*60*24*30);
             $dateFin=date('Y-m-d');
             $fecha=$otros;
-            
+
         }else{
             if(null !== $request->query->get('bFiltro') && $request->query->get('bFiltro')!=''){
                 $filtro=$request->query->get('bFiltro');
@@ -351,7 +358,181 @@ class PagoController extends AbstractController
 
         return $this->redirectToRoute('pago_index');
     }
-    
+    /**
+     * @Route("/genera_cuotas", name="pago_generacuotas", methods={"GET","POST"})
+     */
+    public function generaCuotas(CuotaRepository $cuotaRepository,ContratoRepository $contratoRepository): Response
+    {
+
+        $contratos=$contratoRepository->findAll();
+
+
+        foreach($contratos as $contrato){
+            $cuota=$cuotaRepository->findOneByUltimaPagada($contrato->getId());
+           
+            if(null == $cuota){
+                
+                
+                $entityManager = $this->getDoctrine()->getManager();
+
+             
+
+                $countCuotas=$contrato->getCuotas();
+                $fechaPrimerPago=$contrato->getFechaPrimerPago();
+                if($fechaPrimerPago){
+                    
+                    $diaPago=$contrato->getDiaPago();
+                    $sumames=0;
+                    $numeroCuota=1;
+                    $isAbono=$contrato->getIsAbono();
+                    if($isAbono){
+                        $cuota=new Cuota();
+
+                        $cuota->setContrato($contrato);
+                        $cuota->setNumero($numeroCuota);
+                        $cuota->setFechaPago($contrato->getFechaPrimeraCuota());
+                        $cuota->setMonto($contrato->getPrimeraCuota());
+
+                        $entityManager->persist($cuota);
+                        $entityManager->flush();
+                        $numeroCuota++;
+                    }
+                    $primerPago=date("Y-m-".$diaPago,strtotime($fechaPrimerPago->format('Y-m-d')));
+                    if(date("n",strtotime($fechaPrimerPago->format('Y-m-d')))==2){
+                        if($diaPago==30)
+                            $primerPago=date("Y-m-28",strtotime($fechaPrimerPago->format('Y-m-d')));
+
+                    }
+                
+                    $timePrimrePago=strtotime($primerPago);
+
+                    $timeFechaActual=strtotime(date("Y-m-d"));
+                
+                
+                    if($timeFechaActual>=$timePrimrePago){
+
+                        $sumames=1;
+                    }
+                    for($i=0;$i<$countCuotas;$i++){
+                        $cuota=new Cuota();
+                
+                        $i_aux=$i;
+                    
+                        $cuota->setContrato($contrato);
+                        $cuota->setNumero($numeroCuota);
+
+                        $ts = mktime(0, 0, 0, date('m',$timePrimrePago) + $sumames+$i_aux, 1,date('Y',$timePrimrePago));
+                        
+                        $dia=$diaPago;
+                        if(date("n",$ts)==2){
+                            if($diaPago==30){
+                                $dia=date("d",mktime(0,0,0,date('m',$timePrimrePago)+ $sumames+$i_aux+1,1,date('Y',$timePrimrePago))-24);
+                            }
+                        }
+                        $fechaCuota=date("Y-m-d", mktime(0,0,0,date('m',$timePrimrePago) + $sumames+$i_aux,$dia,date('Y',$timePrimrePago)));
+                        $cuota->setFechaPago(new \DateTime($fechaCuota));
+                        $cuota->setMonto($contrato->getValorCuota());
+
+                        $entityManager->persist($cuota);
+                        $entityManager->flush();
+                        $numeroCuota++;
+                    }
+                }
+            }
+        }
+        return $this->redirectToRoute('pago_index');
+    }
+    /**
+     * @Route("/cargar_pagos", name="pago_cargarpagos", methods={"GET","POST"})
+     */
+    public function cargarPagos(Request $request,
+                                PagoRepository $pagoRepository,
+                                PagoTipoRepository $pagoTipoRepository,
+                                CuentaCorrienteRepository $cuentaCorrienteRepository,
+                                PagoCanalRepository $pagoCanalRepository,
+                                CuotaRepository $cuotaRepository,
+                                PagoCuotasRepository $pagoCuotasRepository,
+                                ContratoRepository $contratoRepository,
+                                UsuarioRepository $usuarioRepository):Response
+    {
+        $user=$this->getUser();
+        $importacion = new Importacion();
+        $importacion->setFechaCarga(new \DateTime(date("Y-m-d H:i:s")));
+        $form = $this->createForm(ImportacionType::class, $importacion);
+        $form->add('cuenta');
+        $form->handleRequest($request);
+
+       if ($form->isSubmitted() && $form->isValid()) {
+
+            /** @var UploadedFile $brochureFile */
+            $brochureFile = $form->get('url')->getData();
+
+            // this condition is needed because the 'brochure' field is not required
+            // so the PDF file must be processed only when a file is uploaded
+            if ($brochureFile) {
+                $originalFilename = pathinfo($brochureFile->getClientOriginalName(), PATHINFO_FILENAME);
+                // this is needed to safely include the file name as part of the URL
+                $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()',$originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$brochureFile->guessExtension();
+
+                // Move the file to the directory where brochures are stored
+                try {
+                    $brochureFile->move(
+                        $this->getParameter('csv_importacion'),
+                        $newFilename
+                    );
+                    $importacion->setNombre($originalFilename);
+                    $importacion->setUrl($this->getParameter('csv_importacion').$newFilename);
+                    $importacion->setUsuarioCarga($usuarioRepository->find($user->getId()));
+                    $entityManager = $this->getDoctrine()->getManager();
+                    $entityManager->persist($importacion);
+                    $entityManager->flush();
+                    $fp = fopen($importacion->getUrl(), "r");
+                    $i=0;
+                    $paso=true;
+                    $mensajeError="";
+                  
+            
+            
+                    while (!feof($fp)){
+                        $linea = fgets($fp);
+                        $datos=explode(";",$linea);
+                        if ($i==0){
+                            $i++;
+                            continue;
+                        }
+                        $i++;
+                        
+                        if($datos[0]=="") break;
+
+                        $pago=new Pago();
+                        $pago->setPagoTipo($pagoTipoRepository->find($datos[1]));
+                        $pago->setPagoCanal($pagoCanalRepository->find($datos[2]));
+                        $pago->setMonto($datos[3]);
+                        $pago->setBoleta($datos[4]);
+                        $pago->setObservacion($datos[5]);
+                        $pago->setFechaPago(new \DateTime(date('Y-m-d',strtotime($datos[6]))));
+                        $pago->setHoraPago(new \DateTime(date('H:i',strtotime($datos[7]))));
+                        $pago->setFechaRegistro(new \DateTime(date('Y-m-d H:i',strtotime($datos[8]))));
+                        $pago->setCuentaCorriente($cuentaCorrienteRepository->find($datos[9]));
+                        $pago->setNcomprobante($datos[10]);
+                        $pago->setComprobante($datos[11]);
+                        $pago->setUsuarioRegistro($usuarioRepository->find($user->getId()));
+                        $entityManager->persist($pago);
+                        $entityManager->flush();
+
+                        $this->asociarPagos($contratoRepository->find($datos[0]),$cuotaRepository,$pagoCuotasRepository,$pago);
+                    }
+                } catch (FileException $e) {
+                }
+            }
+        }
+        return $this->render('pago/cargarpagos.html.twig', [
+            'importacion' => $importacion,
+            'form' => $form->createView(),
+            'pagina'=>"Cargar Pagos",
+        ]);
+    }
     /**
      * @Route("/{id}", name="pago_show", methods={"GET"})
      */
