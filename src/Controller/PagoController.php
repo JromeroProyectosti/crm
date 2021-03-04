@@ -48,6 +48,7 @@ class PagoController extends AbstractController
             $dateInicio=date('Y-m-d',mktime(0,0,0,date('m'),date('d'),date('Y'))-60*60*24*30);
             $dateFin=date('Y-m-d');
             $fecha=$otros;
+            
         }else{
             if(null !== $request->query->get('bFiltro') && $request->query->get('bFiltro')!=''){
                 $filtro=$request->query->get('bFiltro');

@@ -250,12 +250,21 @@ class ContratoController extends AbstractController
     {
         $this->denyAccessUnlessGranted('edit','contrato');
         $user=$this->getUser();
+
         $pagina=$moduloPerRepository->findOneByName('contrato',$user->getEmpresaActual());
         $juzgados=$juzgadoRepository->findAll();
         $form = $this->createForm(ContratoType::class, $contrato);
         $form->add('fechaPrimeraCuota',DateType::class,array('widget'=>'single_text','html5'=>false));
         $form->handleRequest($request);
-
+        //buscamos la primera cuota para sabes si tiene algun pago asociado:::
+        $cuota=$cuotaRepository->findOneByUltimaPagada($contrato->getId());
+    
+        $tienePago=false;
+        if(null != $cuota){
+            foreach( $cuota->getPagoCuotas() as $pago){
+                $tienePago=true;
+            }
+        }
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
             $contrato->setSucursal($sucursalRepository->find($request->request->get('cboSucursal')));
@@ -263,78 +272,77 @@ class ContratoController extends AbstractController
             $contrato->setTramitador($usuarioRepository->find($request->request->get('cboTramitador')));
             $contrato->setFechaPrimerPago(new \DateTime(date($request->request->get('txtFechaPago')."-1 00:00:00")));
             $entityManager = $this->getDoctrine()->getManager();
-            $detalleCuotas=$contrato->getDetalleCuotas();
-            foreach($detalleCuotas as $detalleCuota){
-               // $contrato->removeDetalleCuota($detalleCuota);
-                $entityManager->remove($detalleCuota);
-                $entityManager->flush();
-            }
-            $contrato->setPdf(null);
-            $entityManager->persist($contrato);
-            $entityManager->flush();
 
-
-           
-
-            $countCuotas=$contrato->getCuotas();
-            $fechaPrimerPago=$contrato->getFechaPrimerPago();
-            $diaPago=$contrato->getDiaPago();
-            $sumames=0;
-            $numeroCuota=1;
-            $isAbono=$contrato->getIsAbono();
-            if($isAbono){
-                $cuota=new Cuota();
-
-                $cuota->setContrato($contrato);
-                $cuota->setNumero($numeroCuota);
-                $cuota->setFechaPago($contrato->getFechaPrimeraCuota());
-                $cuota->setMonto($contrato->getPrimeraCuota());
-
-                $entityManager->persist($cuota);
-                $entityManager->flush();
-                $numeroCuota++;
-            }
-            $primerPago=date("Y-m-".$diaPago,strtotime($fechaPrimerPago->format('Y-m-d')));
-            if(date("n",strtotime($fechaPrimerPago->format('Y-m-d')))==2){
-                if($diaPago==30)
-                    $primerPago=date("Y-m-28",strtotime($fechaPrimerPago->format('Y-m-d')));
-
-            }
-         
-            $timePrimrePago=strtotime($primerPago);
-
-            $timeFechaActual=strtotime(date("Y-m-d"));
-           
-           
-            if($timeFechaActual>=$timePrimrePago){
-
-                $sumames=1;
-            }
-            for($i=0;$i<$countCuotas;$i++){
-                $cuota=new Cuota();
-         
-                $i_aux=$i;
-               
-                $cuota->setContrato($contrato);
-                $cuota->setNumero($numeroCuota);
-
-                $ts = mktime(0, 0, 0, date('m',$timePrimrePago) + $sumames+$i_aux, 1,date('Y',$timePrimrePago));
-                
-                $dia=$diaPago;
-                if(date("n",$ts)==2){
-                    if($diaPago==30){
-                        $dia=date("d",mktime(0,0,0,date('m',$timePrimrePago)+ $sumames+$i_aux+1,1,date('Y',$timePrimrePago))-24);
-                    }
+            if(!$tienePago){
+                $detalleCuotas=$contrato->getDetalleCuotas();
+                foreach($detalleCuotas as $detalleCuota){
+                // $contrato->removeDetalleCuota($detalleCuota);
+                    $entityManager->remove($detalleCuota);
+                    $entityManager->flush();
                 }
-                $fechaCuota=date("Y-m-d", mktime(0,0,0,date('m',$timePrimrePago) + $sumames+$i_aux,$dia,date('Y',$timePrimrePago)));
-                $cuota->setFechaPago(new \DateTime($fechaCuota));
-                $cuota->setMonto($contrato->getValorCuota());
-
-                $entityManager->persist($cuota);
+                $contrato->setPdf(null);
+                $entityManager->persist($contrato);
                 $entityManager->flush();
-                $numeroCuota++;
-            }
 
+                $countCuotas=$contrato->getCuotas();
+                $fechaPrimerPago=$contrato->getFechaPrimerPago();
+                $diaPago=$contrato->getDiaPago();
+                $sumames=0;
+                $numeroCuota=1;
+                $isAbono=$contrato->getIsAbono();
+                if($isAbono){
+                    $cuota=new Cuota();
+
+                    $cuota->setContrato($contrato);
+                    $cuota->setNumero($numeroCuota);
+                    $cuota->setFechaPago($contrato->getFechaPrimeraCuota());
+                    $cuota->setMonto($contrato->getPrimeraCuota());
+
+                    $entityManager->persist($cuota);
+                    $entityManager->flush();
+                    $numeroCuota++;
+                }
+                $primerPago=date("Y-m-".$diaPago,strtotime($fechaPrimerPago->format('Y-m-d')));
+                if(date("n",strtotime($fechaPrimerPago->format('Y-m-d')))==2){
+                    if($diaPago==30)
+                        $primerPago=date("Y-m-28",strtotime($fechaPrimerPago->format('Y-m-d')));
+
+                }
+            
+                $timePrimrePago=strtotime($primerPago);
+
+                $timeFechaActual=strtotime(date("Y-m-d"));
+            
+            
+                if($timeFechaActual>=$timePrimrePago){
+
+                    $sumames=1;
+                }
+                for($i=0;$i<$countCuotas;$i++){
+                    $cuota=new Cuota();
+            
+                    $i_aux=$i;
+                
+                    $cuota->setContrato($contrato);
+                    $cuota->setNumero($numeroCuota);
+
+                    $ts = mktime(0, 0, 0, date('m',$timePrimrePago) + $sumames+$i_aux, 1,date('Y',$timePrimrePago));
+                    
+                    $dia=$diaPago;
+                    if(date("n",$ts)==2){
+                        if($diaPago==30){
+                            $dia=date("d",mktime(0,0,0,date('m',$timePrimrePago)+ $sumames+$i_aux+1,1,date('Y',$timePrimrePago))-24);
+                        }
+                    }
+                    $fechaCuota=date("Y-m-d", mktime(0,0,0,date('m',$timePrimrePago) + $sumames+$i_aux,$dia,date('Y',$timePrimrePago)));
+                    $cuota->setFechaPago(new \DateTime($fechaCuota));
+                    $cuota->setMonto($contrato->getValorCuota());
+
+                    $entityManager->persist($cuota);
+                    $entityManager->flush();
+                    $numeroCuota++;
+                }
+            }
              
            
             return $this->redirectToRoute('contrato_index');
@@ -342,6 +350,7 @@ class ContratoController extends AbstractController
 
         return $this->render('contrato/edit.html.twig', [
             'contrato' => $contrato,
+            'tienePago'=>$tienePago,
             'agenda'=>$contrato->getAgenda(),
             'form' => $form->createView(),
             'juzgados'=>$juzgados,
