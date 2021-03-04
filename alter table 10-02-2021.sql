@@ -8,3 +8,5 @@ ALTER TABLE pago ADD CONSTRAINT FK_F4DF5F3E1EEFD20 FOREIGN KEY (usuario_registro
 ALTER TABLE pago_canal ADD CONSTRAINT FK_23705BC1521E1991 FOREIGN KEY (empresa_id) REFERENCES empresa (id);
 ALTER TABLE pago_tipo ADD CONSTRAINT FK_567222FB521E1991 FOREIGN KEY (empresa_id) REFERENCES empresa (id);
 ALTER TABLE contrato ADD fecha_ultimo_pago DATE DEFAULT NULL;
+
+INSERT INTO `usuario_tipo` (`id`, `nombre`, `orden`, `fijar`, `nombre_interno`, `menu_cabezera_id`, `empresa_id`) VALUES (NULL, 'Cobradores', NULL, '1', 'Cobradores', NULL, NULL);
