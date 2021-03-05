@@ -482,6 +482,7 @@ class ContratoController extends AbstractController
             'contrato' => $contrato,
             'agenda'=> $contrato->getAgenda(),
             'form' => $form->createView(),
+            'tienePago'=>false,
             'juzgados'=>$juzgados,
             'pagina'=>"Revise los datos para finalizar",
             'tramitadores'=>$usuarioRepository->findByCuenta($contrato->getAgenda()->getCuenta()->getId(),['usuarioTipo'=>7]),
