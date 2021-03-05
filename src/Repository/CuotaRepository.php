@@ -45,7 +45,7 @@ class CuotaRepository extends ServiceEntityRepository
                 break;
             case 7://Tramitador
                 if(!is_null($usuario))
-                    $query->andWhere('c.tramitador = '.$usuario);
+                    $query->andWhere('co.tramitador = '.$usuario);
                 break;
 
         }
