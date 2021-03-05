@@ -38,7 +38,8 @@ class CuotaRepository extends ServiceEntityRepository
             case 6://Abogado
                 if(!is_null($usuario)){
                     $query->andWhere('a.abogado = '.$usuario)
-                    ->andWhere("DATEDIFF(now(),c.fechaPago)<=60");
+                    ->andWhere("DATEDIFF(now(),c.fechaPago)<=30")
+                    ->andWhere("c.numero=1");
 
                 }
                 break;
