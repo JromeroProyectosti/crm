@@ -80,6 +80,7 @@ class PagoController extends AbstractController
             case 3:
             case 4:
             case 8:
+            case 12:
                 $query=$cuotaRepository->findVencimiento(null,null,null,$filtro,null,true,$fecha);
                 $companias=$cuentaRepository->findByPers(null,$user->getEmpresaActual());
                 break;
@@ -170,6 +171,7 @@ class PagoController extends AbstractController
             case 3:
             case 4:
             case 8:
+            case 12:
                 $query=$cuotaRepository->findVencimiento(null,null,null,$filtro,7,false,$fecha);
                 $companias=$cuentaRepository->findByPers(null,$user->getEmpresaActual());
                 break;
@@ -249,6 +251,7 @@ class PagoController extends AbstractController
             case 3:
             case 4:
             case 8:
+            case 12:
                 $query=$pagoRepository->findByPers(null,null,null,$filtro,$fecha);
                 $companias=$cuentaRepository->findByPers(null,$user->getEmpresaActual());
 
