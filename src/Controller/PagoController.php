@@ -408,8 +408,8 @@ class PagoController extends AbstractController
                     }
                 
                     $timePrimrePago=strtotime($primerPago);
-
-                    $timeFechaActual=strtotime(date("Y-m-d"));
+                    //fechaActual debe ser fecha_creacion:::
+                    $timeFechaActual=strtotime($contrato->getFechaCreacion()->format('Y-m-d'));
                 
                 
                     if($timeFechaActual>=$timePrimrePago){
