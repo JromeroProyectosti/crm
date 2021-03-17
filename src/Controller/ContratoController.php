@@ -20,6 +20,7 @@ use App\Repository\UsuarioTipoRepository;
 use App\Repository\AgendaStatusRepository;
 use App\Repository\ModuloPerRepository;
 use App\Repository\CuotaRepository;
+use App\Repository\ConfiguracionRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -371,10 +372,13 @@ class ContratoController extends AbstractController
                             DiasPagoRepository $diasPagoRepository,
                             UsuarioRepository $usuarioRepository,
                             UserPasswordEncoderInterface $encoder,
-                            UsuarioTipoRepository $usuarioTipoRepository
+                            UsuarioTipoRepository $usuarioTipoRepository,
+                            ConfiguracionRepository $configuracionRepository,
+                            ContratoRepository $contratoRepository
                             ): Response
     {
         $this->denyAccessUnlessGranted('create','panel_abogado');
+        $user=$this->getUser();
         $juzgados=$juzgadoRepository->findAll();
         $form = $this->createForm(ContratoType::class, $contrato);
         $form->add('fechaPrimeraCuota',DateType::class,array('widget'=>'single_text','html5'=>false));
@@ -382,12 +386,21 @@ class ContratoController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
+            $configuracion=$configuracionRepository->find(1);
+
+            //configuramos el Lote al cual caera::
+            $ult_contrato=$contratoRepository->findLoteMax($user->getEmpresaActual());
+            $lote=1;
+            if(null != $ult_contrato){
+                $lote= $ult_contrato->getLote()>=$configuracion->getLotes()?1:$ult_contrato->getLote()+1;
+            }
+
 
             $contrato->setDiaPago($request->request->get('chkDiasPago'));
             $contrato->setFechaCreacion(new \DateTime(date("Y-m-d H:i:s")));
             $contrato->setSucursal($sucursalRepository->find($request->request->get('cboSucursal')));
             $contrato->setTramitador($usuarioRepository->find($request->request->get('cboTramitador')));
-            
+            $contrato->setLote($lote);
             $entityManager = $this->getDoctrine()->getManager();
             $agenda=$contrato->getAgenda();
 

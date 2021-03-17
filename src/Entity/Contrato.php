@@ -217,6 +217,11 @@ class Contrato
      */
     private $isFinalizado;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $lote;
+
     
 
     public function __construct()
@@ -734,6 +739,18 @@ class Contrato
     public function setIsFinalizado(?bool $isFinalizado): self
     {
         $this->isFinalizado = $isFinalizado;
+
+        return $this;
+    }
+
+    public function getLote(): ?int
+    {
+        return $this->lote;
+    }
+
+    public function setLote(?int $lote): self
+    {
+        $this->lote = $lote;
 
         return $this;
     }

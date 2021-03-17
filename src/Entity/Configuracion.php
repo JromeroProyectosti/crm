@@ -37,6 +37,11 @@ class Configuracion
      */
     private $verifyToken;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $lotes;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -86,6 +91,18 @@ class Configuracion
     public function setVerifyToken(?string $verifyToken): self
     {
         $this->verifyToken = $verifyToken;
+
+        return $this;
+    }
+
+    public function getLotes(): ?int
+    {
+        return $this->lotes;
+    }
+
+    public function setLotes(?int $lotes): self
+    {
+        $this->lotes = $lotes;
 
         return $this;
     }

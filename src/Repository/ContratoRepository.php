@@ -18,6 +18,22 @@ class ContratoRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Contrato::class);
     }
+    public function findLoteMax($empresa=null): ?Contrato
+    {
+        $query=$this->createQueryBuilder('c')
+        ->join('c.agenda','a')
+        ->join('a.cuenta','cu');
+        if(!is_null($empresa)){
+            
+            $query->andWhere('cu.empresa = '.$empresa);
+        }
+
+        return $query->setMaxResults(1)
+        ->orderBy('c.id', 'DESC')
+        ->getQuery()
+        ->getOneOrNullResult();
+
+    }
     public function findByPers($usuario=null,$empresa=null,$compania=null,$filtro=null,$agendador=null, $otros=null, $deuda = false)
     {
 
