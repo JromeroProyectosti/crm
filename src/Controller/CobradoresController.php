@@ -17,6 +17,7 @@ use App\Repository\UsuarioTipoRepository;
 use App\Repository\ModuloPerRepository;
 use App\Repository\UsuarioTipoDocumentoRepository;
 use App\Repository\UsuarioNoDisponibleRepository;
+use App\Repository\ConfiguracionRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -71,21 +72,21 @@ class CobradoresController extends AbstractController
                         ModuloPerRepository $moduloPerRepository,
                         PrivilegioTipousuarioRepository $privilegioTipousuarioRepository,
                         PrivilegioRepository $privilegioRepository,
+                        ConfiguracionRepository $configuracionRepository,
                         UsuarioTipoDocumentoRepository $tipoDocumento): Response
     {
         $this->denyAccessUnlessGranted('create','cobradores');
         $user=$this->getUser();
         $pagina=$moduloPerRepository->findOneByName('cobradores',$user->getEmpresaActual());
+        $configuracion=$configuracionRepository->find(1);
+
         $usuario = new Usuario();
         $usuario->setEstado(1);
         $empresa=$this->getDoctrine()->getRepository(Empresa::class)->find($user->getEmpresaActual());
         $statues=$this->getDoctrine()->getRepository(UsuarioStatus::class)->findBy(['id'=>[1,2]]);
-        $usuarioCategorias=$empresa->getUsuarioCategorias();
+        
         $cuentas=$empresa->getCuentas();
-        $choices= array();
-        foreach($usuarioCategorias as $usuarioCategoria){
-            $choices[$usuarioCategoria->getNombre()]=$usuarioCategoria->getId();
-        }
+       
         $statusChoices=array();
         foreach($statues as $status){
             $statusChoices[$status->getNombre()]=$status->getId();
@@ -124,8 +125,7 @@ class CobradoresController extends AbstractController
             $usuarioCuenta=new UsuarioCuenta();
             $usuario->setTipoDocumento($tipoDocumento->find($request->request->get('cboTipoDocumento')));
 
-            $categoria=$this->getDoctrine()->getRepository(UsuarioCategoria::class)->find($request->request->get('cboUsuarioCategoria'));
-            $usuario->setCategoria($categoria);
+            
 
             $status=$this->getDoctrine()->getRepository(UsuarioStatus::class)->find($request->request->get('cboStatues'));
             $usuario->setStatus($status);
@@ -171,11 +171,11 @@ class CobradoresController extends AbstractController
         }
 
         return $this->render('cobradores/new.html.twig', [
-            'agendador' => $usuario,
+            'usuario' => $usuario,
             'form' => $form->createView(),
             'pagina'=>$pagina->getNombre(),
             'cuentas'=>$cuentas,
-            'usuarioCategorias'=>$usuarioCategorias,
+            'lotes'=>$configuracion->getLotes(),
             'statues'=>$statues,
             'tipo_documentos'=>$tipoDocumento->findAll(),
         ]);
@@ -204,15 +204,17 @@ class CobradoresController extends AbstractController
                         ModuloPerRepository $moduloPerRepository,
                         UsuarioTipoDocumentoRepository $tipoDocumento,
                         UserPasswordEncoderInterface $encoder,
+                        ConfiguracionRepository $configuracionRepository,
                         UsuarioNoDisponibleRepository $usuarioNoDisponibleRepository): Response
     {
         $this->denyAccessUnlessGranted('edit','cobradores');
         $user=$this->getUser();
+        $configuracion=$configuracionRepository->find(1);
         $pagina=$moduloPerRepository->findOneByName('cobradores',$user->getEmpresaActual());
         $empresa=$this->getDoctrine()->getRepository(Empresa::class)->find($user->getEmpresaActual());
         $usuarioCuenta=$this->getDoctrine()->getRepository(UsuarioCuenta::class)->findOneBy(['usuario'=>$usuario->getId()]);
    
-        $usuarioCategorias=$empresa->getUsuarioCategorias();
+        
         $cuentas=$empresa->getCuentas();
 
         $statues=$this->getDoctrine()->getRepository(UsuarioStatus::class)->findBy(['id'=>[1,2]]);
@@ -253,9 +255,7 @@ class CobradoresController extends AbstractController
             
             $entityManager = $this->getDoctrine()->getManager();
 
-            $categoria=$this->getDoctrine()->getRepository(UsuarioCategoria::class)->find($request->request->get('cboUsuarioCategoria'));
-            $usuario->setCategoria($categoria);
-
+            
 
             $usuario->setTipoDocumento($tipoDocumento->find($request->request->get('cboTipoDocumento')));
 
@@ -267,6 +267,8 @@ class CobradoresController extends AbstractController
             foreach($usuarioCuentas as $usuarioCuenta){
                 $usuario->removeUsuarioCuenta($usuarioCuenta);
             }
+            $lotes=$_POST['cboLotes'];
+            $usuario->setLotes($lotes);
             $getcuentas=$_POST['cboEmpresa'];
          
             foreach($getcuentas as $getcuenta){
@@ -295,8 +297,7 @@ class CobradoresController extends AbstractController
             'form' => $form->createView(),
             'pagina'=>$pagina->getNombre(),
             'cuentas'=>$cuentas,
-            'usuarioCategorias'=>$usuarioCategorias,
-
+            'lotes'=>$configuracion->getLotes(),
             'statues'=>$statues,
             'id_cuenta'=>$usuarioCuenta->getCuenta()->getId(),
             'cuentas_sel'=>$usuario->getUsuarioCuentas(),

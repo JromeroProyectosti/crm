@@ -21,7 +21,7 @@
 								{% endfor %}
 							{% endif %}
 							>{{cuenta.nombre}}</option>
-						{% endfor %}}
+						{% endfor %}
 					</select>
 				</div>
 				<div class="col-sm-6 col-md-6">
@@ -59,20 +59,18 @@
 					
 				</div>
 				<div class="col-sm-6 col-md-3">
-					<small class="text-muted">Categoria</small>
-					<select name="cboUsuarioCategoria" class="form-control" required>
+					<small class="text-muted">Lotes *</small>
+					<select name="cboLotes[]" class="select3" multiple="multiple" data-placeholder="Selecciona Lotes" style="width: 100%;" required>
 						<option></option>
-						{% for usuarioCategoria in usuarioCategorias %}
-							<option value="{{usuarioCategoria.id}}"
-							{% if usuario is defined %}
-								{% if usuario.categoria.id == usuarioCategoria.id%}
-									selected
-								{% endif %}
+						
+						{% for lote in 1..lotes %}
+							<option value="{{lote}}"
+							{% if lote in usuario.lotes %}
+							selected
 							{% endif %}
-							>{{usuarioCategoria.nombre}}</option>
-						{% endfor %}}
+							>Lote {{lote}}</option>
+						{% endfor %}
 					</select>
-					
 				</div>
 				<div class="col-sm-6 col-md-3">
 					<small class="text-muted">Status</small>
@@ -80,7 +78,7 @@
 						<option></option>
 						{% for status in statues %}
 							<option value="{{status.id}}"
-							{% if usuario is defined %}
+							{% if usuario.status.id is defined %}
 								{% if usuario.status.id==status.id %}
 									selected
 								{% endif %}
@@ -138,6 +136,7 @@
 		$(function () {
 			//Initialize Select2 Elements
 			$('.select2').select2();
+			$('.select3').select2();
 			
 		});
 	</script>

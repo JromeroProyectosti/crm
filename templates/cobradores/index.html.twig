@@ -24,7 +24,7 @@
                         <th>Tipo Usuario</th>
                         <th>Estado</th>
                         <th>Disponible</th>
-                        <th>Categoria</th>
+                        
                         <th>Fecha alta</th>
                         <th>Correo</th>
                         <th>Acciones</th>
@@ -39,7 +39,7 @@
                         <td>{{ usuario.usuarioTipo.nombre }}</td>
                         <td>{{ usuario.estado ? 'Activo' : 'Deshabilitado' }}</td>
                         <td>{{usuario.status }} </td>
-                        <td>{{usuario.categoria.nombre}} </td>
+                        
                         <td>{{ usuario.fechaActivacion ? usuario.fechaActivacion|date('Y-m-d H:i:s') : '' }}</td>
                         <td>{{ usuario.correo }}</td>
                         

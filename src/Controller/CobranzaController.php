@@ -24,6 +24,7 @@ use App\Repository\CuentaCorrienteRepository;
 use App\Repository\PagoCuotasRepository;
 use App\Repository\VencimientoRepository;
 use App\Repository\UsuarioRepository;
+use App\Repository\ConfiguracionRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -90,7 +91,7 @@ class CobranzaController extends AbstractController
             case 3:
             case 4:
             case 8:
-            case 12:
+            
                 $query=$cuotaRepository->findVencimiento(null,null,null,$filtro,null,true,$fecha);
                 $companias=$cuentaRepository->findByPers(null,$user->getEmpresaActual());
                 break;
@@ -103,11 +104,18 @@ class CobranzaController extends AbstractController
                 $companias=$cuentaRepository->findByPers(null,$user->getEmpresaActual());
                 break;
             case 11://Administrativo
+
                 //$query=$contratoRepository->findByPers(null,$user->getEmpresaActual(),$compania,$filtro,null,$fecha,true);
                 $query=$cuotaRepository->findVencimiento(null,null,null,$filtro,null,true,$fecha);
                 $companias=$cuentaRepository->findByPers(null,$user->getEmpresaActual());
             break;
-            
+            case 12://Cobradores
+               
+                $fecha.=" and co.lote in (".implode(",",$user->getLotes()).") ";
+                $query=$cuotaRepository->findVencimiento(null,null,null,$filtro,null,true,$fecha);
+                $companias=$cuentaRepository->findByPers(null,$user->getEmpresaActual());
+                break;
+
             default:
                 //$query=$contratoRepository->findByPers(null,null,$compania,$filtro,null,$fecha,true);
                 $query=$cuotaRepository->findVencimiento(null,null,null,$filtro,null,true,$fecha);
@@ -371,7 +379,30 @@ class CobranzaController extends AbstractController
 
         return $this->redirectToRoute('cobranza_index');
     }
-   
+
+    /**
+     * @Route("/generalotes", name="cobranza_generalotes", methods={"GET","POST"})
+     */
+    public function generalotes(ContratoRepository $contratoRepository,ConfiguracionRepository $configuracionRepository){
+
+
+        $contratos=$contratoRepository->findBy(['lote'=>null]);
+        $configuracion=$configuracionRepository->find(1);
+        $lote=1;
+        $entityManager = $this->getDoctrine()->getManager();
+        
+        foreach($contratos as $contrato){
+            $contrato->setLote($lote);
+
+            $entityManager->persist($contrato);
+            $entityManager->flush();
+            $lote++;
+            if($lote>$configuracion->getLotes()){
+                $lote=1;
+            }
+        }
+        return $this->redirectToRoute('cobranza_index');
+    }
     /**
      * @Route("/{id}", name="cobranza_show", methods={"GET"})
      */
