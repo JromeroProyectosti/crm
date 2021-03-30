@@ -276,6 +276,14 @@ class ContratoController extends AbstractController
             $contrato->setPdf(null);
             $entityManager->persist($contrato);
             $entityManager->flush();
+            
+            $agenda=$contrato->getAgenda();
+            $agenda->setNombreCliente($contrato->getNombre());
+            $agenda->setTelefonoCliente($contrato->getTelefono());
+            $agenda->setEmailCliente($contrato->getEmail());
+            $agenda->setReunion($contrato->getReunion());
+            $entityManager->persist($agenda);
+            $entityManager->flush();
             if(!$tienePago){
                 $detalleCuotas=$contrato->getDetalleCuotas();
                 foreach($detalleCuotas as $detalleCuota){
