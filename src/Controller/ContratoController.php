@@ -429,6 +429,7 @@ class ContratoController extends AbstractController
             $agenda->setNombreCliente($contrato->getNombre());
             $agenda->setTelefonoCliente($contrato->getTelefono());
             $agenda->setEmailCliente($contrato->getEmail());
+            $agenda->setReunion($contrato->getReunion());
             $entityManager->persist($agenda);
             $entityManager->flush();
 
