@@ -73,13 +73,18 @@ class CuotaRepository extends ServiceEntityRepository
         ;
     }
 
-    public function findOneByPrimeraVigente($contrato): ?Cuota
+    public function findOneByPrimeraVigente($contrato,$isMulta=false): ?Cuota
     {
         $query=$this->createQueryBuilder('c')
         ->andWhere('c.contrato=:contra')
         ->setParameter('contra', $contrato)
         ->andWhere('c.monto>c.pagado or c.pagado is null')
         ->setMaxResults(1);
+        if($isMulta){
+            $query->andWhere('c.isMulta = true');
+        }else{
+            $query->andWhere('c.isMulta != true');
+        }
         return $query->getQuery()
             ->getOneOrNullResult()
         ;

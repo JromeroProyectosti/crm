@@ -725,7 +725,12 @@ class PagoController extends AbstractController
         do{
 
             $pagostatus=false;
-            $cuota=$cuotaRepository->findOneByPrimeraVigente($contrato->getId());
+            $multa=$cuotaRepository->findOneByPrimeraVigente($contrato->getId(),true);
+            if(null !== $multa){
+                $cuota=$multa;
+            }else{
+                $cuota=$cuotaRepository->findOneByPrimeraVigente($contrato->getId());
+            }
             $pagoCuotas=$pagoCuotasRepository->findByPago($pago->getId());
 
             if(null == $pagoCuotas["total"]){

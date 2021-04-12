@@ -65,6 +65,11 @@ class Cuota
      */
     private $pagoCuotas;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $isMulta;
+
     public function __construct()
     {
         $this->pagoCuotas = new ArrayCollection();
@@ -197,6 +202,18 @@ class Cuota
                 $pagoCuota->setCuota(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getIsMulta(): ?bool
+    {
+        return $this->isMulta;
+    }
+
+    public function setIsMulta(?bool $isMulta): self
+    {
+        $this->isMulta = $isMulta;
 
         return $this;
     }

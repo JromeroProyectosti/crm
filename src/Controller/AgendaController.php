@@ -12,10 +12,12 @@ use App\Repository\AgendaStatusRepository;
 use App\Entity\AgendaObservacion;
 use App\Repository\UsuarioRepository;
 use App\Repository\CuentaRepository;
+use App\Repository\ContratoRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+
 
 /**
  * @Route("/agenda")
@@ -39,7 +41,8 @@ class AgendaController extends AbstractController
                         AgendaStatusRepository $agendaStatusRepository,
                         CuentaRepository $cuentaRepository,
                         UsuarioRepository $usuarioRepository,
-                        AgendaRepository $agendaRepository
+                        AgendaRepository $agendaRepository,
+                        ContratoRepository $contratoRepository
                         ): Response
     {
         $this->denyAccessUnlessGranted('create','agenda');
@@ -82,9 +85,10 @@ class AgendaController extends AbstractController
                 $sql1=" and (a.telefonoCliente='$telefonoRecado' or a.telefonoRecadoCliente='$telefonoRecado' ) ";
             }
 
-            $agenda_existe=$agendaRepository->findByPers(null,null,null,null,null,3,$sql.$sql1);
-
-            if(null == $agenda_existe){
+            $agenda_existe=$contratoRepository-> findByPersSinContr(null,null,null,null,null,3,$sql.$sql1);
+            $contrato_existe=$contratoRepository->findByPers(null,null,null,null,null, $sql.$sql1);
+            if(null == $agenda_existe || null != $contrato_existe){
+                
             //if(true){
                 $cuenta=$request->request->get('cboCuenta');
                 $usuario=$request->request->get('cboAgendador');
@@ -106,7 +110,7 @@ class AgendaController extends AbstractController
                 $entityManager->persist($observacion);
                 $entityManager->flush();
 
-                return $this->redirectToRoute('agenda_new',['msg'=>'exito']);
+                //return $this->redirectToRoute('agenda_new',['msg'=>'exito']);
             }else{
                 $error='<div class="alert alert-danger alert-dismissible">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>

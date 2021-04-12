@@ -44,7 +44,11 @@ class ContratoController extends AbstractController
         $user=$this->getUser();
         $pagina=$moduloPerRepository->findOneByName('contrato',$user->getEmpresaActual());
         $filtro=null;
-
+        $error='';
+        $error_toast="";
+        if(null !== $request->query->get('error_toast')){
+            $error_toast=$request->query->get('error_toast');
+        }
         $compania=null;
         if(null !== $request->query->get('bFiltro') && $request->query->get('bFiltro')!=''){
             $filtro=$request->query->get('bFiltro');
@@ -60,7 +64,7 @@ class ContratoController extends AbstractController
             $dateInicio=date('Y-m-d',mktime(0,0,0,date('m'),date('d'),date('Y'))-60*60*24*30);
             $dateFin=date('Y-m-d');
         }
-        $fecha="c.fechaCreacion between '$dateInicio' and '$dateFin 23:59:59'" ;
+        $fecha="c.fechaCreacion between '$dateInicio' and '$dateFin 23:59:59' and a.status in (7,14)" ;
       
         switch($user->getUsuarioTipo()->getId()){
             case 3:
@@ -94,6 +98,8 @@ class ContratoController extends AbstractController
             'dateInicio'=>$dateInicio,
             'dateFin'=>$dateFin,
             'pagina'=>$pagina->getNombre(),
+            'error'=>$error,
+            'error_toast'=>$error_toast,
         ]);
     }
 
@@ -301,12 +307,10 @@ class ContratoController extends AbstractController
                 $isAbono=$contrato->getIsAbono();
                 if($isAbono){
                     $cuota=new Cuota();
-
                     $cuota->setContrato($contrato);
                     $cuota->setNumero($numeroCuota);
                     $cuota->setFechaPago($contrato->getFechaPrimeraCuota());
                     $cuota->setMonto($contrato->getPrimeraCuota());
-
                     $entityManager->persist($cuota);
                     $entityManager->flush();
                     $numeroCuota++;
@@ -513,8 +517,6 @@ class ContratoController extends AbstractController
         ]);
     }
 
-    
-
     /**
      * @Route("/{id}/pdf", name="contrato_pdf", methods={"GET","POST"})
      */
@@ -544,7 +546,89 @@ class ContratoController extends AbstractController
         );
     }
 
-    
+    /**
+     * @Route("/{id}/terminar", name="contrato_terminar", methods={"GET","POST"})
+     */
+    function terminar(Contrato $contrato,
+                    DiasPagoRepository $diasPagoRepository,
+                    ModuloPerRepository $moduloPerRepository,
+                    AgendaStatusRepository $agendaStatusRepository,
+                    UsuarioRepository $usuarioRepository,
+                    CuotaRepository $cuotaRepository,
+                    Request $request): Response
+    {
+        $this->denyAccessUnlessGranted('edit','contrato');
+        $user=$this->getUser();
+        
+        $pagina=$moduloPerRepository->findOneByName('contrato',$user->getEmpresaActual());
+
+        if(null !== $request->query->get('status')){
+            $status= $request->query->get('status');
+            $observacion_texto= $request->request->get('txtObservacion');
+            $entityManager = $this->getDoctrine()->getManager();
+            $agenda=$contrato->getAgenda();
+            $agenda->setStatus($agendaStatusRepository->find($status));
+
+            $entityManager->persist($agenda);
+            $entityManager->flush();
+
+            $observacion=new AgendaObservacion();
+            $observacion->setAgenda($agenda);
+            $observacion->setUsuarioRegistro($usuarioRepository->find($user->getId()));
+            $observacion->setStatus($agendaStatusRepository->find($status));
+            $observacion->setFechaRegistro(new \DateTime(date("Y-m-d H:i:s")));
+            $observacion->setObservacion($observacion_texto);
+            $entityManager->persist($observacion);
+            $entityManager->flush();
+            if($status==12){
+
+
+                $error_toast="Toast.fire({
+                    icon: 'success',
+                    title: 'Cliente desconoce contrato'
+                  })";
+            }else{
+
+                $dateInicio=strtotime($contrato->getFechaCreacion()->format('Y-m-d'));
+                $dateFin=strtotime(date('Y-m-d'));
+
+                $interval = $dateFin-$dateInicio;
+
+                if(($interval*60*60*24)>10){
+                    $_cuota=$cuotaRepository->findOneBy(['contrato'=>$contrato],['numero'=>'desc']);
+
+
+                    $numeroCuota=$_cuota->getNumero();
+                    $numeroCuota++;
+                    $cuota=new Cuota();
+
+                    $cuota->setContrato($contrato);
+                    $cuota->setNumero($numeroCuota);
+                    $cuota->setFechaPago(new \DateTime(date('Y-m-d H:i')));
+                    $cuota->setMonto(($contrato->getMontoContrato()/10));
+                    $cuota->setIsMulta(true);
+                    $entityManager->persist($cuota);
+                    $entityManager->flush();
+                }
+                $error_toast="Toast.fire({
+                    icon: 'success',
+                    title: 'Cliente desiste de contrato'
+                  })";
+            }
+           
+            return $this->redirectToRoute('contrato_index',['error_toast'=>$error_toast]);
+
+        }
+        
+        return $this->render('contrato/show.html.twig', [
+            'contrato' => $contrato,
+            'agenda'=>$contrato->getAgenda(),
+            'pagina'=>$pagina->getNombre(),
+            'diasPagos'=>$diasPagoRepository->findAll(),
+            'metodo'=>"T",
+            
+        ]);
+    }
     /**
      * @Route("/{id}", name="contrato_delete", methods={"DELETE"})
      */

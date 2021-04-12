@@ -108,15 +108,15 @@
                 </div>
                 <div class="col-sm-12 col-md-3">
                     <small class="text-muted">Monto nivel de deuda</small>
-                    <p>{{contrato.montoNivelDeuda}}</p>   
+                    <p>{{contrato.montoNivelDeuda|number_format(0,',','.')}}</p>   
                 </div>
                 <div class="col-sm-12 col-md-3">
                     <small class="text-muted">Monto contrato</small>
-                    <p>{{contrato.MontoContrato}}</p>   
+                    <p>{{contrato.MontoContrato|number_format(0,',','.')}}</p>   
                 </div>
                 <div class="col-sm-12 col-md-3">
                     <small class="text-muted">Primera Cuota </small>
-                    <p>{{contrato.primeraCuota}}</p> 
+                    <p>{{contrato.primeraCuota|number_format(0,',','.')}}</p> 
                  </div>
                 <div class="col-sm-12 col-md-3">
                     <small class="text-muted">Fecha Primera Cuota</small>
@@ -129,7 +129,7 @@
                
                 <div class="col-sm-12 col-md-3">
                     <small class="text-muted">Valor cuota</small>
-                    <p>{{contrato.valorCuota}}</p>   
+                    <p>{{contrato.valorCuota|number_format(0,',','.')}}</p>   
                 </div>
                 
             
@@ -174,8 +174,8 @@
             </div>
             {% if metodo is defined %}
                 
-                {% if metodo == "T" %}
-                {{ include('contrato/_terminar.html.twig', {'button_label': 'Modificar'}) }}
+                {% if metodo == "R" %}
+                {{ include('desconoce/_ratifica.html.twig', {'button_label': 'Modificar'}) }}
                 {% endif %}
             {% endif %}
         </div>

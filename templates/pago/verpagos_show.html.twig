@@ -78,8 +78,17 @@
                     {% set total_pagado=0 %}
                     {% set total_deuda=0 %}
                 {% for cuota in contrato.detalleCuotas %}
-                    <tr>
-                        <td>{{cuota.numero|number_format(0,",",".")}}</td>
+                    
+                    <tr 
+                    {% if cuota.anular %}
+                    class="table-danger"
+                    {% endif %}
+                    >
+                        <td>
+                            {% if cuota.isMulta %}
+                                *
+                            {% endif %}
+                            {{cuota.numero|number_format(0,",",".")}}</td>
                         <td>{{cuota.fechaPago|date('Y-m-d')}}</td>
                         <td>{{cuota.monto|number_format(0,",",".")}}</td>
                         <td>

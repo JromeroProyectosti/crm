@@ -1,0 +1,2 @@
+INSERT INTO `modulo` (`id`, `nombre`, `ruta`, `nombre_alt`, `descripcion`) VALUES (NULL, 'terminos', 'terminos_index', 'Términos de contrato', 'COntratos terminados ');
+ALTER TABLE cuota ADD is_multa TINYINT(1) DEFAULT NULL;

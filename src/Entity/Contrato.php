@@ -222,8 +222,12 @@ class Contrato
      */
     private $lote;
 
-    
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $pdfTermino;
 
+    
     public function __construct()
     {
         $this->contratoRols = new ArrayCollection();
@@ -751,6 +755,18 @@ class Contrato
     public function setLote(?int $lote): self
     {
         $this->lote = $lote;
+
+        return $this;
+    }
+
+    public function getPdfTermino(): ?string
+    {
+        return $this->pdfTermino;
+    }
+
+    public function setPdfTermino(?string $pdfTermino): self
+    {
+        $this->pdfTermino = $pdfTermino;
 
         return $this;
     }

@@ -41,6 +41,7 @@ class ContratoRepository extends ServiceEntityRepository
         $query=$this->createQueryBuilder('c');
         $query->join('c.agenda','a');
         $query->join('a.cuenta','cu');
+
         if(!is_null($empresa)){
             
             $query->andWhere('cu.empresa = '.$empresa);
@@ -73,10 +74,65 @@ class ContratoRepository extends ServiceEntityRepository
         ;
     }
 
+    /**
+      * @return Contrato[] Retorna un array de Agenda objects sin contrato creado
+    */
+    public function findByPersSinContr($usuario=null,$empresa=null,$compania=null,$status=null, $filtro=null,$esAbogado=null,$otros=null,$tipoFecha=null)
+    {
+        $query=$this->createQueryBuilder('c')
+        ->rightJoin('c.agenda', 'a')
+        ->andWhere('c.id is null');
+
+        if(!is_null($status)){
+            $query->andWhere('a.status in ('.$status.')');
+        }
+        if(!is_null($empresa)){
+            $query->join('a.cuenta','i');
+            $query->andWhere('i.empresa = '.$empresa);
+        }
+        switch($esAbogado){
+            case 1:
+                if(!is_null($usuario)){
+                    $query->andWhere('a.abogado = '.$usuario);
+                }else{
+                    $query->andWhere('a.abogado is not null ');
+                }
+            break;
+            case 0:
+                if(!is_null($usuario)){
+                    $query->andWhere('a.agendador = '.$usuario);
+                }
+                //$query->andWhere('(a.abogado is null or a.status in (4,6,7,8))');
+            break;
+            default:
+                if(!is_null($usuario)){
+                    $query->andWhere('a.agendador = '.$usuario);
+                }
+            break;
+
+        }
+        if(!is_null($compania)){
+            $query->andWhere('a.cuenta = '.$compania);
+        }
+        if(!is_null($filtro)){ 
+            $query->andWhere("(a.nombreCliente like '%$filtro%' or a.telefonoCliente like '%$filtro%' or a.emailCliente like '%$filtro%')")
+         ;
+
+        }
+
+        if(!is_null($otros)){ 
+            $query->andWhere($otros)
+         ;
+
+        }
+    
+        return $query->getQuery()
+            ->getResult()
+        ;
+    }
+
     public function findByPersDeuda($usuario=null,$empresa=null,$compania=null,$filtro=null,$agendador=null, $otros=null)
     {
-        echo $usuario;
-
         $query=$this->createQueryBuilder('c');
         $query->join('c.agenda','a');
         $query->join('a.cuenta','cu');
