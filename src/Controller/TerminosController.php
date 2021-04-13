@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controller;
+use App\Entity\ContratoAnexo;
 use App\Entity\Contrato;
 use App\Entity\ContratoRol;
 use App\Entity\Usuario;
@@ -17,6 +18,7 @@ use App\Repository\DiasPagoRepository;
 use App\Repository\UsuarioRepository;
 use App\Repository\UsuarioTipoRepository;
 use App\Repository\AgendaStatusRepository;
+use App\Repository\AgendaObservacionRepository;
 use App\Repository\ModuloPerRepository;
 use App\Repository\CuotaRepository;
 use App\Repository\ConfiguracionRepository;
@@ -151,20 +153,38 @@ class TerminosController extends AbstractController
     /**
      * @Route("/{id}/pdf", name="terminos_pdf", methods={"GET","POST"})
      */
-    public function pdf(Contrato $contrato,\Knp\Snappy\Pdf $snappy): Response
+    public function pdf(Contrato $contrato,
+                        \Knp\Snappy\Pdf $snappy,
+                        CuotaRepository $cuotaRepository , 
+                        AgendaObservacionRepository $agendaObservacionRepository): Response
     {
         $this->denyAccessUnlessGranted('view','terminos');
         $filename = sprintf('desestimiento-'.$contrato->getId().'-%s.pdf',rand(0,9000));
-       
-        $html = $this->renderView('terminos/print.html.twig', array(
-            'contrato' => $contrato,
-            'Titulo'=>"Contrato"
-        ));
-
         $entityManager = $this->getDoctrine()->getManager();
-        $contrato->setPdfTermino($filename);
-        $entityManager->persist($contrato);
+        $anexo=new ContratoAnexo();
+        $anexo->setContrato($contrato);
+        $anexo->setFechaCreacion(new \DateTime(date('Y-m-d H:i')));
+        $anexo->setIsDesiste(true);
+        
+        $anexo->setPdf($filename);
+        $entityManager->persist($anexo);
         $entityManager->flush();
+        $cuotas=$cuotaRepository->findBy(['contrato'=>$contrato,'isMulta'=>true]);
+        foreach($cuotas as $cuota){
+            if($cuota->getIsMulta() && !$cuota->getAnular()){
+                $cuota->setAnexo($anexo);
+                $entityManager->persist($cuota);
+                $entityManager->flush();
+            }
+        }
+
+        $observacion=$agendaObservacionRepository->findOneBy(['agenda'=>$contrato->getAgenda(),'status'=>[12,13]],['id'=>'desc']);
+        $html = $this->renderView('terminos/print.html.twig', array(
+            'anexo' => $anexo,
+            'Titulo'=>"Contrato",
+            'status'=>$observacion->getStatus(),
+            'cuotas'=>$cuotaRepository->findBy(['anexo'=>$anexo]),
+        ));
 
         $snappy->generateFromHtml(
            $html,

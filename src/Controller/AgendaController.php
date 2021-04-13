@@ -50,12 +50,12 @@ class AgendaController extends AbstractController
         $agenda = new Agenda();
         $error='';
         $error_toast="";
-        if($request->query->get('msg')=='exito'){
-            $error_toast="Toast.fire({
-                icon: 'success',
-                title: 'Registro grabado con exito'
-              })";
-        }
+            if($request->query->get('msg')=='exito'){
+                $error_toast="Toast.fire({
+                    icon: 'success',
+                    title: 'Registro grabado con exito'
+                })";
+            }
         $agenda->setStatus($agendaStatusRepository->find(1));
         $agenda->setFechaCarga(new \DateTime(date('Y-m-d H:i:s')));
         $form = $this->createForm(AgendaType::class, $agenda);

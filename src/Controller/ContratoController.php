@@ -555,6 +555,7 @@ class ContratoController extends AbstractController
                     AgendaStatusRepository $agendaStatusRepository,
                     UsuarioRepository $usuarioRepository,
                     CuotaRepository $cuotaRepository,
+                    ConfiguracionRepository $configuracionRepository,
                     Request $request): Response
     {
         $this->denyAccessUnlessGranted('edit','contrato');
@@ -596,7 +597,7 @@ class ContratoController extends AbstractController
 
                 if(($interval*60*60*24)>10){
                     $_cuota=$cuotaRepository->findOneBy(['contrato'=>$contrato],['numero'=>'desc']);
-
+                    $configuracion=$configuracionRepository->find(1);
 
                     $numeroCuota=$_cuota->getNumero();
                     $numeroCuota++;
@@ -605,7 +606,7 @@ class ContratoController extends AbstractController
                     $cuota->setContrato($contrato);
                     $cuota->setNumero($numeroCuota);
                     $cuota->setFechaPago(new \DateTime(date('Y-m-d H:i')));
-                    $cuota->setMonto(($contrato->getMontoContrato()/10));
+                    $cuota->setMonto($configuracion->getValorMulta());
                     $cuota->setIsMulta(true);
                     $entityManager->persist($cuota);
                     $entityManager->flush();

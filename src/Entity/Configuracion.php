@@ -42,6 +42,11 @@ class Configuracion
      */
     private $lotes;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $valorMulta;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -103,6 +108,18 @@ class Configuracion
     public function setLotes(?int $lotes): self
     {
         $this->lotes = $lotes;
+
+        return $this;
+    }
+
+    public function getValorMulta(): ?int
+    {
+        return $this->valorMulta;
+    }
+
+    public function setValorMulta(?int $valorMulta): self
+    {
+        $this->valorMulta = $valorMulta;
 
         return $this;
     }
