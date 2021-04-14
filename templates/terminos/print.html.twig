@@ -1,7 +1,7 @@
 <div class="page">
     <div align="right">Nro Folio {{anexo.id}}-{{anexo.contrato.id}}</div>
   
-  <div align="center"><h4>{{anexo.contrato.agenda.status.nombre|upper}} CONTRATO DE PRESTACI&Oacute;N DE SERVICIOS</h4></div>
+  <div align="center"><h4>{{status.nombre|upper}} CONTRATO DE PRESTACI&Oacute;N DE SERVICIOS</h4></div>
   <p align="justify">En Santiago de Chile a {{anexo.fechaCreacion|date("d-m-Y")}}, entre Estudio Jur&iacute;dico Alfaro y Madariaga Spa., rol &uacute;nico tributario 76.638.999-6 
   empresa de servicios Jur&iacute;dicos con domicilio en casa matriz <strong>Hu&eacute;rfanos 1147, 
   oficina 501</strong>, comuna de Santiago, Regi&oacute;n Metropolitana, quien en adelante se denominar&aacute; indistintamente <strong>&quot;Estudio Jur&iacute;dico&quot;</strong> y por la otra don 
@@ -14,7 +14,7 @@
   <p align="justify"><strong> SEGUNDO:</strong> Que los honorarios de los servicios profesionales pactados e indicados en el contrato {{anexo.contrato.id}} de prestaci&oacute;n de servicios, 
   no se encuentran enteramnete pagadas en su totalidad</p> 
   
-  <p align="justify"><strong>TERCERO: <strong>{{anexo.contrato.nombre|title|special_chars|raw}}</strong>, por este acto 
+  <p align="justify"><strong>TERCERO: {{anexo.contrato.nombre|title|special_chars|raw}}</strong>, por este acto 
     {{status.nombre|upper}}
    al contrato anteriormente individualizado.</p>
   
