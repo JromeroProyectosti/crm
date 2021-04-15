@@ -718,19 +718,14 @@ class PagoController extends AbstractController
     }
 
 
-    public function asociarPagos($contrato,$cuotaRepository,$pagoCuotasRepository,$pago){
+    public function asociarPagos($contrato,$cuotaRepository,$pagoCuotasRepository,$pago,$esMulta=false){
+
         $entityManager = $this->getDoctrine()->getManager();
         $contrato->setIsFinalizado(false);
 
         do{
-
             $pagostatus=false;
-            $multa=$cuotaRepository->findOneByPrimeraVigente($contrato->getId(),true);
-            if(null !== $multa){
-                $cuota=$multa;
-            }else{
-                $cuota=$cuotaRepository->findOneByPrimeraVigente($contrato->getId());
-            }
+            $cuota=$cuotaRepository->findOneByPrimeraVigente($contrato->getId(),$esMulta);
             $pagoCuotas=$pagoCuotasRepository->findByPago($pago->getId());
 
             if(null == $pagoCuotas["total"]){
@@ -739,7 +734,6 @@ class PagoController extends AbstractController
                 $total=$pagoCuotas["total"];
             }
             if($cuota){
-
                 //cuando el pago es menor o igual a la deuda.
                 if(($pago->getMonto()-$total)<=($cuota->getMonto()-$cuota->getPagado())){
                     
@@ -809,7 +803,7 @@ class PagoController extends AbstractController
 
         }while($pagostatus);
 
-        $cuota=$cuotaRepository->findOneByPrimeraVigente($contrato->getId());
+        $cuota=$cuotaRepository->findOneByPrimeraVigente($contrato->getId(),$esMulta);
 
         if($cuota){
             $contrato->setIsFinalizado(false);

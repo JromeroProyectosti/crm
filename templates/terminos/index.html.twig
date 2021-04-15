@@ -79,8 +79,7 @@
                                 {% endif %}
                                 
                             {% else %}
-                                <a href="{{ path('terminos_pdf', {'id': contrato.id}) }}" class="btn btn-primary btn-sm"><i class="far fa-check-circle"></i></a>
-                            
+                                <button onclick="javascript:generaPdf('{{ path('terminos_pdf', {'id': contrato.id}) }}')" class="btn btn-primary btn-sm btn-pdf"><i class="far fa-check-circle"></i></button>
                             {% endfor %}
                             
                         </td>
@@ -122,5 +121,14 @@
         console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
         
         });
+        /*$(".btn-pdf").click(function(){
+            window.setTimeout(function(){window.location.reload();}, 5000);
+            
+        });*/
+        function generaPdf(pag){
+            window.location.href=pag;
+            window.setTimeout(function(){window.location.reload();},10000);
+            
+        }
     </script>
 {% endblock %}

@@ -79,14 +79,16 @@ class CuotaRepository extends ServiceEntityRepository
         ->andWhere('c.contrato=:contra')
         ->setParameter('contra', $contrato)
         ->andWhere('c.monto>c.pagado or c.pagado is null')
-        ->setMaxResults(1);
-        if($isMulta){
+        ;
+       if($isMulta){
             $query->andWhere('c.isMulta = true');
-        }else{
-            $query->andWhere('c.isMulta != true');
         }
+        $query
+        ->setMaxResults(1);
         return $query->getQuery()
+            
             ->getOneOrNullResult()
+            
         ;
     }
     public function findOneByUltimaPagada($contrato): ?Cuota
