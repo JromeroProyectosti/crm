@@ -19,14 +19,20 @@ class PagoRepository extends ServiceEntityRepository
         parent::__construct($registry, Pago::class);
     }
 
-    public function findByContrato($value)
+    public function findByContrato($value, $esMulta=false)
     {
-        return $this->createQueryBuilder('p')
-            ->join('p.pagoCuotas','pc')
-            ->join('pc.cuota','c')
-            ->andWhere('c.contrato = :val')
-            ->setParameter('val', $value)
-            ->orderBy('p.id', 'ASC')
+        $query=$this->createQueryBuilder('p')
+        ->join('p.pagoCuotas','pc')
+        ->join('pc.cuota','c')
+        ->andWhere('c.contrato = :val');
+        if($esMulta){
+            $query->andWhere('c.isMulta = true');
+        }
+
+        $query->setParameter('val', $value)
+        ->orderBy('p.id', 'ASC');
+
+        return $query
             ->getQuery()
             ->getResult()
         ;
@@ -83,6 +89,7 @@ class PagoRepository extends ServiceEntityRepository
         ;
 
     }
+    
     // /**
     //  * @return Pago[] Returns an array of Pago objects
     //  */
