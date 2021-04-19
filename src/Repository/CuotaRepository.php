@@ -25,6 +25,7 @@ class CuotaRepository extends ServiceEntityRepository
         $query->join('a.cuenta','cu');
         if($vigente){
             $query->andWhere('c.monto>c.pagado or c.pagado is null');
+            $query->andWhere('c.anular != true')
         }else{
             $query->andWhere(' co.isFinalizado=true');
         }
