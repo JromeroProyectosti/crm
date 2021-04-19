@@ -78,39 +78,41 @@
                     {% set total_pagado=0 %}
                     {% set total_deuda=0 %}
                 {% for cuota in contrato.detalleCuotas %}
-                    {% if cuota.anular %}
-                    
-                    {% else %}
-                    <tr>
-                        <td>
-                            {% if cuota.isMulta %}
-                                *
-                            {% endif %}
-                            {{cuota.numero|number_format(0,",",".")}}</td>
-                        <td>{{cuota.fechaPago|date('Y-m-d')}}</td>
-                        <td>{{cuota.monto|number_format(0,",",".")}}</td>
-                        <td>
-                            {% if cuota.pagado>0 %}
-                            {{cuota.pagado|number_format(0,",",".")}}
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% if cuota.pagado>0 %}
+                    {% if cuota.isMulta and cuota.anular%}
+                        <tr 
+                        {% if cuota.anular %}
+                        class="table-danger"
+                        {% endif %}
+                        >
+                            <td>
+                                {% if cuota.isMulta %}
+                                    *
+                                {% endif %}
+                                {{cuota.numero|number_format(0,",",".")}}</td>
+                            <td>{{cuota.fechaPago|date('Y-m-d')}}</td>
+                            <td>{{cuota.monto|number_format(0,",",".")}}</td>
+                            <td>
+                                {% if cuota.pagado>0 %}
+                                {{cuota.pagado|number_format(0,",",".")}}
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if cuota.pagado>0 %}
+                                    
                                 
+                                    {{(cuota.monto - cuota.pagado)|number_format(0,",",".")}}
+                                    {% set total_deuda = total_deuda + (cuota.monto - cuota.pagado)%}
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if cuota.pagado>0 %}
+                                <button class="btn btn-success" onclick="javascript:detallePago({{cuota.id}})"><i class="fas fa-eye"></i></button>
+                                {% endif %}
+                            </td>
+                            {% set total = total + cuota.monto %}
+                            {% set total_pagado = total_pagado + cuota.pagado %}
                             
-                                {{(cuota.monto - cuota.pagado)|number_format(0,",",".")}}
-                                {% set total_deuda = total_deuda + (cuota.monto - cuota.pagado)%}
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% if cuota.pagado>0 %}
-                            <button class="btn btn-success" onclick="javascript:detallePago({{cuota.id}})"><i class="fas fa-eye"></i></button>
-                            {% endif %}
-                        </td>
-                        {% set total = total + cuota.monto %}
-                        {% set total_pagado = total_pagado + cuota.pagado %}
-                        
-                    </tr>
+                        </tr>
                     {% endif %}
                 {% endfor %}
                     <tr>
