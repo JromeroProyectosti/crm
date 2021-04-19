@@ -81,6 +81,7 @@ class CuotaRepository extends ServiceEntityRepository
         ->setParameter('contra', $contrato)
         ->andWhere('c.monto>c.pagado or c.pagado is null')
         ;
+        $query->andWhere('c.anular is null or c.anular = false');
        if($isMulta){
             $query->andWhere('c.isMulta = true');
         }
