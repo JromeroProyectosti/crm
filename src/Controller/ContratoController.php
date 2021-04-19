@@ -594,8 +594,9 @@ class ContratoController extends AbstractController
                 $dateFin=strtotime(date('Y-m-d'));
 
                 $interval = $dateFin-$dateInicio;
+   
 
-                if(($interval*60*60*24)>10){
+                if(($interval/60/60/24)>10){
                     $_cuota=$cuotaRepository->findOneBy(['contrato'=>$contrato],['numero'=>'desc']);
                     $configuracion=$configuracionRepository->find(1);
 
