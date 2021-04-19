@@ -78,12 +78,10 @@
                     {% set total_pagado=0 %}
                     {% set total_deuda=0 %}
                 {% for cuota in contrato.detalleCuotas %}
-                    
-                    <tr 
                     {% if cuota.anular %}
-                    class="table-danger"
-                    {% endif %}
-                    >
+                    
+                    {% else %}
+                    <tr>
                         <td>
                             {% if cuota.isMulta %}
                                 *
@@ -113,6 +111,7 @@
                         {% set total_pagado = total_pagado + cuota.pagado %}
                         
                     </tr>
+                    {% endif %}
                 {% endfor %}
                     <tr>
                         <th colspan="2">Totales</th>

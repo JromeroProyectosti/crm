@@ -556,17 +556,28 @@ class PagoController extends AbstractController
     /**
      * @Route("/{id}/verpagos", name="verpagos_index", methods={"GET","POST"})
      */
-    public function verpagos(Request $request, Contrato $contrato,PagoRepository $pagoRepository,ModuloPerRepository $moduloPerRepository): Response
+    public function verpagos(Request $request, Contrato $contrato,CuotaRepository $cuotaRepository, PagoRepository $pagoRepository,ModuloPerRepository $moduloPerRepository): Response
     {
         $this->denyAccessUnlessGranted('view','pago');
-        $user=$this->getUser();
+        $user=$this->getUser();$error_toast="";
+        if(null !== $request->query->get('error_toast')){
+            $error_toast=$request->query->get('error_toast');
+        }
+
         $pagina=$moduloPerRepository->findOneByName('pago',$user->getEmpresaActual());
         $pagos=$pagoRepository->findByContrato($contrato);
+
+        $cuotas_multa=$cuotaRepository->findOneByPrimeraVigente($contrato->getId(),true);
+        $pagos_multa=$pagoRepository->findByContrato($contrato,true);
 
         return $this->render('pago/verpagos.html.twig', [
             'pagos' => $pagos,
             'pagina'=>"Ingreso ". $pagina->getNombre(),
             'contrato'=>$contrato,
+            'cuotas_multa'=>$cuotas_multa,
+            'pagos_multa'=>$pagos_multa,
+            
+            'error_toast'=>$error_toast,
         ]);
     }
 

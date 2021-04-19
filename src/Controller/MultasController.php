@@ -113,7 +113,7 @@ class MultasController extends AbstractController
             $pagoCuotasRepository->asociarPagos($contrato,$cuotaRepository,$pagoCuotasRepository,$pago,true);
             
            
-            return $this->redirectToRoute('multas_view',['id'=>$contrato,'error_toast'=>$error_toast]);
+            return $this->redirectToRoute('verpagos_index',['id'=>$contrato,'error_toast'=>$error_toast]);
            
         }
 
@@ -148,7 +148,7 @@ class MultasController extends AbstractController
                 icon: 'success',
                 title: 'Multa modificada con exito!!'
               })";
-            return $this->redirectToRoute('multas_view',['id'=>$contrato,'error_toast'=>$error_toast]);
+            return $this->redirectToRoute('verpagos_index',['id'=>$contrato,'error_toast'=>$error_toast]);
            
         }
 
