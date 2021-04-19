@@ -70,10 +70,12 @@ class DesconoceController  extends AbstractController{
             case 3:
             case 4:
             case 1:
+            
                 $query=$contratoRepository->findByPers(null,$user->getEmpresaActual(),$compania,$filtro,null,$fecha);
                 $companias=$cuentaRepository->findByPers(null,$user->getEmpresaActual());
             break;
             case 7:
+            case 12:
                 $query=$contratoRepository->findByPers(null,null,$compania,$filtro,null,$fecha." and c.tramitador = ".$user->getId());
                 $companias=$cuentaRepository->findByPers($user->getId());
                 break;
