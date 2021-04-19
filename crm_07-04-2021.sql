@@ -1,4 +1,9 @@
-INSERT INTO `modulo` (`id`, `nombre`, `ruta`, `nombre_alt`, `descripcion`) VALUES (NULL, 'terminos', 'terminos_index', 'Términos de contrato', 'COntratos terminados ');
+
+ALTER TABLE configuracion ADD lotes INT DEFAULT NULL;
+ALTER TABLE contrato ADD lote INT DEFAULT NULL;
+ALTER TABLE usuario ADD lotes JSON DEFAULT NULL;
+
+
 ALTER TABLE cuota ADD is_multa TINYINT(1) DEFAULT NULL;
 ALTER TABLE contrato ADD pdf_termino VARCHAR(255) DEFAULT NULL;
 
@@ -20,3 +25,21 @@ ALTER TABLE cuota ADD anexo_id INT DEFAULT NULL;
 ALTER TABLE cuota ADD CONSTRAINT FK_763CCB0FC9348664 FOREIGN KEY (anexo_id) REFERENCES contrato_anexo (id);
 CREATE INDEX IDX_763CCB0FC9348664 ON cuota (anexo_id);
 
+
+INSERT INTO `modulo` (`id`, `nombre`, `ruta`, `nombre_alt`, `descripcion`) VALUES
+(36, 'administrativo', 'administrativo_index', 'Usuario Administrativo', 'Usuario para Pagos y Cobranzza'),
+(37, 'pago_finalizado', 'pago_finalizado', 'Pago Finalizado', 'Es una extension de pagos filtrando solos los contratos finalizados'),
+(38, 'pago_resumen', 'pago_resumen', 'Resumen de Pagos', 'Modulo anclado al modulo Pago, los privilegios serán los de pagos'),
+(39, 'cobradores', 'cobradores_index', 'Cobradores', 'Usuario de Cobranza'),
+(40, 'cobranza', 'cobranza_index', 'Cobranza', 'Cobranza'),
+(41, 'reporte_agendador', 'reporte_agendador', 'Reporte Agendadores', 'Reporte de Agendadores'),
+(42, 'reporte_abogado', 'reporte_abogado', 'Reporte Abogados', 'Reporte de Abogados'),
+(43, 'reporte', 'reporte_index', 'Reportes', 'Reportes y Efectividad'),
+(44, 'comision', 'comision_index', 'Comisiones', 'Resumen y detalle de comisiones'),
+(45, 'comision_agendador', 'comision_agendador', 'Comision Agendadores', 'Comision Agendadores'),
+(46, 'comision_abogado', 'comision_abogado', 'Comision Abogados', 'Comisiones Abogados'),
+(47, 'estadistico', 'estadistico_index', 'Estadísticos', 'Gráficos Estadísticos'),
+(48, 'estadistico_marketing', 'estadistico_marketing', 'Estadísticos Marketing', 'Gráficos Estadísticos Marketing'),
+(49, 'terminos', 'terminos_index', 'Términos de contrato', 'COntratos terminados '),
+(50, 'desconoce', 'desconoce_index', 'Quiere desistir o desconoce', 'Quiere desistir o desconoce'),
+(51, 'multas', 'multas_index', 'Multas', 'Multas');
