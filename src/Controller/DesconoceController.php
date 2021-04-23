@@ -140,6 +140,9 @@ class DesconoceController  extends AbstractController{
                         $entityManager->flush();
                     }
                 }
+                $contrato->setIsFinalizado(true);
+                $entityManager->persist($contrato);
+                $entityManager->flush();
             }
             if($status==14){
                 foreach($multas as $multa){

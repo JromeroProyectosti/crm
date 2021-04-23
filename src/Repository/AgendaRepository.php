@@ -75,7 +75,7 @@ class AgendaRepository extends ServiceEntityRepository
     }
     
     /**
-      * @return Agenda[] Retorna un array de Agenda objects sin contrato creado
+    * @return Agenda[] Retorna un array de Agenda objects sin contrato creado
     */
     public function findByPersSinContr($usuario=null,$empresa=null,$compania=null,$status=null, $filtro=null,$esAbogado=null,$otros=null,$tipoFecha=null)
     {

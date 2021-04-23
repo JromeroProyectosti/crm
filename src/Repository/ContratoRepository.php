@@ -82,6 +82,11 @@ class ContratoRepository extends ServiceEntityRepository
         $query=$this->createQueryBuilder('c')
         ->rightJoin('c.agenda', 'a')
         ->andWhere('c.id is null');
+        
+
+
+        /*->join('c.agenda', 'a')
+        ;*/
 
         if(!is_null($status)){
             $query->andWhere('a.status in ('.$status.')');

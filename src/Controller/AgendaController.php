@@ -72,6 +72,8 @@ class AgendaController extends AbstractController
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+
             $sql="";
             $sql1="";
             $telefono = $form->getData()->getTelefonoCliente();
@@ -85,18 +87,36 @@ class AgendaController extends AbstractController
                 $sql1=" and (a.telefonoCliente='$telefonoRecado' or a.telefonoRecadoCliente='$telefonoRecado' ) ";
             }
 
-            $agenda_existe=$contratoRepository-> findByPersSinContr(null,null,null,null,null,3,$sql.$sql1);
-            $contrato_existe=$contratoRepository->findByPers(null,null,null,null,null, $sql.$sql1);
-            if(null == $agenda_existe || null != $contrato_existe){
-                
-            //if(true){
+            $registrar=true;
+            //$agenda_existe=$contratoRepository->findByPersSinContr(null,null,null,null,null,3,$sql.$sql1);
+            //$contrato_existe=$contratoRepository->findByPers(null,null,null,null,null, $sql.$sql1);
+            //if(null != $contrato_existe){
+            $agendas=$agendaRepository->findByPers(null,null,null,null,null, 3,$sql.$sql1);
+            
+            if(null != $agendas ){
+                $cont_agendas=0;
+                foreach($agendas as $_agenda ){
+                   
+                    $contrato_terminado=$contratoRepository->findOneBy(['agenda'=>$_agenda, 'isFinalizado'=>true]);
+
+                    if(null == $contrato_terminado){
+                        $cont_agendas+=1;
+                    }
+                }
+                if($cont_agendas>0){
+                    $registrar=false;
+                }
+            }
+
+            
+            if($registrar){
                 $cuenta=$request->request->get('cboCuenta');
                 $usuario=$request->request->get('cboAgendador');
                 $agenda->setCuenta($cuentaRepository->find($cuenta));
                 $agenda->setAgendador($usuarioRepository->find($usuario));
 
                 $agenda->setCampania($canal);
-                $entityManager = $this->getDoctrine()->getManager();
+                
                 $entityManager->persist($agenda);
                 $entityManager->flush();
 
@@ -110,7 +130,7 @@ class AgendaController extends AbstractController
                 $entityManager->persist($observacion);
                 $entityManager->flush();
 
-                //return $this->redirectToRoute('agenda_new',['msg'=>'exito']);
+                return $this->redirectToRoute('agenda_new',['msg'=>'exito']);
             }else{
                 $error='<div class="alert alert-danger alert-dismissible">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
