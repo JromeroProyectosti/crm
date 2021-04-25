@@ -558,7 +558,7 @@ class ContratoController extends AbstractController
                     ConfiguracionRepository $configuracionRepository,
                     Request $request): Response
     {
-        $this->denyAccessUnlessGranted('edit','contrato');
+        $this->denyAccessUnlessGranted('create','terminos');
         $user=$this->getUser();
         
         $pagina=$moduloPerRepository->findOneByName('contrato',$user->getEmpresaActual());
