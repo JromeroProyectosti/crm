@@ -50,6 +50,7 @@
                         
                         <th>{{ knp_pagination_sortable(contratos, 'Estado', 'agenda.status') }} {% if contratos.isSorted('agenda.status') %} <i class="fas fa-sort"></i>{% endif %}</th>
                         <th>{{ knp_pagination_sortable(contratos, 'Fecha Contrato', 'fechaCreacion') }} {% if contratos.isSorted('fechaCreacion') %} <i class="fas fa-sort"></i>{% endif %}</th>
+                        <th>{{ knp_pagination_sortable(contratos, 'Termino', 'agenda.status') }} {% if contratos.isSorted('agenda.status') %} <i class="fas fa-sort"></i>{% endif %}</th>
                         {% if sesion.getSesion.usuarioTipo.id in [1,4,8,7] %}
                         <th>Acciones</th>
                         {% endif %}
@@ -67,7 +68,7 @@
                         <td>{{ contrato.sucursal}}</td>
                         <td>{{ contrato.agenda.status.nombre}}</td>
                         <td>{{ contrato.fechaCreacion|date('d-m-Y H:i') }}</td>
-                       
+                        <td>{{ contrato.agenda.status.nombre }}</td>
                         <td>
                             
                                 
