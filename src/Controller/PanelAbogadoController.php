@@ -54,7 +54,7 @@ class PanelAbogadoController extends AbstractController
         $compania=null;
         $fecha=null;
         $statues='5';
-        $statuesgroup='4,5,7,6,8,12,13';
+        $statuesgroup='4,5,7,6,8,14,15';
         $status=null;
         $tipo_fecha=1;
         if(null !== $request->query->get('bFiltro') && trim($request->query->get('bFiltro'))!=''){

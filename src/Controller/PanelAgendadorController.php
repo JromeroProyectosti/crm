@@ -41,7 +41,7 @@ class PanelAgendadorController extends AbstractController
         $compania=null;
         $fecha=null;
         $statues='1';
-        $statuesgroup="1,2,3,4,5,6,7,8,9,10,11,12,13";
+        $statuesgroup="1,2,3,4,5,6,7,8,9,10,11,14,15";
         $status=null;
         $tipo_fecha=0;
         if(null !== $request->query->get('bFiltro') && trim($request->query->get('bFiltro'))!=''){
