@@ -130,10 +130,16 @@ class Agenda
      */
     private $fechaContrato;
 
+    /**
+     * @ORM\OneToOne(targetEntity=Contrato::class,  mappedBy="agenda")
+     */
+    private $contrato;
+
     public function __construct()
     {
         $this->usuarioUsuariocategorias = new ArrayCollection();
         $this->agendaObservacions = new ArrayCollection();
+        
     }
 
     public function getId(): ?int
@@ -441,5 +447,10 @@ class Agenda
         $this->fechaContrato = $fechaContrato;
 
         return $this;
+    }
+
+    public function getContrato(): ?Contrato
+    {
+        return $this->contrato;
     }
 }

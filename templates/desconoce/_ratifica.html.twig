@@ -36,6 +36,11 @@
             $(".btn-desiste").addClass("disabled");
             $(".btn-desiste").removeClass("btn-desiste");
             $("#msg").html('<div class="alert alert-danger" role="alert">Debe multa de ${{multa.monto|number_format(0,',','.')}} </div>');
+            {% else %}
+
+            $(".btn-desconoce").addClass("disabled");
+            $(".btn-desconoce").removeClass("btn-desconoce");
+
             {% endif %}
             
         {% endfor %}
