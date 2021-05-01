@@ -35,7 +35,7 @@ class DesconoceController  extends AbstractController{
      */
     public function index(ContratoRepository $contratoRepository,PaginatorInterface $paginator,ModuloPerRepository $moduloPerRepository,Request $request,CuentaRepository $cuentaRepository): Response
     {
-        //$this->denyAccessUnlessGranted('view','contrato');
+        $this->denyAccessUnlessGranted('view','desconoce');
         $user=$this->getUser();
         $pagina=$moduloPerRepository->findOneByName('desconoce',$user->getEmpresaActual());
         $filtro=null;

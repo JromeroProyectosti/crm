@@ -38,7 +38,7 @@ class TerminosController extends AbstractController
      */
     public function index(ContratoRepository $contratoRepository,PaginatorInterface $paginator,ModuloPerRepository $moduloPerRepository,Request $request,CuentaRepository $cuentaRepository): Response
     {
-        //$this->denyAccessUnlessGranted('view','contrato');
+        $this->denyAccessUnlessGranted('view','terminos');
         $user=$this->getUser();
         $pagina=$moduloPerRepository->findOneByName('terminos',$user->getEmpresaActual());
         $filtro=null;
