@@ -172,7 +172,14 @@
                 <p>{{contrato.observacion}}</p>   
                 
             </div>
+            {% if metodo is defined %}
+                
+                {% if metodo == "T" %}
+                {{ include('contrato/_terminar.html.twig', {'button_label': 'Modificar'}) }}
+                {% endif %}
+            {% endif %}
         </div>
+
         
     </div>
 

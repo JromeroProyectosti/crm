@@ -16,8 +16,7 @@ class PagoType extends AbstractType
             ->add('monto')
             ->add('boleta')
             ->add('observacion')
-            ->add('fechaPago')
-            ->add('horaPago')
+            
             ->add('ncomprobante')
             ->add('pagoTipo')
             ->add('pagoCanal')

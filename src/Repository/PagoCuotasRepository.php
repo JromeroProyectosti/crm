@@ -40,7 +40,102 @@ class PagoCuotasRepository extends ServiceEntityRepository
             ->getOneOrNullResult()
         ;
     }
+    public function asociarPagos($contrato,$cuotaRepository,$pagoCuotasRepository,$pago,$esMulta=false){
 
+        $entityManager = $this->_em;
+        $contrato->setIsFinalizado(false);
+
+        do{
+            $pagostatus=false;
+            $cuota=$cuotaRepository->findOneByPrimeraVigente($contrato->getId(),$esMulta);
+            $pagoCuotas=$pagoCuotasRepository->findByPago($pago->getId());
+
+            if(null == $pagoCuotas["total"]){
+                $total=0;
+            }else{
+                $total=$pagoCuotas["total"];
+            }
+            if($cuota){
+                //cuando el pago es menor o igual a la deuda.
+                if(($pago->getMonto()-$total)<=($cuota->getMonto()-$cuota->getPagado())){
+                    
+                    $cuota->setPagado($cuota->getPagado()+($pago->getMonto()-$total));
+
+                    $entityManager->persist($cuota);
+                    $entityManager->flush();
+
+                    $pagoCuota=new PagoCuotas();
+                    $pagoCuota->setCuota($cuota);
+                    $pagoCuota->setPago($pago);
+                    $pagoCuota->setMonto($pago->getMonto()-$total);
+                    $entityManager->persist($pagoCuota);
+                    $entityManager->flush();
+                }else{
+                    
+                    
+                    if(($pago->getMonto()-$total)>=($cuota->getMonto()-$cuota->getPagado())){
+                        
+                        
+                        $pagoCuota=new PagoCuotas();
+                        $pagoCuota->setCuota($cuota);
+                        $pagoCuota->setPago($pago);
+                        $pagoCuota->setMonto($cuota->getMonto()-$cuota->getPagado());
+                        $entityManager->persist($pagoCuota);
+                        $entityManager->flush();
+
+                        $cuota->setPagado($cuota->getMonto());
+                        $entityManager->persist($cuota);
+                        $entityManager->flush();
+                        $pagostatus=true;
+                    }else if(($pago->getMonto()-$total)<($cuota->getMonto()-$cuota->getPagado())){
+                        
+                        
+                        $pagoCuota=new PagoCuotas();
+                        $pagoCuota->setCuota($cuota);
+                        $pagoCuota->setPago($pago);
+                        $pagoCuota->setMonto(($pago->getMonto()-$total));
+                        $entityManager->persist($pagoCuota);
+                        $entityManager->flush();
+
+                        $cuota->setPagado(($pago->getMonto()-$total)+$cuota->getPagado());
+
+                        $entityManager->persist($cuota);
+                        $entityManager->flush();
+                    }
+                }
+            }else{
+                if($pago->getMonto()-$total>0){
+                    $cuota=$cuotaRepository->findOneByUltimaPagada($contrato->getId());
+                    if($cuota){
+
+                        $pagoCuota=new PagoCuotas();
+                        $pagoCuota->setCuota($cuota);
+                        $pagoCuota->setPago($pago);
+                        $pagoCuota->setMonto(($pago->getMonto()-$total));
+                        $entityManager->persist($pagoCuota);
+                        $entityManager->flush();
+
+                        $cuota->setPagado(($pago->getMonto()-$total)+$cuota->getPagado());
+
+                        $entityManager->persist($cuota);
+                        $entityManager->flush();
+                    }
+                }
+            }
+
+        }while($pagostatus);
+
+        $cuota=$cuotaRepository->findOneByPrimeraVigente($contrato->getId(),$esMulta);
+
+        if($cuota){
+            $contrato->setIsFinalizado(false);
+        }else{
+            $contrato->setIsFinalizado(true);
+        }
+        $entityManager->persist($contrato);
+        $entityManager->flush();
+        return true;
+    }
     // /**
     //  * @return PagoCuotas[] Returns an array of PagoCuotas objects
     //  */

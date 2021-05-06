@@ -217,12 +217,27 @@ class Contrato
      */
     private $isFinalizado;
 
-    
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $lote;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $pdfTermino;
+
+    /**
+     * @ORM\OneToMany(targetEntity=ContratoAnexo::class, mappedBy="contrato")
+     */
+    private $contratoAnexos;
+
+    
     public function __construct()
     {
         $this->contratoRols = new ArrayCollection();
         $this->detalleCuotas = new ArrayCollection();
+        $this->contratoAnexos = new ArrayCollection();
         
     }
 
@@ -734,6 +749,60 @@ class Contrato
     public function setIsFinalizado(?bool $isFinalizado): self
     {
         $this->isFinalizado = $isFinalizado;
+
+        return $this;
+    }
+
+    public function getLote(): ?int
+    {
+        return $this->lote;
+    }
+
+    public function setLote(?int $lote): self
+    {
+        $this->lote = $lote;
+
+        return $this;
+    }
+
+    public function getPdfTermino(): ?string
+    {
+        return $this->pdfTermino;
+    }
+
+    public function setPdfTermino(?string $pdfTermino): self
+    {
+        $this->pdfTermino = $pdfTermino;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ContratoAnexo[]
+     */
+    public function getContratoAnexos(): Collection
+    {
+        return $this->contratoAnexos;
+    }
+
+    public function addContratoAnexo(ContratoAnexo $contratoAnexo): self
+    {
+        if (!$this->contratoAnexos->contains($contratoAnexo)) {
+            $this->contratoAnexos[] = $contratoAnexo;
+            $contratoAnexo->setContrato($this);
+        }
+
+        return $this;
+    }
+
+    public function removeContratoAnexo(ContratoAnexo $contratoAnexo): self
+    {
+        if ($this->contratoAnexos->removeElement($contratoAnexo)) {
+            // set the owning side to null (unless already changed)
+            if ($contratoAnexo->getContrato() === $this) {
+                $contratoAnexo->setContrato(null);
+            }
+        }
 
         return $this;
     }

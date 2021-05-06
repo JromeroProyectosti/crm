@@ -3,7 +3,7 @@ knp_snappy:
   process_timeout: 60
   pdf: 
     enabled: true
-    binary: "/Users/Hans/sistemas/ProyectosPHP/crm/vendor/bin/wkhtmltopdf-amd64"
+    binary: "wkhtmltopdf"
     options:
       []
   temporary_folder: "%kernel.cache_dir%/snappy"

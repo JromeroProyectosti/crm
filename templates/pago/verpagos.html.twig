@@ -53,11 +53,29 @@
                 </tr>
 
             {% endfor %}
+
+           
+            {% if cuotas_multa is not null %}
+            <tr class="table-danger">
+                <td align="right">${{cuotas_multa.monto|number_format(0,',','.')}}</td>
+                <td align="center"></td>
+                <td align="center">{{cuotas_multa.fechaPago|date('Y-m-d H:i')}}</td>
+                <td align="right"></td>
+                <td align="right"></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>
+                    <a href="{{path('multa_new',{'id':cuotas_multa.id})}}" class="btn btn-success" alt="Pagar Multa"><i class="fas fa-dollar-sign"></i></a>
+                    <a href="{{path('multa_edit',{'id':cuotas_multa.id})}}" class="btn btn-success" alt="Editar Multa"><i class="fas fa-edit"></i></a>
+                </td>
+            </tr>
+            {% endif %}
         </tbody>
         </table>
         </div>
         <div class="card-footer">
-            {% if not contrato.isFinalizado %}
+            {% if not contrato.isFinalizado and cuotas_multa is null %}
                 <a href="{{path('pago_new',{'id':contrato.id})}}" class="btn btn-primary" >Agregar pago</a>
             {% endif %}
         </div>

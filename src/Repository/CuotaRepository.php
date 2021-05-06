@@ -25,6 +25,8 @@ class CuotaRepository extends ServiceEntityRepository
         $query->join('a.cuenta','cu');
         if($vigente){
             $query->andWhere('c.monto>c.pagado or c.pagado is null');
+            $query->andWhere('c.anular is null or c.anular = false');
+            $query->andWhere(' co.isFinalizado != true'); 
         }else{
             $query->andWhere(' co.isFinalizado=true');
         }
@@ -73,15 +75,23 @@ class CuotaRepository extends ServiceEntityRepository
         ;
     }
 
-    public function findOneByPrimeraVigente($contrato): ?Cuota
+    public function findOneByPrimeraVigente($contrato,$isMulta=false): ?Cuota
     {
         $query=$this->createQueryBuilder('c')
         ->andWhere('c.contrato=:contra')
         ->setParameter('contra', $contrato)
         ->andWhere('c.monto>c.pagado or c.pagado is null')
+        ;
+        $query->andWhere('c.anular is null or c.anular = false');
+       if($isMulta){
+            $query->andWhere('c.isMulta = true');
+        }
+        $query
         ->setMaxResults(1);
         return $query->getQuery()
+            
             ->getOneOrNullResult()
+            
         ;
     }
     public function findOneByUltimaPagada($contrato): ?Cuota

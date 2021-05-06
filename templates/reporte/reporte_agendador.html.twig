@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ReporteAgendadorController!{% endblock %}
+
+{% block body %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>AgendaId</th>
+                        <th>AgendadorId</th>
+                        <th>Agendador</th>
+                        <th>Cliente</th>
+                        <th>FechaContrato</th>
+                        <th>SucursalId</th>
+                        <th>Sucursal</th>
+                        <th>ReunionId</th>
+                        <th>Reunion</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for contrato in contratos %}
+                    <tr>
+                        <td>{{ contrato.agenda.id }}</td>
+                        <td>{{ contrato.agenda.agendador.id }}</td>
+                        <td>{{ contrato.agenda.agendador }}</td>
+                        <td>{{ contrato.nombre }}</td>
+                        <td>{{ contrato.fechaCreacion | date('Y-m-d') }}</td>
+                        <td>{{ contrato.sucursal.id }}</td>
+                        <td>{{ contrato.sucursal }}</td>
+                        <td>{{ contrato.reunion.id }}</td>
+                        <td>{{ contrato.reunion }}</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="3">no records found</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+{% endblock %}

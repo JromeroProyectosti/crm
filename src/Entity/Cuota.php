@@ -65,6 +65,16 @@ class Cuota
      */
     private $pagoCuotas;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $isMulta;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=ContratoAnexo::class, inversedBy="cuotas")
+     */
+    private $anexo;
+
     public function __construct()
     {
         $this->pagoCuotas = new ArrayCollection();
@@ -197,6 +207,30 @@ class Cuota
                 $pagoCuota->setCuota(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getIsMulta(): ?bool
+    {
+        return $this->isMulta;
+    }
+
+    public function setIsMulta(?bool $isMulta): self
+    {
+        $this->isMulta = $isMulta;
+
+        return $this;
+    }
+
+    public function getAnexo(): ?ContratoAnexo
+    {
+        return $this->anexo;
+    }
+
+    public function setAnexo(?ContratoAnexo $anexo): self
+    {
+        $this->anexo = $anexo;
 
         return $this;
     }

@@ -556,17 +556,28 @@ class PagoController extends AbstractController
     /**
      * @Route("/{id}/verpagos", name="verpagos_index", methods={"GET","POST"})
      */
-    public function verpagos(Request $request, Contrato $contrato,PagoRepository $pagoRepository,ModuloPerRepository $moduloPerRepository): Response
+    public function verpagos(Request $request, Contrato $contrato,CuotaRepository $cuotaRepository, PagoRepository $pagoRepository,ModuloPerRepository $moduloPerRepository): Response
     {
         $this->denyAccessUnlessGranted('view','pago');
-        $user=$this->getUser();
+        $user=$this->getUser();$error_toast="";
+        if(null !== $request->query->get('error_toast')){
+            $error_toast=$request->query->get('error_toast');
+        }
+
         $pagina=$moduloPerRepository->findOneByName('pago',$user->getEmpresaActual());
         $pagos=$pagoRepository->findByContrato($contrato);
+
+        $cuotas_multa=$cuotaRepository->findOneByPrimeraVigente($contrato->getId(),true);
+        $pagos_multa=$pagoRepository->findByContrato($contrato,true);
 
         return $this->render('pago/verpagos.html.twig', [
             'pagos' => $pagos,
             'pagina'=>"Ingreso ". $pagina->getNombre(),
             'contrato'=>$contrato,
+            'cuotas_multa'=>$cuotas_multa,
+            'pagos_multa'=>$pagos_multa,
+            
+            'error_toast'=>$error_toast,
         ]);
     }
 
@@ -612,15 +623,18 @@ class PagoController extends AbstractController
         $pago->setUsuarioRegistro($user);
         $form = $this->createForm(PagoType::class, $pago);
        
-        $form->add('fechaPago',DateType::class,array('widget'=>'single_text','html5'=>false));
+       
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $fechaPago=$request->request->get('fechaPago');
             $entityManager = $this->getDoctrine()->getManager();
+            $pago->setFechaPago(new \DateTime(date('Y-m-d H:i',strtotime($fechaPago))));
+            $pago->setHoraPago(new \DateTime(date('H:i',strtotime($fechaPago))));
             $entityManager->persist($pago);
             $entityManager->flush();
             
-            $this->asociarPagos($contrato,$cuotaRepository,$pagoCuotasRepository,$pago);
+            $pagoCuotasRepository->asociarPagos($contrato,$cuotaRepository,$pagoCuotasRepository,$pago);
             
            
             return $this->redirectToRoute('verpagos_index',['id'=>$contrato->getId()]);
@@ -715,104 +729,5 @@ class PagoController extends AbstractController
         }else{
             return $this->redirectToRoute('pago_index');
         }
-    }
-
-
-    public function asociarPagos($contrato,$cuotaRepository,$pagoCuotasRepository,$pago){
-        $entityManager = $this->getDoctrine()->getManager();
-        $contrato->setIsFinalizado(false);
-
-        do{
-
-            $pagostatus=false;
-            $cuota=$cuotaRepository->findOneByPrimeraVigente($contrato->getId());
-            $pagoCuotas=$pagoCuotasRepository->findByPago($pago->getId());
-
-            if(null == $pagoCuotas["total"]){
-                $total=0;
-            }else{
-                $total=$pagoCuotas["total"];
-            }
-            if($cuota){
-
-                //cuando el pago es menor o igual a la deuda.
-                if(($pago->getMonto()-$total)<=($cuota->getMonto()-$cuota->getPagado())){
-                    
-                    $cuota->setPagado($cuota->getPagado()+($pago->getMonto()-$total));
-
-                    $entityManager->persist($cuota);
-                    $entityManager->flush();
-
-                    $pagoCuota=new PagoCuotas();
-                    $pagoCuota->setCuota($cuota);
-                    $pagoCuota->setPago($pago);
-                    $pagoCuota->setMonto($pago->getMonto()-$total);
-                    $entityManager->persist($pagoCuota);
-                    $entityManager->flush();
-                }else{
-                    
-                    
-                    if(($pago->getMonto()-$total)>=($cuota->getMonto()-$cuota->getPagado())){
-                        
-                        
-                        $pagoCuota=new PagoCuotas();
-                        $pagoCuota->setCuota($cuota);
-                        $pagoCuota->setPago($pago);
-                        $pagoCuota->setMonto($cuota->getMonto()-$cuota->getPagado());
-                        $entityManager->persist($pagoCuota);
-                        $entityManager->flush();
-
-                        $cuota->setPagado($cuota->getMonto());
-                        $entityManager->persist($cuota);
-                        $entityManager->flush();
-                        $pagostatus=true;
-                    }else if(($pago->getMonto()-$total)<($cuota->getMonto()-$cuota->getPagado())){
-                        
-                        
-                        $pagoCuota=new PagoCuotas();
-                        $pagoCuota->setCuota($cuota);
-                        $pagoCuota->setPago($pago);
-                        $pagoCuota->setMonto(($pago->getMonto()-$total));
-                        $entityManager->persist($pagoCuota);
-                        $entityManager->flush();
-
-                        $cuota->setPagado(($pago->getMonto()-$total)+$cuota->getPagado());
-
-                        $entityManager->persist($cuota);
-                        $entityManager->flush();
-                    }
-                }
-            }else{
-                if($pago->getMonto()-$total>0){
-                    $cuota=$cuotaRepository->findOneByUltimaPagada($contrato->getId());
-                    if($cuota){
-
-                        $pagoCuota=new PagoCuotas();
-                        $pagoCuota->setCuota($cuota);
-                        $pagoCuota->setPago($pago);
-                        $pagoCuota->setMonto(($pago->getMonto()-$total));
-                        $entityManager->persist($pagoCuota);
-                        $entityManager->flush();
-
-                        $cuota->setPagado(($pago->getMonto()-$total)+$cuota->getPagado());
-
-                        $entityManager->persist($cuota);
-                        $entityManager->flush();
-                    }
-                }
-            }
-
-        }while($pagostatus);
-
-        $cuota=$cuotaRepository->findOneByPrimeraVigente($contrato->getId());
-
-        if($cuota){
-            $contrato->setIsFinalizado(false);
-        }else{
-            $contrato->setIsFinalizado(true);
-        }
-        $entityManager->persist($contrato);
-        $entityManager->flush();
-        return true;
     }
 }

@@ -289,6 +289,11 @@ class Usuario implements UserInterface
      */
     private $sobrecupo;
 
+    /**
+     * @ORM\Column(type="json", nullable=true)
+     */
+    private $lotes = [];
+
     
     
     public function __construct()
@@ -1185,6 +1190,18 @@ class Usuario implements UserInterface
     public function setSobrecupo(?int $sobrecupo): self
     {
         $this->sobrecupo = $sobrecupo;
+
+        return $this;
+    }
+
+    public function getLotes(): ?array
+    {
+        return $this->lotes;
+    }
+
+    public function setLotes(?array $lotes): self
+    {
+        $this->lotes = $lotes;
 
         return $this;
     }
