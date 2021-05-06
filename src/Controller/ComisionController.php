@@ -56,6 +56,12 @@ class ComisionController extends AbstractController
         }
         $fecha="a.fechaContrato between '$dateInicio' and '$dateFin 23:59:59'" ;
 
+        if(null !== $request->query->get('bStatus') && trim($request->query->get('bStatus')!='')){
+            $status=$request->query->get('bStatus');
+            $statues=$status;
+            $statuesgroup=$status;
+        }
+
         switch($user->getUsuarioTipo()->getId()){
             case 1:
                 $query=$agendaRepository->findByPers(null,$user->getEmpresaActual(),$compania,$statuesgroup,$filtro,null,$fecha);
@@ -81,7 +87,7 @@ class ComisionController extends AbstractController
             'dateFin'=>$dateFin,
             'pagina'=>$pagina->getNombre(),
             'resumenes'=>$queryresumen,
-            'status'=>$status,
+            'status'=>$statuesgroup,
         ]);
     }
     /**
