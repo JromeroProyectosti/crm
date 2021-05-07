@@ -183,6 +183,7 @@ class PanelAbogadoController extends AbstractController
 
         $user=$this->getUser();
         $pagina=$moduloPerRepository->findOneByName('panel_abogado',$user->getEmpresaActual());
+
         if(null != $request->request->get('chkStatus')){
             $agenda->setStatus($agendaStatusRepository->find($request->request->get('chkStatus')));
             if(null !== $request->request->get('cboAbogado')){

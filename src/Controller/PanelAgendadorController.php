@@ -15,6 +15,7 @@ use App\Repository\UsuarioRepository;
 use App\Repository\UsuarioNoDisponibleRepository;
 use App\Repository\AgendaStatusRepository;
 use App\Repository\CuentaRepository;
+use App\Service\ActualizaLead;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -327,9 +328,15 @@ class PanelAgendadorController extends AbstractController
                         CuentaRepository $cuentaRepository,
                         UsuarioRepository $usuarioRepository,
                         ReunionRepository $reunionRepository,
+                        ActualizaLead $actualizaLead,
                         Request $request): Response
     {
         $this->denyAccessUnlessGranted('create','panel_agendador');
+
+        //Buscar si tiene Campaña::::
+
+        $actualizaLead->completar($agenda);
+
         $error='';
         $abortar=false;
         $user=$this->getUser();

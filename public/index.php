@@ -1,5 +1,6 @@
 <?php
 date_default_timezone_set('America/Santiago');
+error_reporting(E_ALL);
 use App\Kernel;
 use Symfony\Component\ErrorHandler\Debug;
 use Symfony\Component\HttpFoundation\Request;

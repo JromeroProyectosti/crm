@@ -135,6 +135,16 @@ class Agenda
      */
     private $contrato;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $lead;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $formId;
+
     public function __construct()
     {
         $this->usuarioUsuariocategorias = new ArrayCollection();
@@ -452,5 +462,29 @@ class Agenda
     public function getContrato(): ?Contrato
     {
         return $this->contrato;
+    }
+
+    public function getLead(): ?string
+    {
+        return $this->lead;
+    }
+
+    public function setLead(?string $lead): self
+    {
+        $this->lead = $lead;
+
+        return $this;
+    }
+
+    public function getFormId(): ?string
+    {
+        return $this->formId;
+    }
+
+    public function setFormId(?string $formId): self
+    {
+        $this->formId = $formId;
+
+        return $this;
     }
 }

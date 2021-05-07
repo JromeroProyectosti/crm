@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => 'b31f6a25877c11ab727e2845215fe8873c46537b',
+    'reference' => 'bca5ee226311c27cafad96e5740710fcb29cabb4',
     'name' => '__root__',
   ),
   'versions' => 
@@ -18,7 +18,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => 'b31f6a25877c11ab727e2845215fe8873c46537b',
+      'reference' => 'bca5ee226311c27cafad96e5740710fcb29cabb4',
     ),
     'beberlei/doctrineextensions' => 
     array (
@@ -308,6 +308,15 @@
       ),
       'reference' => '9567d9c4c519fbe40de01dbd1e4469dbbb66f46a',
     ),
+    'monolog/monolog' => 
+    array (
+      'pretty_version' => '2.2.0',
+      'version' => '2.2.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '1cb1cde8e8dd0f70cc0fe51354a59acad9302084',
+    ),
     'myclabs/php-enum' => 
     array (
       'pretty_version' => '1.7.7',
@@ -447,6 +456,7 @@
       'provided' => 
       array (
         0 => '1.0',
+        1 => '1.0.0',
       ),
     ),
     'psr/simple-cache' => 
@@ -721,6 +731,24 @@
       array (
       ),
       'reference' => 'aa2b2013a8d380e3980a29a79cc0fbcfb02fb920',
+    ),
+    'symfony/monolog-bridge' => 
+    array (
+      'pretty_version' => 'v5.0.11',
+      'version' => '5.0.11.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'd48bf711b47c6fa9a0df747a73ad4d45d8fc5409',
+    ),
+    'symfony/monolog-bundle' => 
+    array (
+      'pretty_version' => 'v3.7.0',
+      'version' => '3.7.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '4054b2e940a25195ae15f0a49ab0c51718922eb4',
     ),
     'symfony/options-resolver' => 
     array (
