@@ -89,7 +89,8 @@
                     <th>{{ knp_pagination_sortable(agendas, 'Canal', 'campania') }} {% if agendas.isSorted('campania') %} <i class="fas fa-sort"></i>{% endif %}</th>
                     <th>{{ knp_pagination_sortable(agendas, 'Agendador', 'agendador.nombre') }} {% if agendas.isSorted('agendador.nombre') %} <i class="fas fa-sort"></i>{% endif %}</th>
                     <th>{{ knp_pagination_sortable(agendas, 'Cliente', 'nombreCliente') }} {% if agendas.isSorted('nombreCliente') %} <i class="fas fa-sort"></i>{% endif %}</th>
-                    <th>Fecha cto.</th>
+                    <th>{{ knp_pagination_sortable(agendas, 'Fecha cto.', 'contrato.fechaCreacion') }} {% if agendas.isSorted('contrato.fechaCreacion') %} <i class="fas fa-sort"></i>{% endif %}</th>
+
                     <th>Sucursal</th>
                     <th>Reunión</th>
                 </tr>

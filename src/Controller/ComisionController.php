@@ -67,6 +67,12 @@ class ComisionController extends AbstractController
                 $query=$agendaRepository->findByPers(null,$user->getEmpresaActual(),$compania,$statuesgroup,$filtro,null,$fecha);
                 $companias=$cuentaRepository->findByPers(null,$user->getEmpresaActual());
                 $queryresumen=$agendaRepository->findByPersGroup(null,$user->getEmpresaActual(),$compania,$statuesgroup,$filtro,0,$fecha);
+                break;
+            default:
+            $query=$agendaRepository->findByPers(null,$user->getEmpresaActual(),$compania,$statuesgroup,$filtro,null,$fecha);
+            $companias=$cuentaRepository->findByPers(null,$user->getEmpresaActual());
+            $queryresumen=$agendaRepository->findByPersGroup(null,$user->getEmpresaActual(),$compania,$statuesgroup,$filtro,0,$fecha);
+
             break;
         }
 
