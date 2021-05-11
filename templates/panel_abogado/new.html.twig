@@ -13,8 +13,26 @@
             <div class="row">
                
                 <div class="col-sm-12 col-md-6">
-                    <small class="text-muted">Compañia</small><br>
-                    <label>{{agenda.cuenta.nombre}}</label>
+                    <div class="row">
+                        <div class="col-8">
+                            <small class="text-muted">Compañia</small>
+                            <select name="cboCompanias" class="form-control" onchange="javascript:cambiaCompania(this.value)">
+                                {% for compania in companias %}
+                                    <option {% if compania.id==agenda.cuenta.id %}
+                                        selected
+                                    {% endif %}
+                                    value ="{{compania.id}}" >{{compania.nombre}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div class="col-4" id="status">
+                            
+                        </div>
+
+                    </div>
+                    
+                    
                 </div>
                 <div class="col-sm-12 col-md-6">
                     <small class="text-muted">Canal</small><br>
@@ -312,8 +330,29 @@
             }
 
         });
+        
     }
+    function cambiaCompania(status){
+        $.ajax({
+            url:"{{path('panel_abogado_compania',{'id':agenda.id})}}",
+            type: "get",
+            dataType: "html",
+            data:"compania="+status,
+            cache: false,
+            contentType: false,
+            processData: false,
+            async: true,
+            beforeSend: function(){
+                $("#status").html(' <div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i><div class="text-bold pt-2">Loading...</div></div>');
+                
+            },
+            success:function(data){
+                $("#status").html(data);
+                //$("#contrato").html("");
+            }
 
+        });
+    }
     </script>
 
 {% endblock %}

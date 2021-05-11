@@ -183,6 +183,7 @@ class PanelAbogadoController extends AbstractController
 
         $user=$this->getUser();
         $pagina=$moduloPerRepository->findOneByName('panel_abogado',$user->getEmpresaActual());
+        $companias=$cuentaRepository->findByPers(null,$user->getEmpresaActual());
 
         if(null != $request->request->get('chkStatus')){
             $agenda->setStatus($agendaStatusRepository->find($request->request->get('chkStatus')));
@@ -221,7 +222,7 @@ class PanelAbogadoController extends AbstractController
         return $this->render('panel_abogado/new.html.twig', [
             'agenda'=>$agenda,
             'pagina'=>$pagina->getNombre().' | Gestionar',
-            
+            'companias'=>$companias,
             'statues'=>$agendaStatusRepository->findBy(['perfil'=>[$agenda->getAbogado()->getUsuarioTipo()->getId(),0]],['orden'=>'asc']),
         ]);
 
@@ -432,6 +433,22 @@ class PanelAbogadoController extends AbstractController
             'status'=>$_GET['status']
         ]);
     }
-    
+    /**
+     * @Route("/{id}/compania", name="panel_abogado_compania", methods={"GET","POST"})
+     */
+    public function compania(Agenda $agenda,Request $request,
+                   CuentaRepository  $cuentaRepository)
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+        
+        $compania=$request->query->get('compania');
+        $agenda->setCuenta($cuentaRepository->find($compania));
+        $entityManager->persist($agenda);
+        $entityManager->flush();
+
+        return $this->render('panel_abogado/ok.html.twig');
+
+    }
+
 
 }

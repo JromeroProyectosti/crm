@@ -84,11 +84,11 @@
             <thead>
                 <tr>
                     <th>Id</th>
-                    <th>Folio cto.</th>
-                    <th>Compañia</th>
-                    <th>Canal</th>
-                    <th>Agendador</th>
-                    <th>Cliente</th>
+                    <th>{{ knp_pagination_sortable(agendas, 'Folio cto.', 'contrato.id') }} {% if agendas.isSorted('contrato.id') %} <i class="fas fa-sort"></i>{% endif %}</th>
+                    <th>{{ knp_pagination_sortable(agendas, 'Compañia', 'cuenta.nombre') }} {% if agendas.isSorted('cuenta.nombre') %} <i class="fas fa-sort"></i>{% endif %}</th>
+                    <th>{{ knp_pagination_sortable(agendas, 'Canal', 'campania') }} {% if agendas.isSorted('campania') %} <i class="fas fa-sort"></i>{% endif %}</th>
+                    <th>{{ knp_pagination_sortable(agendas, 'Agendador', 'agendador.nombre') }} {% if agendas.isSorted('agendador.nombre') %} <i class="fas fa-sort"></i>{% endif %}</th>
+                    <th>{{ knp_pagination_sortable(agendas, 'Cliente', 'nombreCliente') }} {% if agendas.isSorted('nombreCliente') %} <i class="fas fa-sort"></i>{% endif %}</th>
                     <th>Fecha cto.</th>
                     <th>Sucursal</th>
                     <th>Reunión</th>
@@ -114,6 +114,15 @@
             {% endfor %}
             </tbody>
         </table>
+        <div class="card-footer clearfix">
+            {# display navigation #}
+       <div class="navigation">
+           {{ knp_pagination_render(agendas,'@KnpPaginator/Pagination/twitter_bootstrap_v4_pagination.html.twig',{},{
+           'position': 'centered',
+           'rounded': true,
+           }) }}
+       </div>
+   </div>
 
 <script>
     $('#bFecha').daterangepicker({
