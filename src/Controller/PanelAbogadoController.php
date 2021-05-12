@@ -8,6 +8,7 @@ use App\Entity\Usuario;
 use App\Entity\ContratoRol;
 use App\Entity\AgendaObservacion;
 use App\Entity\Contrato;
+use App\Entity\Cuenta;
 use App\Form\ContratoType;
 use App\Repository\AgendaRepository;
 use App\Repository\JuzgadoRepository;
@@ -165,6 +166,16 @@ class PanelAbogadoController extends AbstractController
             'pagina'=>$pagina->getNombre(),
             'contrato_rols' => $contratoRolRepository->findByTemporal($abogado->getId()),
            
+        ]);
+    }
+    /**
+     * @Route("/{id}/tramitadores", name="panel_abogado_tramitadores", methods={"GET","POST"})
+     */
+    public function tramitadores(Cuenta $cuenta, Request $request,UsuarioRepository $usuarioRepository): Response
+    {
+        
+        return $this->render('panel_abogado/tramitadores.html.twig', [
+            'tramitadores'=>$usuarioRepository->findByCuenta($cuenta->getId(),['usuarioTipo'=>7,'estado'=>1]),
         ]);
     }
     /**
@@ -449,6 +460,6 @@ class PanelAbogadoController extends AbstractController
         return $this->render('panel_abogado/ok.html.twig');
 
     }
-
+     
 
 }
