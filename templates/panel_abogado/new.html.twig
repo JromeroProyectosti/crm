@@ -16,6 +16,9 @@
                     <div class="row">
                         <div class="col-8">
                             <small class="text-muted">Compañia</small>
+                            {% if agenda.status.id==5 %}
+                                
+                            
                             <select name="cboCompanias" class="form-control" onchange="javascript:cambiaCompania(this.value)">
                                 {% for compania in companias %}
                                     <option {% if compania.id==agenda.cuenta.id %}
@@ -24,6 +27,10 @@
                                     value ="{{compania.id}}" >{{compania.nombre}}</option>
                                 {% endfor %}
                             </select>
+                            {% else %}
+                            <label>{{agenda.status.nombre}}</label>
+                            {% endif %}
+
                         </div>
                         
                         <div class="col-4" id="status">
