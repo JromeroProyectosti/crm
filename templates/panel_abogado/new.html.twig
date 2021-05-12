@@ -17,18 +17,17 @@
                         <div class="col-8">
                             <small class="text-muted">Compañia</small>
                             {% if agenda.status.id==5 %}
-                                
-                            
-                            <select name="cboCompanias" class="form-control" onchange="javascript:cambiaCompania(this.value)">
-                                {% for compania in companias %}
-                                    <option {% if compania.id==agenda.cuenta.id %}
-                                        selected
-                                    {% endif %}
-                                    value ="{{compania.id}}" >{{compania.nombre}}</option>
-                                {% endfor %}
-                            </select>
+                                <select name="cboCompanias" class="form-control" onchange="javascript:cambiaCompania(this.value)">
+                                    {% for compania in companias %}
+                                        <option {% if compania.id==agenda.cuenta.id %}
+                                            selected
+                                        {% endif %}
+                                        value ="{{compania.id}}" >{{compania.nombre}}</option>
+                                    {% endfor %}
+                                </select>
                             {% else %}
-                            <label>{{agenda.status.nombre}}</label>
+                            <br>
+                            <label>{{agenda.cuenta.nombre}}</label>
                             {% endif %}
 
                         </div>
