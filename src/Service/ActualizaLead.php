@@ -50,31 +50,33 @@ class ActualizaLead
 
             
             $configuracion=$em->getRepository(Configuracion::class)->find(1);
-            $data_1 = json_decode( file_get_contents('https://graph.facebook.com/'.$agenda->getLead().'?access_token='.$configuracion->getAccessToken()), true );
-            $data=$data_1['field_data'];
+            if(false !== @file_get_contents('https://graph.facebook.com/'.$agenda->getLead().'?access_token='.$configuracion->getAccessToken())){
+                $data_1 = json_decode( file_get_contents('https://graph.facebook.com/'.$agenda->getLead().'?access_token='.$configuracion->getAccessToken()), true );
+                $data=$data_1['field_data'];
+                var_dump($data);
+                $nombre=$data[0]['values'][0];
+                $telefono=$data[1]['values'][0];
+                $correo=$data[2]['values'][0];
 
-            $nombre=$data[0]['values'][0];
-            $telefono=$data[1]['values'][0];
-            $correo=$data[2]['values'][0];
+                if(trim($agenda->getNombreCliente())==''){
+                    $agenda->setNombreCliente($nombre);
+                }
+                if(trim($agenda->getEmailCliente())==''){
+                    $agenda->setEmailCliente($correo);
+                }
+                if(trim($agenda->getTelefonoCliente())==''){
+                    $agenda->setTelefonoCliente($telefono);
+                }
 
-            if(trim($agenda->getNombreCliente())==''){
-                $agenda->setNombreCliente($nombre);
+
+                $campania = json_decode( file_get_contents('https://graph.facebook.com/v8.0/'.$agenda->getFormId().'?access_token='.$configuracion->getAccessToken()), true );
+
+                if(trim($agenda->getCampania())==''){
+                    $agenda->setCampania($campania['name']);
+                }
+                $entityManager->persist($agenda);
+                $entityManager->flush();
             }
-            if(trim($agenda->getEmailCliente())==''){
-                $agenda->setEmailCliente($correo);
-            }
-            if(trim($agenda->getTelefonoCliente())==''){
-                $agenda->setTelefonoCliente($telefono);
-            }
-
-
-            $campania = json_decode( file_get_contents('https://graph.facebook.com/v8.0/'.$agenda->getFormId().'?access_token='.$configuracion->getAccessToken()), true );
-
-            if(trim($agenda->getCampania())==''){
-                $agenda->setCampania($campania['name']);
-            }
-            $entityManager->persist($agenda);
-            $entityManager->flush();
         }
     }
 }

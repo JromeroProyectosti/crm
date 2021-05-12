@@ -131,7 +131,7 @@ class CobranzaController extends AbstractController
             20 /*limit per page*/,
             array('defaultSortFieldName' => 'fechaPago', 'defaultSortDirection' => 'Asc'));
         
-        return $this->render('pago/index.html.twig', [
+        return $this->render('cobranza/index.html.twig', [
             'cuotas' => $cuotas,
             'bFiltro'=>$filtro,
             'bFolio'=>$folio,
@@ -421,13 +421,13 @@ class CobranzaController extends AbstractController
         ]);
     }
     /**
-     * @Route("/{id}/verpagos", name="verpagos_index", methods={"GET","POST"})
+     * @Route("/{id}/vercobranza", name="vercobranza_index", methods={"GET","POST"})
      */
     public function verpagos(Request $request, Contrato $contrato,PagoRepository $pagoRepository,ModuloPerRepository $moduloPerRepository): Response
     {
-        $this->denyAccessUnlessGranted('view','pago');
+        $this->denyAccessUnlessGranted('view','cobranza');
         $user=$this->getUser();
-        $pagina=$moduloPerRepository->findOneByName('pago',$user->getEmpresaActual());
+        $pagina=$moduloPerRepository->findOneByName('cobranza',$user->getEmpresaActual());
         $pagos=$pagoRepository->findByContrato($contrato);
 
         return $this->render('pago/verpagos.html.twig', [
@@ -438,7 +438,7 @@ class CobranzaController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/verpagos_view", name="verpagos_view", methods={"GET","POST"})
+     * @Route("/{id}/vercobranza_view", name="vercobranza_view", methods={"GET","POST"})
      */
     public function verpagosShow(Request $request, Contrato $contrato,PagoRepository $pagoRepository,ModuloPerRepository $moduloPerRepository): Response
     {

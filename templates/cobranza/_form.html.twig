@@ -17,19 +17,9 @@
                         </div>
                         <div class="col-sm-12 col-md-4">
                             <small class="text-muted">Fecha Comprobante (*)</small>
-                            <div class="row">
-                                <div class="col-6">
+                            <input class="form-control datetimepicker-pago" name="fechaPago">
                                     
-                                    {{form_row(form.fechaPago,{'label':false,'attr':{'class':'form-control datetimepicker-pago'}})}}
-                                    <small align="center">Año-Mes-Dia</small> 
-                                </div>
-                                <div class="col-6">
                                     
-                                    {{form_row(form.horaPago,{'label':false,'attr':{'class':'form-control '}})}}
-                                    <small align="center">Hora:Minutos</small>
-                                </div>
-                            </div>
-                            
                         </div>
                         <div class="col-sm-12 col-md-4">
                             <small class="text-muted">Fecha Ingreso Comprobante</small>
@@ -105,6 +95,7 @@
         $("#m-monto").html($.number( $(this).val(), 0, ',', '.' ));
     });
     $('.datetimepicker-registro').daterangepicker({
+        
         "singleDatePicker": true,
         "locale": {
             "format": "YYYY-MM-DD",
@@ -117,9 +108,10 @@
 
     });
     $('.datetimepicker-pago').daterangepicker({
+        "timePicker": true,
         "singleDatePicker": true,
         "locale": {
-            "format": "YYYY-MM-DD",
+            "format": "YYYY-MM-DD hh:mm A",
 
             "applyLabel": "Apply",
             "cancelLabel": "Cancel",
@@ -128,6 +120,7 @@
         console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
 
     });
+   
     var newName;
     Dropzone.options.myAwesomeDropzone = { // The camelized version of the ID of the form element
         url: "{{path('pago_upload')}}",

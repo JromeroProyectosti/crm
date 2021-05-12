@@ -41,6 +41,7 @@
                 <thead>
                     <tr>
                         <th>{{ knp_pagination_sortable(cuotas, 'Folio', 'contrato.id') }} {% if cuotas.isSorted('contrato.id') %} <i class="fas fa-sort"></i>{% endif %}</th>
+                        <th>{{ knp_pagination_sortable(cuotas, 'Lote', 'contrato.lote') }} {% if cuotas.isSorted('contrato.lote') %} <i class="fas fa-sort"></i>{% endif %}</th>
                         <th>{{ knp_pagination_sortable(cuotas, 'Sucursal', 'contrato.sucursal') }} {% if cuotas.isSorted('contrato.sucursal') %} <i class="fas fa-sort"></i>{% endif %}</th>
                         <th>{{ knp_pagination_sortable(cuotas, 'Abogado', 'contrato.agenda.abogado') }} {% if cuotas.isSorted('contrato.agenda.abogado') %} <i class="fas fa-sort"></i>{% endif %}</th>
                         <th>{{ knp_pagination_sortable(cuotas, 'Tramitador', 'contrato.tramitador') }} {% if cuotas.isSorted('contrato.tramitador') %} <i class="fas fa-sort"></i>{% endif %}</th>
@@ -65,6 +66,7 @@
                 {% set contrato = cuota.contrato %}
                     <tr>
                         <td>{{ contrato.id }}</td>
+                        <td align="center">{{ contrato.lote }}</td>
                         <td>{{ contrato.sucursal}}</td>
                         <td>{{ contrato.agenda.abogado.nombre }}</td>
                         <td>{{ contrato.tramitador.nombre }}</td>
@@ -81,9 +83,7 @@
                            {{semaforo(cuota.fechaPago|date('Y-m-d'))|raw}}
                         </td>
                         <td>
-
                                 <a href="{{ path('verpagos_index', {'id': contrato.id}) }}" class="btn btn-primary btn-sm"><i class="far fa-plus-square"></i></a>
-                            
                                 <a href="{{ path('verpagos_view', {'id': contrato.id}) }}" class="btn btn-success btn-sm"><i class="fas fa-eye"></i></a>
                         </td>
                         {% else %}

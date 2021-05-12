@@ -36,12 +36,15 @@ class UsuarioRepository extends ServiceEntityRepository implements PasswordUpgra
         $this->_em->flush();
     }
 
-    public function findByCuenta($cuenta,$filtro=array())
+    public function findByCuenta($cuenta=null,$filtro=array())
     {
         $query=$this->createQueryBuilder('u')
             ->join('u.usuarioCuentas','uc')
-            ->andWhere('uc.cuenta = :cuenta')
-            ->setParameter('cuenta', $cuenta);
+            ->andWhere('uc.cuenta = :cuenta');
+        if(null!=$cuenta){
+            $query->setParameter('cuenta', $cuenta);
+        }
+            
         foreach($filtro as $index=>$nombre){
             $query->andWhere('u.'.$index.'='.$nombre);
         }

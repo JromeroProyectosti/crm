@@ -1,20 +1,153 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello CobranzaController!{% endblock %}
+{% block title %}Pagos{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    <div class="card">
+        <div class="card-header">
+            <form action="" method="get">
+                <div class="row">
+                    <div class="col-sm-12 col-md-3">
+                        <select name="bCompania" class="form-control">
+                            <option value="0">Todos</option>
+                            {% for compania in companias %}
+                                <option value="{{compania.id}}"
+                                {% if bCompania==compania.id %}
+                                    selected
+                                {% endif %}
+                                >{{compania.nombre}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-sm-12 col-md-2">
+                        <input type="text" class="form-control bFolio" name="bFolio"  placeholder="Folio" value="{{bFolio}}">
+                    </div>
+                    <div class="col-sm-12 col-md-2">
+                        <input type="text" class="form-control bFiltro" name="bFiltro" placeholder="Nombre/Rut" value="{{bFiltro}}">
+                    </div>
+                    <div class="col-sm-12 col-md-3">
+                        <input type="text" class="form-control" name="bFecha" id="bFecha"  value="" style="display: none;">
+                    </div>
+                    <div class="col-sm-12 col-md-2">
+                        <button class="btn btn-primary"><i class="fas fa-search"></i></button>
+                    </div>
+                   
+                </div>
+                </form>
+        </div>
+        <div class="card-body table-responsive p-0" style="height: 500px;">
+        
+            <table class="table table-head-fixed text-nowrap table-striped table-sm">
+                <thead>
+                    <tr>
+                        <th>{{ knp_pagination_sortable(cuotas, 'Folio', 'contrato.id') }} {% if cuotas.isSorted('contrato.id') %} <i class="fas fa-sort"></i>{% endif %}</th>
+                        <th>{{ knp_pagination_sortable(cuotas, 'Lote', 'contrato.lote') }} {% if cuotas.isSorted('contrato.lote') %} <i class="fas fa-sort"></i>{% endif %}</th>
+                        <th>{{ knp_pagination_sortable(cuotas, 'Sucursal', 'contrato.sucursal') }} {% if cuotas.isSorted('contrato.sucursal') %} <i class="fas fa-sort"></i>{% endif %}</th>
+                        <th>{{ knp_pagination_sortable(cuotas, 'Abogado', 'contrato.agenda.abogado') }} {% if cuotas.isSorted('contrato.agenda.abogado') %} <i class="fas fa-sort"></i>{% endif %}</th>
+                        <th>{{ knp_pagination_sortable(cuotas, 'Tramitador', 'contrato.tramitador') }} {% if cuotas.isSorted('contrato.tramitador') %} <i class="fas fa-sort"></i>{% endif %}</th>
+                        
+                        <th>{{ knp_pagination_sortable(cuotas, 'Cliente', 'contrato.nombre') }} {% if cuotas.isSorted('contrato.nombre') %} <i class="fas fa-sort"></i>{% endif %}</th>
+                        <th>{{ knp_pagination_sortable(cuotas, 'Rut', 'contrato.rut') }} {% if cuotas.isSorted('contrato.rut') %} <i class="fas fa-sort"></i>{% endif %}</th>
+                        <th>{{ knp_pagination_sortable(cuotas, 'Fecha Contrato', 'contrato.fechaCreacion') }} {% if cuotas.isSorted('contrato.fechaCreacion') %} <i class="fas fa-sort"></i>{% endif %}</th>
+                        <th>{{ knp_pagination_sortable(cuotas, 'Vencimiento', 'fechaPago') }} {% if cuotas.isSorted('fechaPago') %} <i class="fas fa-sort"></i>{% endif %}</th>
+                        <th>Último Pago</th>
+                        {% if finalizado is null or not finalizado %}
+                            
+                        <th><i class="fas fa-traffic-light"></i></th>
+                        
+                        
+                        {% endif %}
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for cuota in cuotas %}
+              
+                {% set contrato = cuota.contrato %}
+                    <tr>
+                        <td>{{ contrato.id }}</td>
+                        <td align="center">{{ contrato.lote }}</td>
+                        <td>{{ contrato.sucursal}}</td>
+                        <td>{{ contrato.agenda.abogado.nombre }}</td>
+                        <td>{{ contrato.tramitador.nombre }}</td>
+                        <td>{{ contrato.nombre }}</td>
+                        <td align="center">{{ contrato.rut }}</td>
+                        <td align="center">{{ contrato.fechaCreacion|date('d-m-Y H:i') }}</td>
+                        <td align="center">{{ cuota.fechaPago|date('d-m-Y') }}</td>
+                        <td align="center">{{ ultimoPago(contrato.id) ? ultimoPago(contrato.id) |date('d-m-Y H:i') : '' }}
+                            
+                        </td>
+                        
+                        {% if finalizado is null or not finalizado %}
+                        <td>
+                           {{semaforo(cuota.fechaPago|date('Y-m-d'))|raw}}
+                        </td>
+                        <td>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+                                <a href="{{ path('verpagos_index', {'id': contrato.id}) }}" class="btn btn-primary btn-sm"><i class="far fa-plus-square"></i></a>
+                            
+                                <a href="{{ path('verpagos_view', {'id': contrato.id}) }}" class="btn btn-success btn-sm"><i class="fas fa-eye"></i></a>
+                                {% if contrato.agenda.status.id == 14 %}
+                                    <a href="#" class="btn btn-warning btn-sm"><i class="fas fa-retweet"></i></a>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'D:/htdocs/desarrollos_symfony/micrm/crm v.2/src/Controller/CobranzaController.php'|file_link(0) }}">src/Controller/CobranzaController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'D:/htdocs/desarrollos_symfony/micrm/crm v.2/templates/cobranza/index.html.twig'|file_link(0) }}">templates/cobranza/index.html.twig</a></code></li>
-    </ul>
-</div>
+                                {% else %}
+                                    <a href="{{ path('contrato_terminar', {'id': contrato.id}) }}" class="btn btn-danger btn-sm"><i class="fas fa-handshake-slash"></i></a>
+                                    <!--<a href="#" class="btn btn-danger btn-sm"><i class="fas fa-handshake-slash"></i></a>-->
+                                    
+                                {% endif %}
+
+                        </td>
+                        {% else %}
+                        <td>
+                            <a href="{{ path('verpagos_index', {'id': contrato.id}) }}" class="btn btn-primary btn-sm"><i class="far fa-plus-square"></i></a>
+                            
+                            <a href="{{ path('verpagos_view', {'id': contrato.id}) }}" class="btn btn-success btn-sm"><i class="fas fa-eye"></i></a>
+
+                        </td>
+                        {% endif %}
+                        
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="16">No hay contratos</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer">
+            <div class="card-footer clearfix">
+                {# display navigation #}
+           <div class="navigation">
+               {{ knp_pagination_render(cuotas,'@KnpPaginator/Pagination/twitter_bootstrap_v4_pagination.html.twig',{},{
+               'position': 'centered',
+               'rounded': true,
+               }) }}
+           </div>
+       </div>
+            
+        </div>
+    </div>
+    <script>
+        $('#bFecha').daterangepicker({
+        
+            "drops": "down",
+            "startDate":"{{dateInicio}}",
+            "endDate": "{{dateFin}}",
+            "locale": {
+                "format": "YYYY-MM-DD",
+                "applyLabel": "Apply",
+                "cancelLabel": "Cancel",
+            }
+        }, function(start, end, label) {
+        console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
+        
+        });
+        $(".bFolio").change(function(){
+            $(".bFiltro").val('');
+        });
+        $(".bFiltro").change(function(){
+            $(".bFolio").val('');
+        });
+    </script>
 {% endblock %}
