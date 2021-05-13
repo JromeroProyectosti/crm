@@ -69,7 +69,7 @@ class ReasignarController extends AbstractController
         $agendas=$paginator->paginate(
         $query, /* query NOT result */
         $request->query->getInt('page', 1), /*page number*/
-        20 /*limit per page*/,
+        10 /*limit per page*/,
         array('defaultSortFieldName' => 'id', 'defaultSortDirection' => 'desc'));
 
         return $this->render('reasignar/index.html.twig', [
