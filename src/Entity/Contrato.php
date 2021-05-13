@@ -75,7 +75,7 @@ class Contrato
     private $escritura;
 
     /**
-     * @ORM\OneToOne(targetEntity=Agenda::class, cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity=Agenda::class,inversedBy="contrato", cascade={"persist", "remove"})
      */
     private $agenda;
 
