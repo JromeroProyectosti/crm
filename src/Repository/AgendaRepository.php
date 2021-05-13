@@ -68,7 +68,7 @@ class AgendaRepository extends ServiceEntityRepository
          ;
 
         }
-    
+        $query->setMaxResults(2000);
         return $query->getQuery()
             ->getResult()
         ;
