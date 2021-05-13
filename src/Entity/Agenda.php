@@ -130,10 +130,7 @@ class Agenda
      */
     private $fechaContrato;
 
-    /**
-     * @ORM\OneToOne(targetEntity=Contrato::class,  mappedBy="agenda")
-     */
-    private $contrato;
+    
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -459,11 +456,7 @@ class Agenda
         return $this;
     }
 
-    public function getContrato(): ?Contrato
-    {
-        return $this->contrato;
-    }
-
+    
     public function getLead(): ?string
     {
         return $this->lead;
