@@ -71,7 +71,7 @@ class Cache
         $full_url = null;
         $enable_remote = $dompdf->getOptions()->getIsRemoteEnabled();
 
-        try {
+       // try {
 
             // Remote not allowed and is not DataURI
             if (!$enable_remote && $remote && !$data_uri) {
@@ -157,7 +157,7 @@ class Cache
                 list($width, $height, $type) = Helpers::dompdf_getimagesize($resolved_url, $dompdf->getHttpContext());
 
                 // Known image type
-                if ($width && $height && in_array($type, ["gif", "png", "jpeg", "bmp", "svg"])) {
+                if ($width && $height && in_array($type, ["gif", "png", "jpeg", "bmp", "svg","jpg"])) {
                     //Don't put replacement image into cache - otherwise it will be deleted on cache cleanup.
                     //Only execute on successful caching of remote image.
                     if ($enable_remote && $remote || $data_uri) {
@@ -168,13 +168,13 @@ class Cache
                     throw new ImageException("Image type unknown", E_WARNING);
                 }
             }
-        } catch (ImageException $e) {
+        /*} catch (ImageException $e) {
             $resolved_url = self::$broken_image;
             $type = "png";
-            $message = self::$error_message;
+            $message = self::$error_message." ".$e->getMessage();
             Helpers::record_warnings($e->getCode(), $e->getMessage() . " \n $url", $e->getFile(), $e->getLine());
             self::$_cache[$full_url] = $resolved_url;
-        }
+        }*/
 
         return [$resolved_url, $type, $message];
     }

@@ -526,7 +526,7 @@ class ContratoController extends AbstractController
     /**
      * @Route("/{id}/pdf", name="contrato_pdf", methods={"GET","POST"})
      */
-    public function pdf(Contrato $contrato,\Knp\Snappy\Pdf $snappy): Response
+    public function pdf(Contrato $contrato)
     {
         $this->denyAccessUnlessGranted('view','contrato');
         $filename = sprintf('Contrato-'.$contrato->getId().'-%s.pdf',rand(0,9000));
@@ -555,8 +555,9 @@ class ContratoController extends AbstractController
         // Configure Dompdf según sus necesidades
         $pdfOptions = new Options();
         $pdfOptions->set('defaultFont', 'helvetica');
-        
+        $pdfOptions->setIsHtml5ParserEnabled(true);
         $pdfOptions->setIsRemoteEnabled(true);
+        
         //$pdfOptions->set('fontHeightRatio',0.1);
         
         // Crea una instancia de Dompdf con nuestras opciones
