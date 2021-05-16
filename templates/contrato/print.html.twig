@@ -1,7 +1,12 @@
-  <div align="right">Nro Folio {{contrato.id}}</div>
+<style>
+    body{
+        font-size:13px;
+    }
+</style>
+<div align="right">Nro Folio {{contrato.id}}</div>
 
 <div align="center"><h4>CONTRATO DE PRESTACI&Oacute;N DE SERVICIOS</h4></div>
-<p align="justify">En Santiago de Chile a {{contrato.fechaCreacion|date("d-m-Y")}}, entre Estudio Jur&iacute;dico Alfaro y Madariaga Spa., rol &uacute;nico tributario 76.638.999-6 
+<p align="justify" >En Santiago de Chile a {{contrato.fechaCreacion|date("d-m-Y")}}, entre Estudio Jur&iacute;dico Alfaro y Madariaga Spa., rol &uacute;nico tributario 76.638.999-6 
 empresa de servicios Jur&iacute;dicos, representada por don <strong>Fernando Cort&eacute;s Salinas</strong>, c&eacute;dula de identidad N&deg; 9.704.412-0, domiciliado  en <strong>Hu&eacute;rfanos 1147, 
 oficina 501</strong>, comuna de Santiago, Regi&oacute;n Metropolitana, quien en adelante se denominar&aacute; indistintamente <strong>&quot;Estudio Jur&iacute;dico&quot;</strong> y por la otra don 
 (&ntilde;a) <strong>{{contrato.nombre|title|special_chars|raw}}</strong>, Nacionalidad  {{contrato.pais}}, C&eacute;dula de identidad N&deg; {{contrato.rut}}, Tel&eacute;fono: {{contrato.telefono}}, 
@@ -197,7 +202,7 @@ un contrato de prestaci&oacute;n de servicios jur&iacute;dicos, desglosando su c
     poder de cada una de las partes.</p>
 
 <table width="100%">
-    <tr><td width="50%" align="center"><img src="{{url_web}}/build/img/firma_contrato.jpg"></td><td></td></tr>
+    <tr><td width="50%" align="center"><img src="{{url_root}}/build/img/firma_contrato.jpg"></td><td></td></tr>
 
     <tr>
         <td><p align="center"><strong>ESTUDIO JURIDICO ALFARO Y MADARIAGA</strong></p>

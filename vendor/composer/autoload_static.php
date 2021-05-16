@@ -150,6 +150,7 @@ class ComposerStaticInitda4d442c9aa82344ae9624e4bffb7d89
             'Symfony\\Bridge\\Monolog\\' => 23,
             'Symfony\\Bridge\\Doctrine\\' => 24,
             'SymfonyCasts\\Bundle\\ResetPassword\\' => 34,
+            'Svg\\' => 4,
             'Sensio\\Bundle\\FrameworkExtraBundle\\' => 35,
         ),
         'P' => 
@@ -185,12 +186,17 @@ class ComposerStaticInitda4d442c9aa82344ae9624e4bffb7d89
             'Knp\\Bundle\\SnappyBundle\\' => 24,
             'Knp\\Bundle\\PaginatorBundle\\' => 27,
         ),
+        'F' => 
+        array (
+            'FontLib\\' => 8,
+        ),
         'E' => 
         array (
             'Egulias\\EmailValidator\\' => 23,
         ),
         'D' => 
         array (
+            'Dompdf\\' => 7,
             'Doctrine\\SqlFormatter\\' => 22,
             'Doctrine\\Persistence\\' => 21,
             'Doctrine\\ORM\\' => 13,
@@ -452,6 +458,10 @@ class ComposerStaticInitda4d442c9aa82344ae9624e4bffb7d89
         array (
             0 => __DIR__ . '/..' . '/symfonycasts/reset-password-bundle/src',
         ),
+        'Svg\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phenx/php-svg-lib/src/Svg',
+        ),
         'Sensio\\Bundle\\FrameworkExtraBundle\\' => 
         array (
             0 => __DIR__ . '/..' . '/sensio/framework-extra-bundle/src',
@@ -541,9 +551,17 @@ class ComposerStaticInitda4d442c9aa82344ae9624e4bffb7d89
         array (
             0 => __DIR__ . '/..' . '/knplabs/knp-paginator-bundle/src',
         ),
+        'FontLib\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phenx/php-font-lib/src/FontLib',
+        ),
         'Egulias\\EmailValidator\\' => 
         array (
             0 => __DIR__ . '/..' . '/egulias/email-validator/src',
+        ),
+        'Dompdf\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/dompdf/dompdf/src',
         ),
         'Doctrine\\SqlFormatter\\' => 
         array (
@@ -626,10 +644,26 @@ class ComposerStaticInitda4d442c9aa82344ae9624e4bffb7d89
         ),
     );
 
+    public static $prefixesPsr0 = array (
+        'S' => 
+        array (
+            'Sabberworm\\CSS' => 
+            array (
+                0 => __DIR__ . '/..' . '/sabberworm/php-css-parser/lib',
+            ),
+        ),
+    );
+
     public static $classMap = array (
         'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
         'Collator' => __DIR__ . '/..' . '/symfony/intl/Resources/stubs/Collator.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'Dompdf\\Cpdf' => __DIR__ . '/..' . '/dompdf/dompdf/lib/Cpdf.php',
+        'HTML5_Data' => __DIR__ . '/..' . '/dompdf/dompdf/lib/html5lib/Data.php',
+        'HTML5_InputStream' => __DIR__ . '/..' . '/dompdf/dompdf/lib/html5lib/InputStream.php',
+        'HTML5_Parser' => __DIR__ . '/..' . '/dompdf/dompdf/lib/html5lib/Parser.php',
+        'HTML5_Tokenizer' => __DIR__ . '/..' . '/dompdf/dompdf/lib/html5lib/Tokenizer.php',
+        'HTML5_TreeBuilder' => __DIR__ . '/..' . '/dompdf/dompdf/lib/html5lib/TreeBuilder.php',
         'IntlDateFormatter' => __DIR__ . '/..' . '/symfony/intl/Resources/stubs/IntlDateFormatter.php',
         'JsonException' => __DIR__ . '/..' . '/symfony/polyfill-php73/Resources/stubs/JsonException.php',
         'Locale' => __DIR__ . '/..' . '/symfony/intl/Resources/stubs/Locale.php',
@@ -645,6 +679,7 @@ class ComposerStaticInitda4d442c9aa82344ae9624e4bffb7d89
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInitda4d442c9aa82344ae9624e4bffb7d89::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInitda4d442c9aa82344ae9624e4bffb7d89::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitda4d442c9aa82344ae9624e4bffb7d89::$prefixesPsr0;
             $loader->classMap = ComposerStaticInitda4d442c9aa82344ae9624e4bffb7d89::$classMap;
 
         }, null, ClassLoader::class);

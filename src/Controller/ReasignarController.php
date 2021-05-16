@@ -38,6 +38,8 @@ class ReasignarController extends AbstractController
         $pagina=$moduloPerRepository->findOneByName('reasignar',$user->getEmpresaActual());
         $filtro=null;
         $compania=null;
+        $fecha=null;
+        $tipo_fecha=0;
         if(null !== $request->request->get('bFiltro')){
             $filtro=$request->request->get('bFiltro');
         }
@@ -46,19 +48,48 @@ class ReasignarController extends AbstractController
         }
 
 
+        
+        if(null !== $request->query->get('bFecha')){
+            $aux_fecha=explode(" - ",$request->query->get('bFecha'));
+            $dateInicio=$aux_fecha[0];
+            $dateFin=$aux_fecha[1];
+            
+        }else{
+            $dateInicio=date('Y-m-d',mktime(0,0,0,date('m'),date('d'),date('Y'))-60*60*24*30);
+            $dateFin=date('Y-m-d');
+        }
+        if(null !== $request->query->get('bTipofecha') ){
+            $tipo_fecha=$request->query->get('bTipofecha');
+        }
+        switch($tipo_fecha){
+            case 0:
+                $fecha="a.fechaCarga between '$dateInicio' and '$dateFin 23:59:59'" ;
+                break;
+            case 1:
+                $fecha="a.fechaAsignado between '$dateInicio' and '$dateFin 23:59:59'" ;
+                break;
+            case 2:
+                $fecha="a.fechaContrato between '$dateInicio' and '$dateFin 23:59:59'" ;
+                break;
+            default:
+                $fecha="a.fechaCarga between '$dateInicio' and '$dateFin 23:59:59'" ;
+                break;
+        }
+
+
         switch($user->getUsuarioTipo()->getId()){
             case 3:
             case 4:
             case 1:
-                $query=$agendaRepository->findByPers(null,$user->getEmpresaActual(),$compania,'9,6',$filtro,3);
+                $query=$agendaRepository->findByPers(null,$user->getEmpresaActual(),$compania,'9,6',$filtro,3,$fecha);
                 $companias=$cuentaRepository->findByPers(null,$user->getEmpresaActual());
             break;
             case 5:
-                $query=$agendaRepository->findByPers($user->getId(),null,$compania,'9,6',$filtro,3);
+                $query=$agendaRepository->findByPers($user->getId(),null,$compania,'9,6',$filtro,3,$fecha);
                 $companias=$cuentaRepository->findByPers($user->getId());
             break;
             default:
-                $query=$agendaRepository->findByPers($user->getId(),null,$compania,'9,6',$filtro,3);
+                $query=$agendaRepository->findByPers($user->getId(),null,$compania,'9,6',$filtro,3,$fecha);
                 $companias=$cuentaRepository->findByPers($user->getId());
             break;
         }
@@ -77,7 +108,10 @@ class ReasignarController extends AbstractController
             'pagina'=>$pagina->getNombre(),
             'bFiltro'=>$filtro,
             'companias'=>$companias,
-            'bCompania'=>$compania
+            'bCompania'=>$compania,
+            'dateInicio'=>$dateInicio,
+            'dateFin'=>$dateFin,
+            'tipoFecha'=>$tipo_fecha,
         ]);
         
     }

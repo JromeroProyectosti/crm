@@ -28,7 +28,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
-
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 /**
  * @Route("/contrato")
@@ -168,6 +169,11 @@ class ContratoController extends AbstractController
             $html,
             $this->getParameter('url_root'). $this->getParameter('pdf_contratos').$filename
             );
+
+
+
+
+            
         }
         return $this->redirectToRoute('contrato_index');
     }
@@ -535,7 +541,7 @@ class ContratoController extends AbstractController
         $entityManager->persist($contrato);
         $entityManager->flush();
 
-        $snappy->generateFromHtml(
+        /*$snappy->generateFromHtml(
            $html,
            $this->getParameter('url_root'). $this->getParameter('pdf_contratos').$filename
         );
@@ -543,7 +549,37 @@ class ContratoController extends AbstractController
             $snappy->getOutputFromHtml($html, array(
                 'page-size' => 'letter')),
             $filename
-        );
+        );*/
+
+
+        // Configure Dompdf según sus necesidades
+        $pdfOptions = new Options();
+        $pdfOptions->set('defaultFont', 'helvetica');
+        
+        $pdfOptions->setIsRemoteEnabled(true);
+        //$pdfOptions->set('fontHeightRatio',0.1);
+        
+        // Crea una instancia de Dompdf con nuestras opciones
+        $dompdf = new Dompdf($pdfOptions);
+        
+        // Recupere el HTML generado en nuestro archivo twig
+       /* $html = $this->renderView('default/mypdf.html.twig', [
+            'title' => "Welcome to our PDF Test"
+        ]);*/
+        
+        // Cargar HTML en Dompdf
+        $dompdf->loadHtml($html);
+        
+        // (Opcional) Configure el tamaño del papel y la orientación 'vertical' o 'vertical'
+        $dompdf->setPaper('letter', 'portrait');
+
+        // Renderiza el HTML como PDF
+        $dompdf->render();
+
+        // Envíe el PDF generado al navegador (descarga forzada)
+        $dompdf->stream($filename, [
+            "Attachment" => true
+        ]);
     }
 
     /**
