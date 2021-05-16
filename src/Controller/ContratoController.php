@@ -557,7 +557,7 @@ class ContratoController extends AbstractController
         $pdfOptions->set('defaultFont', 'helvetica');
         $pdfOptions->setIsHtml5ParserEnabled(true);
         $pdfOptions->setIsRemoteEnabled(true);
-        
+        $pdfOptions->set('tempDir', '/var/www/html/crm/var/cache/dev/);
         //$pdfOptions->set('fontHeightRatio',0.1);
         
         // Crea una instancia de Dompdf con nuestras opciones
