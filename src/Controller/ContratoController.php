@@ -555,15 +555,13 @@ class ContratoController extends AbstractController
         // Configure Dompdf según sus necesidades
         $pdfOptions = new Options();
         $pdfOptions->set('defaultFont', 'helvetica');
-        $pdfOptions->setIsHtml5ParserEnabled(true);
-        $pdfOptions->setIsRemoteEnabled(true);
     
         //$pdfOptions->set('fontHeightRatio',0.1);
         
         // Crea una instancia de Dompdf con nuestras opciones
         $dompdf = new Dompdf($pdfOptions);
 
-        $dompdf->getOptions()->setChroot(array('/var/www/html/crm/vendor/dompdf/dompdf','/var/www/html/crm/public/build/img',));
+        $dompdf->getOptions()->setChroot(array('d:\\htdocs\\desarrollos_symfony\\micrm\\crm v.2','/var/www/html/crm'));
         var_dump($dompdf->getOptions()->getChroot());
         // Recupere el HTML generado en nuestro archivo twig
        /* $html = $this->renderView('default/mypdf.html.twig', [

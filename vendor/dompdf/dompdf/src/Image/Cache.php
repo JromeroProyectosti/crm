@@ -71,7 +71,7 @@ class Cache
         $full_url = null;
         $enable_remote = $dompdf->getOptions()->getIsRemoteEnabled();
 
-       // try {
+        try {
 
             // Remote not allowed and is not DataURI
             if (!$enable_remote && $remote && !$data_uri) {
@@ -123,9 +123,11 @@ class Cache
                 $resolved_url = Helpers::build_url($protocol, $host, $base_path, $url);
 
                 if ($protocol == "" || $protocol === "file://") {
+   
                     $realfile = realpath($resolved_url);
-        
+                
                     $rootDir = realpath($dompdf->getOptions()->getRootDir());
+                   
                     if (strpos($realfile, $rootDir) !== 0) {
                         $chroot = $dompdf->getOptions()->getChroot();
                         $chrootValid = false;
@@ -168,13 +170,13 @@ class Cache
                     throw new ImageException("Image type unknown", E_WARNING);
                 }
             }
-        /*} catch (ImageException $e) {
+        } catch (ImageException $e) {
             $resolved_url = self::$broken_image;
             $type = "png";
             $message = self::$error_message." ".$e->getMessage();
             Helpers::record_warnings($e->getCode(), $e->getMessage() . " \n $url", $e->getFile(), $e->getLine());
             self::$_cache[$full_url] = $resolved_url;
-        }*/
+        }
 
         return [$resolved_url, $type, $message];
     }
