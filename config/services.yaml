@@ -4,6 +4,7 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
+    url_raiz: '%kernel.project_dir%'
     url_root: '%kernel.project_dir%/public'
     url_web: 'http://localhost:8000'
     pdf_contratos: '/build/contratos/pdf/'

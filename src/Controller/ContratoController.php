@@ -561,8 +561,8 @@ class ContratoController extends AbstractController
         // Crea una instancia de Dompdf con nuestras opciones
         $dompdf = new Dompdf($pdfOptions);
 
-        $dompdf->getOptions()->setChroot(array('d:\\htdocs\\desarrollos_symfony\\micrm\\crm v.2','/var/www/html/crm'));
-        var_dump($dompdf->getOptions()->getChroot());
+        $dompdf->getOptions()->setChroot(array($this->getParameter('url_raiz'));
+        
         // Recupere el HTML generado en nuestro archivo twig
        /* $html = $this->renderView('default/mypdf.html.twig', [
             'title' => "Welcome to our PDF Test"
@@ -580,7 +580,9 @@ class ContratoController extends AbstractController
         $file=$dompdf->output();
         file_put_contents($this->getParameter('url_root'). $this->getParameter('pdf_contratos').$filename,$file);
         // Envíe el PDF generado al navegador (descarga forzada)
-        $dompdf->stream();
+        $dompdf->stream($filename, [
+            "Attachment" => true
+        ]);
     }
 
     /**
