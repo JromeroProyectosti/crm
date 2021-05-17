@@ -577,8 +577,10 @@ class ContratoController extends AbstractController
         // Renderiza el HTML como PDF
         $dompdf->render();
 
+        $file=$dompdf->output();
+        file_put_contents($this->getParameter('url_root'). $this->getParameter('pdf_contratos').$filename,$file);
         // Envíe el PDF generado al navegador (descarga forzada)
-        $dompdf->stream($this->getParameter('url_root'). $this->getParameter('pdf_contratos').$filename, [
+        $dompdf->stream($filename, [
             "Attachment" => true
         ]);
     }
