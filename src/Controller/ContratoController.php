@@ -578,7 +578,7 @@ class ContratoController extends AbstractController
         $dompdf->render();
 
         // Envíe el PDF generado al navegador (descarga forzada)
-        $dompdf->stream($filename, [
+        $dompdf->stream($this->getParameter('url_root'). $this->getParameter('pdf_contratos').$filename, [
             "Attachment" => true
         ]);
     }
