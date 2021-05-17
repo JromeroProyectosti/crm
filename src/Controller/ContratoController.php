@@ -363,7 +363,7 @@ class ContratoController extends AbstractController
                 }
             }
              
-           
+            $this->pdf2($contrato);
             return $this->redirectToRoute('contrato_index');
         }
 
@@ -507,7 +507,8 @@ class ContratoController extends AbstractController
                 $entityManager->flush();
                 $numeroCuota++;
             }
-         return $this->redirectToRoute('contrato_index');
+            $this->pdf2($contrato);
+            return $this->redirectToRoute('contrato_index');
         }
 
         return $this->render('contrato/finalizar.html.twig', [
@@ -523,9 +524,66 @@ class ContratoController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/{id}/pdf", name="contrato_pdf", methods={"GET","POST"})
-     */
+   
+    public function pdf2(Contrato $contrato)
+    {
+        $this->denyAccessUnlessGranted('view','contrato');
+        $filename = sprintf('Contrato-'.$contrato->getId().'-%s.pdf',rand(0,9000));
+       
+        $html = $this->renderView('contrato/print.html.twig', array(
+            'contrato' => $contrato,
+            'Titulo'=>"Contrato"
+        ));
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $contrato->setPdf($filename);
+        $entityManager->persist($contrato);
+        $entityManager->flush();
+
+        /*$snappy->generateFromHtml(
+           $html,
+           $this->getParameter('url_root'). $this->getParameter('pdf_contratos').$filename
+        );
+        return new PdfResponse(
+            $snappy->getOutputFromHtml($html, array(
+                'page-size' => 'letter')),
+            $filename
+        );*/
+
+
+        // Configure Dompdf según sus necesidades
+        $pdfOptions = new Options();
+        $pdfOptions->set('defaultFont', 'helvetica');
+    
+        //$pdfOptions->set('fontHeightRatio',0.1);
+        
+        // Crea una instancia de Dompdf con nuestras opciones
+        $dompdf = new Dompdf($pdfOptions);
+
+        $dompdf->getOptions()->setChroot(array($this->getParameter('url_raiz')));
+        
+        // Recupere el HTML generado en nuestro archivo twig
+       /* $html = $this->renderView('default/mypdf.html.twig', [
+            'title' => "Welcome to our PDF Test"
+        ]);*/
+        
+        // Cargar HTML en Dompdf
+        $dompdf->loadHtml($html);
+        
+        // (Opcional) Configure el tamaño del papel y la orientación 'vertical' o 'vertical'
+        $dompdf->setPaper('letter', 'portrait');
+
+        // Renderiza el HTML como PDF
+        $dompdf->render();
+
+        $file=$dompdf->output();
+        file_put_contents($this->getParameter('url_root'). $this->getParameter('pdf_contratos').$filename,$file);
+        // Envíe el PDF generado al navegador (descarga forzada)
+        /*$dompdf->stream($filename, [
+            "Attachment" => true
+        //]);*/
+    }
+
     public function pdf(Contrato $contrato)
     {
         $this->denyAccessUnlessGranted('view','contrato');
@@ -584,7 +642,6 @@ class ContratoController extends AbstractController
             "Attachment" => true
         ]);
     }
-
     /**
      * @Route("/{id}/terminar", name="contrato_terminar", methods={"GET","POST"})
      */
