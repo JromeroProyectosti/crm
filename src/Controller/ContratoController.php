@@ -561,7 +561,7 @@ class ContratoController extends AbstractController
         // Crea una instancia de Dompdf con nuestras opciones
         $dompdf = new Dompdf($pdfOptions);
 
-        $dompdf->getOptions()->setChroot(array($this->getParameter('url_raiz'));
+        $dompdf->getOptions()->setChroot(array($this->getParameter('url_raiz')));
         
         // Recupere el HTML generado en nuestro archivo twig
        /* $html = $this->renderView('default/mypdf.html.twig', [
