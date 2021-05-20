@@ -232,6 +232,11 @@ class Contrato
      */
     private $contratoAnexos;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $fechaTermino;
+
     
     public function __construct()
     {
@@ -803,6 +808,18 @@ class Contrato
                 $contratoAnexo->setContrato(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getFechaTermino(): ?\DateTimeInterface
+    {
+        return $this->fechaTermino;
+    }
+
+    public function setFechaTermino(?\DateTimeInterface $fechaTermino): self
+    {
+        $this->fechaTermino = $fechaTermino;
 
         return $this;
     }

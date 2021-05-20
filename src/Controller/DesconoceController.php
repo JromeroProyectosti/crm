@@ -141,6 +141,7 @@ class DesconoceController  extends AbstractController{
                     }
                 }
                 $contrato->setIsFinalizado(true);
+                $contrato->setFechaTermino(new \DateTime(date('Y-m-d h:i')));
                 $entityManager->persist($contrato);
                 $entityManager->flush();
             }
