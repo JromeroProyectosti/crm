@@ -268,6 +268,7 @@ class ContratoController extends AbstractController
         $juzgados=$juzgadoRepository->findAll();
         $form = $this->createForm(ContratoType::class, $contrato);
         $form->add('fechaPrimeraCuota',DateType::class,array('widget'=>'single_text','html5'=>false));
+        $form->add('vigencia');
         $form->handleRequest($request);
         //buscamos la primera cuota para sabes si tiene algun pago asociado:::
         $cuota=$cuotaRepository->findOneByUltimaPagada($contrato->getId());
@@ -398,8 +399,10 @@ class ContratoController extends AbstractController
         $this->denyAccessUnlessGranted('create','panel_abogado');
         $user=$this->getUser();
         $juzgados=$juzgadoRepository->findAll();
+        $contrato->setVigencia(24);
         $form = $this->createForm(ContratoType::class, $contrato);
         $form->add('fechaPrimeraCuota',DateType::class,array('widget'=>'single_text','html5'=>false));
+        $form->add('vigencia');
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

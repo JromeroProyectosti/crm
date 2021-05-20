@@ -237,6 +237,11 @@ class Contrato
      */
     private $fechaTermino;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $vigencia;
+
     
     public function __construct()
     {
@@ -820,6 +825,18 @@ class Contrato
     public function setFechaTermino(?\DateTimeInterface $fechaTermino): self
     {
         $this->fechaTermino = $fechaTermino;
+
+        return $this;
+    }
+
+    public function getVigencia(): ?int
+    {
+        return $this->vigencia;
+    }
+
+    public function setVigencia(?int $vigencia): self
+    {
+        $this->vigencia = $vigencia;
 
         return $this;
     }

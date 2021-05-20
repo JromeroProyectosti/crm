@@ -127,11 +127,7 @@ class PagoCuotasRepository extends ServiceEntityRepository
 
         $cuota=$cuotaRepository->findOneByPrimeraVigente($contrato->getId(),$esMulta);
 
-        if($cuota){
-            $contrato->setIsFinalizado(false);
-        }else{
-            $contrato->setIsFinalizado(true);
-        }
+    
         $entityManager->persist($contrato);
         $entityManager->flush();
         return true;
