@@ -186,7 +186,7 @@ class TerminosController extends AbstractController
             'cuotas'=>$cuotaRepository->findBy(['anexo'=>$anexo]),
         ));
 
-        $snappy->generateFromHtml(
+        /*$snappy->generateFromHtml(
            $html,
            $this->getParameter('url_root'). $this->getParameter('pdf_contratos').$filename
         );
@@ -194,7 +194,39 @@ class TerminosController extends AbstractController
             $snappy->getOutputFromHtml($html, array(
                 'page-size' => 'letter')),
             $filename
-        );
+        );*/
+
+        // Configure Dompdf según sus necesidades
+        $pdfOptions = new Options();
+        $pdfOptions->set('defaultFont', 'helvetica');
+    
+        //$pdfOptions->set('fontHeightRatio',0.1);
+        
+        // Crea una instancia de Dompdf con nuestras opciones
+        $dompdf = new Dompdf($pdfOptions);
+
+        $dompdf->getOptions()->setChroot(array($this->getParameter('url_raiz')));
+        
+        // Recupere el HTML generado en nuestro archivo twig
+       /* $html = $this->renderView('default/mypdf.html.twig', [
+            'title' => "Welcome to our PDF Test"
+        ]);*/
+        
+        // Cargar HTML en Dompdf
+        $dompdf->loadHtml($html);
+        
+        // (Opcional) Configure el tamaño del papel y la orientación 'vertical' o 'vertical'
+        $dompdf->setPaper('letter', 'portrait');
+
+        // Renderiza el HTML como PDF
+        $dompdf->render();
+
+        $file=$dompdf->output();
+        file_put_contents($this->getParameter('url_root'). $this->getParameter('pdf_contratos').$filename,$file);
+        // Envíe el PDF generado al navegador (descarga forzada)
+        $dompdf->stream($filename, [
+            "Attachment" => true
+        ]);
     }
     /**
     * @Route("/{id}", name="terminos_show", methods={"GET"})
