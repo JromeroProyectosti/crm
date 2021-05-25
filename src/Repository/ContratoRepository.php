@@ -41,7 +41,7 @@ class ContratoRepository extends ServiceEntityRepository
         $query=$this->createQueryBuilder('c');
         $query->join('c.agenda','a');
         $query->join('a.cuenta','cu');
-        $query->andWhere('DATEDIFF(now(), c.fechaPrimerPago)<c.vigencia');
+        $query->andWhere('(DATEDIFF(now(), c.fechaPrimerPago)/30)<c.vigencia');
         if(!is_null($empresa)){
             
             $query->andWhere('cu.empresa = '.$empresa);

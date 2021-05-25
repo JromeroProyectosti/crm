@@ -8,7 +8,7 @@
   </p>
   <div class="collapse cerrar1" id="collapse">
     <div class="card card-body">
-        <form action="{{path('contrato_terminar',{'id':contrato.id,'status':'13'})}}" method="post">
+        <form action="{{path('contrato_terminar',{'id':contrato.id,'status':'13'})}}" onsubmit="return disabledButtons()" method="post">
             <textarea name="txtObservacion" class="form-control"></textarea>
             <button class="btn btn-primary">Gestionar</button>
         </form>
@@ -39,4 +39,11 @@
         $(".btn-desiste").addClass("btn-lg");
         $(".btn-desiste").removeClass("btn-sm");
       });
+
+     function disabledButtons(){
+      $('button').attr("disabled", true);
+        return true;
+      };
+
+    
   </script>
