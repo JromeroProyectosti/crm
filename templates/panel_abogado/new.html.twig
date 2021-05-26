@@ -359,7 +359,7 @@
                 
 
                 $.ajax({
-                    url:"/panel_abogado/"+status+"/tramitadores",
+                    url:"/panel_abogado/"+status+"/sucursales",
                     type: "post",
                     dataType: "html",
                     cache: false,
@@ -371,11 +371,28 @@
                         
                     },
                     success:function(data){
-                        $("#tramitador").find('option').remove();
-                        $("#tramitador").append(data);
+                        $("#sucursal").find('option').remove();
+                        $("#sucursal").append(data);
                         //$("#contrato").html("");
                     }});
-
+                
+                    $.ajax({
+                        url:"/panel_abogado/"+status+"/tramitadores",
+                        type: "post",
+                        dataType: "html",
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        async: true,
+                        beforeSend: function(){
+                            //$("#status").html(' <div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i><div class="text-bold pt-2">Loading...</div></div>');
+                            
+                        },
+                        success:function(data){
+                            $("#tramitador").find('option').remove();
+                            $("#tramitador").append(data);
+                            //$("#contrato").html("");
+                        }});
 
             }
 

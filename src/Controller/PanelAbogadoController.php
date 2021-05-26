@@ -179,6 +179,16 @@ class PanelAbogadoController extends AbstractController
         ]);
     }
     /**
+     * @Route("/{id}/sucursales", name="panel_abogado_sucursales", methods={"GET","POST"})
+     */
+    public function sucursales(Cuenta $cuenta, Request $request,SucursalRepository $sucursalRepository): Response
+    {
+        
+        return $this->render('panel_abogado/sucursales.html.twig', [
+            'sucursales'=>$sucursalRepository->findBy(['cuenta'=>$cuenta->getId()]),
+        ]);
+    }
+    /**
      * @Route("/{id}", name="panel_abogado_new", methods={"GET","POST"})
      */
     public function new(Agenda $agenda,
