@@ -62,6 +62,11 @@ class CobranzaController extends AbstractController
         $vencimiento=$vencimientoArray[0];
         $otros=' DATEDIFF(now(),c.fechaPago)>'.$vencimiento->getValMax();
         $fecha=null;
+        $error='';
+        $error_toast="";
+        if(null !== $request->query->get('error_toast')){
+            $error_toast=$request->query->get('error_toast');
+        }
         if(null !== $request->query->get('bFolio') && $request->query->get('bFolio')!=''){
             $folio=$request->query->get('bFolio');
             $otros=$otros." and co.id= $folio";
@@ -144,6 +149,8 @@ class CobranzaController extends AbstractController
             'dateFin'=>$dateFin,
             'pagina'=>$pagina->getNombre(),
             'finalizado'=>false,
+            'error'=>$error,
+            'error_toast'=>$error_toast,
         ]);
     }
 
