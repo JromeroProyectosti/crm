@@ -25,12 +25,15 @@ use App\Repository\PagoCuotasRepository;
 use App\Repository\VencimientoRepository;
 use App\Repository\UsuarioRepository;
 use App\Repository\ConfiguracionRepository;
+use App\Repository\DiasPagoRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+
+use App\Service\ContratoFunciones;
 
 /**
  * @Route("/cobranza")
@@ -550,7 +553,42 @@ class CobranzaController extends AbstractController
             'pagina'=>'Editar '.$pagina->getNombre(),
         ]);
     }
+    /**
+     * @Route("/{id}/terminar", name="cobranza_terminar", methods={"GET","POST"})
+     */
+    function terminar(Contrato $contrato,
+                    DiasPagoRepository $diasPagoRepository,
+                    ModuloPerRepository $moduloPerRepository,
+                    ContratoFunciones $contratoFunciones,
+                    Request $request): Response
+    {
+        $this->denyAccessUnlessGranted('create','cobranza');
+        $user=$this->getUser();
+        
+        $pagina=$moduloPerRepository->findOneByName('cobranza',$user->getEmpresaActual());
 
+        if(null !== $request->query->get('status')){
+            $error_toast=$contratoFunciones->terminarContrato($contrato,$request->query->get('status'),$request->request->get('txtObservacion'));
+           
+            return $this->redirectToRoute('cobranza_index',['error_toast'=>$error_toast]);
+
+        }else{
+            $error_toast="Toast.fire({
+                icon: 'danger',
+                title: 'Error al desistir'
+              })";
+        }
+
+        return $this->render('cobranza/show.html.twig', [
+            'contrato' => $contrato,
+            'agenda'=>$contrato->getAgenda(),
+            'pagina'=>$pagina->getNombre(),
+            'diasPagos'=>$diasPagoRepository->findAll(),
+            'metodo'=>"T",
+            
+        ]);
+
+    }
    
     /**
      * @Route("/{id}", name="cobranza_delete", methods={"DELETE"})

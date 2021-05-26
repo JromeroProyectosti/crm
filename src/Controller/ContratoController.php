@@ -31,6 +31,7 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use App\Service\ContratoFunciones;
 /**
  * @Route("/contrato")
  */
@@ -393,7 +394,8 @@ class ContratoController extends AbstractController
                             UserPasswordEncoderInterface $encoder,
                             UsuarioTipoRepository $usuarioTipoRepository,
                             ConfiguracionRepository $configuracionRepository,
-                            ContratoRepository $contratoRepository
+                            ContratoRepository $contratoRepository,
+                            ContratoFunciones $contratoFunciones
                             ): Response
     {
         $this->denyAccessUnlessGranted('create','panel_abogado');
@@ -595,11 +597,8 @@ class ContratoController extends AbstractController
     function terminar(Contrato $contrato,
                     DiasPagoRepository $diasPagoRepository,
                     ModuloPerRepository $moduloPerRepository,
-                    AgendaStatusRepository $agendaStatusRepository,
-                    UsuarioRepository $usuarioRepository,
-                    CuotaRepository $cuotaRepository,
-                    ConfiguracionRepository $configuracionRepository,
-                    Request $request): Response
+                    Request $request,
+                    ContratoFunciones $contratoFunciones): Response
     {
         $this->denyAccessUnlessGranted('create','terminos');
         $user=$this->getUser();
@@ -607,59 +606,7 @@ class ContratoController extends AbstractController
         $pagina=$moduloPerRepository->findOneByName('contrato',$user->getEmpresaActual());
 
         if(null !== $request->query->get('status')){
-            $status= $request->query->get('status');
-            $observacion_texto= $request->request->get('txtObservacion');
-            $entityManager = $this->getDoctrine()->getManager();
-            $agenda=$contrato->getAgenda();
-            $agenda->setStatus($agendaStatusRepository->find($status));
-
-            $entityManager->persist($agenda);
-            $entityManager->flush();
-
-            $observacion=new AgendaObservacion();
-            $observacion->setAgenda($agenda);
-            $observacion->setUsuarioRegistro($usuarioRepository->find($user->getId()));
-            $observacion->setStatus($agendaStatusRepository->find($status));
-            $observacion->setFechaRegistro(new \DateTime(date("Y-m-d H:i:s")));
-            $observacion->setObservacion($observacion_texto);
-            $entityManager->persist($observacion);
-            $entityManager->flush();
-            if($status==12){
-
-
-                $error_toast="Toast.fire({
-                    icon: 'success',
-                    title: 'Cliente desconoce contrato'
-                  })";
-            }else{
-
-                $dateInicio=strtotime($contrato->getFechaCreacion()->format('Y-m-d'));
-                $dateFin=strtotime(date('Y-m-d'));
-
-                $interval = $dateFin-$dateInicio;
-   
-
-                if(($interval/60/60/24)>10){
-                    $_cuota=$cuotaRepository->findOneBy(['contrato'=>$contrato],['numero'=>'desc']);
-                    $configuracion=$configuracionRepository->find(1);
-
-                    $numeroCuota=$_cuota->getNumero();
-                    $numeroCuota++;
-                    $cuota=new Cuota();
-
-                    $cuota->setContrato($contrato);
-                    $cuota->setNumero($numeroCuota);
-                    $cuota->setFechaPago(new \DateTime(date('Y-m-d H:i')));
-                    $cuota->setMonto($configuracion->getValorMulta());
-                    $cuota->setIsMulta(true);
-                    $entityManager->persist($cuota);
-                    $entityManager->flush();
-                }
-                $error_toast="Toast.fire({
-                    icon: 'success',
-                    title: 'Cliente desiste de contrato'
-                  })";
-            }
+            $error_toast=$contratoFunciones->terminarContrato($contrato,$request->query->get('status'),$request->request->get('txtObservacion'));
            
             return $this->redirectToRoute('contrato_index',['error_toast'=>$error_toast]);
 

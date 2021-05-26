@@ -230,6 +230,8 @@ class TerminosController extends AbstractController
         ]);
         return $this->redirectToRoute('terminos_index');
     }
+
+    
     /**
     * @Route("/{id}", name="terminos_show", methods={"GET"})
     */
