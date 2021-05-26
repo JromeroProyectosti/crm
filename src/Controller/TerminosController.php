@@ -156,7 +156,6 @@ class TerminosController extends AbstractController
      * @Route("/{id}/pdf", name="terminos_pdf", methods={"GET","POST"})
      */
     public function pdf(Contrato $contrato,
-                        \Knp\Snappy\Pdf $snappy,
                         CuotaRepository $cuotaRepository , 
                         AgendaObservacionRepository $agendaObservacionRepository): Response
     {
