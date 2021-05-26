@@ -157,7 +157,7 @@ class TerminosController extends AbstractController
      */
     public function pdf(Contrato $contrato,
                         CuotaRepository $cuotaRepository , 
-                        AgendaObservacionRepository $agendaObservacionRepository)
+                        AgendaObservacionRepository $agendaObservacionRepository): Response
     {
         $this->denyAccessUnlessGranted('view','terminos');
         $filename = sprintf('desestimiento-'.$contrato->getId().'-%s.pdf',rand(0,9000));
@@ -228,6 +228,7 @@ class TerminosController extends AbstractController
         $dompdf->stream($filename, [
             "Attachment" => true
         ]);
+        return $this->redirectToRoute('terminos_index');
     }
     /**
     * @Route("/{id}", name="terminos_show", methods={"GET"})
