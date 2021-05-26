@@ -38,7 +38,10 @@ class ContratoFunciones
         $agenda=$contrato->getAgenda();
         $agenda->setStatus($agendaStatus);
 
+        $contrato->setFechaDesiste(new \DateTime(date("Y-m-d H:i:s") ));
         $entityManager->persist($agenda);
+        $entityManager->flush();
+        $entityManager->persist($contrato);
         $entityManager->flush();
 
         $observacion=new AgendaObservacion();

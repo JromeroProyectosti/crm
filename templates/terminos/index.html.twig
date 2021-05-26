@@ -47,7 +47,10 @@
                         <th>{{ knp_pagination_sortable(contratos, 'Tramitador', 'tramitador') }} {% if contratos.isSorted('tramitador') %} <i class="fas fa-sort"></i>{% endif %}</th>
                         <th>{{ knp_pagination_sortable(contratos, 'Sucursal', 'sucursal') }} {% if contratos.isSorted('sucursal') %} <i class="fas fa-sort"></i>{% endif %}</th>
                         <th>{{ knp_pagination_sortable(contratos, 'Fecha Contrato', 'fechaCreacion') }} {% if contratos.isSorted('fechaCreacion') %} <i class="fas fa-sort"></i>{% endif %}</th>
-                         
+                        <th>{{ knp_pagination_sortable(contratos, 'Aviso Termino', 'fechaDesite') }} {% if contratos.isSorted('fechaDesiste') %} <i class="fas fa-sort"></i>{% endif %}</th>
+                        <th>{{ knp_pagination_sortable(contratos, 'Confirma Termino', 'fechaTermino') }} {% if contratos.isSorted('fechaTermino') %} <i class="fas fa-sort"></i>{% endif %}</th>
+                        <th>{{ knp_pagination_sortable(contratos, 'Fecha PDF Anexo', 'fechaPdfAnexo') }} {% if contratos.isSorted('fechaPdfAnexo') %} <i class="fas fa-sort"></i>{% endif %}</th>
+                          
                         {% if sesion.getSesion.usuarioTipo.id in [1,4,8,7] %}
                         <th>Acciones</th>
                         {% endif %}
@@ -64,6 +67,9 @@
                         <td>{{ contrato.tramitador.nombre }}</td>
                         <td>{{ contrato.sucursal}}</td>
                         <td>{{ contrato.fechaCreacion|date('d-m-Y H:i') }}</td>
+                        <td>{{ contrato.fechaDesiste ? contrato.fechaDesiste|date('d-m-Y H:i'): '' }}</td>
+                        <td>{{ contrato.fechaTermino ? contrato.fechaTermino|date('d-m-Y H:i'): '' }}</td>
+                        <td>{{ contrato.fechaPdfAnexo ? contrato.fechaPdfAnexo|date('d-m-Y H:i'): '' }}</td>
                         
                         {% if sesion.getSesion.usuarioTipo.id in [1,3,4,6,8,7] %}
                         <td>

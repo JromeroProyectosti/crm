@@ -242,6 +242,16 @@ class Contrato
      */
     private $vigencia;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $fechaDesiste;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $fechaPdfAnexo;
+
     
     public function __construct()
     {
@@ -837,6 +847,30 @@ class Contrato
     public function setVigencia(?int $vigencia): self
     {
         $this->vigencia = $vigencia;
+
+        return $this;
+    }
+
+    public function getFechaDesiste(): ?\DateTimeInterface
+    {
+        return $this->fechaDesiste;
+    }
+
+    public function setFechaDesiste(?\DateTimeInterface $fechaDesiste): self
+    {
+        $this->fechaDesiste = $fechaDesiste;
+
+        return $this;
+    }
+
+    public function getFechaPdfAnexo(): ?\DateTimeInterface
+    {
+        return $this->fechaPdfAnexo;
+    }
+
+    public function setFechaPdfAnexo(?\DateTimeInterface $fechaPdfAnexo): self
+    {
+        $this->fechaPdfAnexo = $fechaPdfAnexo;
 
         return $this;
     }

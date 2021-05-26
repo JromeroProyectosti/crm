@@ -170,6 +170,10 @@ class TerminosController extends AbstractController
         $anexo->setPdf($filename);
         $entityManager->persist($anexo);
         $entityManager->flush();
+
+        $contrato->setFechaPdfAnexo(new \DateTime(date('Y-m-d H:i')));
+        $entityManager->persist($contrato);
+        $entityManager->flush();
         $cuotas=$cuotaRepository->findBy(['contrato'=>$contrato,'isMulta'=>true]);
         foreach($cuotas as $cuota){
             if($cuota->getIsMulta() && !$cuota->getAnular()){
