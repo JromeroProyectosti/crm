@@ -62,7 +62,11 @@
                             <option value=""></option>
             
                             {% for cuenta in cuentas %}
-                                <option value="{{cuenta.id}}">{{cuenta.nombre}}</option>
+                                <option value="{{cuenta.id}}" 
+                                {% if cuenta.id == agenda.cuenta.id %}
+                                    selected
+                                {% endif %}
+                                >{{cuenta.nombre}}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -152,6 +156,10 @@
   </div>
 <script>
 
+        
+
+        
+
         function verCalendario(){
             $.ajax({
                 url:"{{path('panel_agendador_calendario',{'id':agenda.id})}}",
@@ -222,8 +230,24 @@
             }
             
         }*/
-       
-
+       $(document).ready(function(){
+           console.log("paso");
+            $.ajax({
+                url:"/agenda/{{agenda.cuenta.id}}/agendadores",
+                type: "get",
+                data: "agendador={{agenda.agendador.id}}",
+                dataType: "html",
+                cache: false,
+                contentType: false,
+                processData: false,
+                async: true,
+                success:function(data){
+                    $("#agendadores").html(data);
+                }
+        
+            });
+       });
+        
     </script>
 
 {% endblock %}

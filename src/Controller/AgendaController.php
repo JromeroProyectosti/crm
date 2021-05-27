@@ -276,6 +276,12 @@ class AgendaController extends AbstractController
     public function agendadores(Request $request, Cuenta $cuenta,UsuarioRepository $usuarioRepository): Response
     {
         $user=$this->getUser();
+        $agendador=0;
+        
+        if($request->query->get('agendador')){
+            
+            $agendador=$request->query->get('agendador');
+        }
         if($user->getUsuarioTipo()->getId()>4){
                 $agendadores= $usuarioRepository->findByCuenta($cuenta->getId(),['id'=>$user->getId()]);
         }else{
@@ -285,6 +291,7 @@ class AgendaController extends AbstractController
 
         return $this->render('agenda/_agendadores.html.twig', [
             'agendadores' => $agendadores,
+            'agendador_id'=>$agendador,
         ]);
     }
 
