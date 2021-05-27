@@ -336,11 +336,12 @@ class PanelAbogadoController extends AbstractController
         }
         //$contrato->setCiudad($agenda->getCiudadCliente());
         $contrato->setFechaPrimeraCuota(new \DateTime(date('Y-m-d')));
+        $contrato->setVigencia(24);
         $form = $this->createForm(ContratoType::class, $contrato, [
             'action' =>$this->generateUrl('panel_abogado_contrata',['id'=>$agenda->getId()])
         ]);
         $form->add('fechaPrimeraCuota',DateType::class,array('widget'=>'single_text','html5'=>false));
-    
+        $form->add('vigencia');
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid()) {
