@@ -61,7 +61,11 @@
                             <option value=""></option>
             
                             {% for cuenta in cuentas %}
-                                <option value="{{cuenta.id}}">{{cuenta.nombre}}</option>
+                                <option value="{{cuenta.id}}"
+                                {% if cuenta.id == agenda.cuenta.id %}
+                                selected
+                                {% endif %}
+                                >{{cuenta.nombre}}</option>
                             {% endfor %}
                         </select>
                     </div>
