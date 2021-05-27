@@ -222,6 +222,23 @@
             
         }*/
        
+        $(document).ready(function(){
+            console.log("paso");
+             $.ajax({
+                 url:"/agenda/{{agenda.cuenta.id}}/agendadores",
+                 type: "get",
+                 data: "agendador={{agenda.agendador.id}}",
+                 dataType: "html",
+                 cache: false,
+                 contentType: false,
+                 processData: false,
+                 async: true,
+                 success:function(data){
+                     $("#agendadores").html(data);
+                 }
+         
+             });
+        });
 
     </script>
 
