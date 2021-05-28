@@ -364,10 +364,14 @@ class ContratoController extends AbstractController
                     $numeroCuota++;
                 }
             }
-             
-            $this->pdf2($contrato);
-            return $this->redirectToRoute('contrato_index');
+            
+            
+            
+           
+            
+            return $this->redirectToRoute('contrato_pdf',['id'=>$contrato->getId()]);
         }
+               
 
         return $this->render('contrato/edit.html.twig', [
             'contrato' => $contrato,
@@ -512,8 +516,7 @@ class ContratoController extends AbstractController
                 $entityManager->flush();
                 $numeroCuota++;
             }
-            $this->pdf2($contrato);
-         return $this->redirectToRoute('contrato_index');
+            return $this->redirectToRoute('contrato_pdf',['id'=>$contrato->getId()]);
         }
 
         return $this->render('contrato/finalizar.html.twig', [
@@ -587,9 +590,11 @@ class ContratoController extends AbstractController
         $file=$dompdf->output();
         file_put_contents($this->getParameter('url_root'). $this->getParameter('pdf_contratos').$filename,$file);
         // Envíe el PDF generado al navegador (descarga forzada)
-        $dompdf->stream($filename, [
+        /*$dompdf->stream($filename, [
             "Attachment" => true
-        ]);
+        ]);*/
+
+        return $this->redirectToRoute('contrato_index');
     }
     /**
      * @Route("/{id}/terminar", name="contrato_terminar", methods={"GET","POST"})
