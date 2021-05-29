@@ -134,6 +134,7 @@
             
         });*/
         function generaPdf(pag){
+            $('button').attr("disabled", true);
             window.location.href=pag;
             window.setTimeout(function(){window.location.reload();},10000);
             
