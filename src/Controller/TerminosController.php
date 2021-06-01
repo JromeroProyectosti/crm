@@ -166,7 +166,6 @@ class TerminosController extends AbstractController
         $crear_anexo=true;
         foreach($anexos as $anexo){
             $crear_anexo=false;
-
         }
         if($crear_anexo){
             $filename = sprintf('desestimiento-'.$contrato->getId().'-%s.pdf',rand(0,9000));
@@ -194,55 +193,62 @@ class TerminosController extends AbstractController
             }
 
             $observacion=$agendaObservacionRepository->findOneBy(['agenda'=>$contrato->getAgenda(),'status'=>[12,13]],['id'=>'desc']);
-            $html = $this->renderView('terminos/print.html.twig', array(
-                'anexo' => $anexo,
-                'Titulo'=>"Contrato",
-                'status'=>$observacion->getStatus(),
-                'cuotas'=>$cuotaRepository->findBy(['anexo'=>$anexo]),
-            ));
-
-            /*$snappy->generateFromHtml(
-            $html,
-            $this->getParameter('url_root'). $this->getParameter('pdf_contratos').$filename
-            );
-            return new PdfResponse(
-                $snappy->getOutputFromHtml($html, array(
-                    'page-size' => 'letter')),
-                $filename
-            );*/
-
-            // Configure Dompdf según sus necesidades
-            $pdfOptions = new Options();
-            $pdfOptions->set('defaultFont', 'helvetica');
-        
-            //$pdfOptions->set('fontHeightRatio',0.1);
             
-            // Crea una instancia de Dompdf con nuestras opciones
-            $dompdf = new Dompdf($pdfOptions);
-
-            $dompdf->getOptions()->setChroot(array($this->getParameter('url_raiz')));
+        }else{
+            $filename = sprintf('desestimiento-'.$contrato->getId().'-%s.pdf',rand(0,9000));
+            $anexo->setPdf($filename);
+            $entityManager->persist($anexo);
+            $entityManager->flush();
             
-            // Recupere el HTML generado en nuestro archivo twig
-        /* $html = $this->renderView('default/mypdf.html.twig', [
-                'title' => "Welcome to our PDF Test"
-            ]);*/
-            
-            // Cargar HTML en Dompdf
-            $dompdf->loadHtml($html);
-            
-            // (Opcional) Configure el tamaño del papel y la orientación 'vertical' o 'vertical'
-            $dompdf->setPaper('letter', 'portrait');
-
-            // Renderiza el HTML como PDF
-            $dompdf->render();
-
-            $file=$dompdf->output();
-            file_put_contents($this->getParameter('url_root'). $this->getParameter('pdf_contratos').$filename,$file);
-            // Envíe el PDF generado al navegador (descarga forzada)
-            $dompdf->stream($filename, [
-                "Attachment" => true
-            ]);
         }
+        $html = $this->renderView('terminos/print.html.twig', array(
+            'anexo' => $anexo,
+            'Titulo'=>"Contrato",
+            'status'=>$observacion->getStatus(),
+            'cuotas'=>$cuotaRepository->findBy(['anexo'=>$anexo]),
+        ));
+
+        /*$snappy->generateFromHtml(
+        $html,
+        $this->getParameter('url_root'). $this->getParameter('pdf_contratos').$filename
+        );
+        return new PdfResponse(
+            $snappy->getOutputFromHtml($html, array(
+                'page-size' => 'letter')),
+            $filename
+        );*/
+
+        // Configure Dompdf según sus necesidades
+        $pdfOptions = new Options();
+        $pdfOptions->set('defaultFont', 'helvetica');
+    
+        //$pdfOptions->set('fontHeightRatio',0.1);
+        
+        // Crea una instancia de Dompdf con nuestras opciones
+        $dompdf = new Dompdf($pdfOptions);
+
+        $dompdf->getOptions()->setChroot(array($this->getParameter('url_raiz')));
+        
+        // Recupere el HTML generado en nuestro archivo twig
+    /* $html = $this->renderView('default/mypdf.html.twig', [
+            'title' => "Welcome to our PDF Test"
+        ]);*/
+        
+        // Cargar HTML en Dompdf
+        $dompdf->loadHtml($html);
+        
+        // (Opcional) Configure el tamaño del papel y la orientación 'vertical' o 'vertical'
+        $dompdf->setPaper('letter', 'portrait');
+
+        // Renderiza el HTML como PDF
+        $dompdf->render();
+
+        $file=$dompdf->output();
+        file_put_contents($this->getParameter('url_root'). $this->getParameter('pdf_contratos').$filename,$file);
+        // Envíe el PDF generado al navegador (descarga forzada)
+        $dompdf->stream($filename, [
+            "Attachment" => true
+        ]);
         return $this->redirectToRoute('terminos_index');
     }
 
