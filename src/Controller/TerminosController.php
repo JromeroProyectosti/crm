@@ -160,7 +160,7 @@ class TerminosController extends AbstractController
                         AgendaObservacionRepository $agendaObservacionRepository): Response
     {
         $this->denyAccessUnlessGranted('view','terminos');
-
+        $entityManager = $this->getDoctrine()->getManager();
         
         $anexos=$contrato->getContratoAnexos();
         $crear_anexo=true;
@@ -169,7 +169,7 @@ class TerminosController extends AbstractController
         }
         if($crear_anexo){
             $filename = sprintf('desestimiento-'.$contrato->getId().'-%s.pdf',rand(0,9000));
-            $entityManager = $this->getDoctrine()->getManager();
+            
             $anexo=new ContratoAnexo();
             $anexo->setContrato($contrato);
             $anexo->setFechaCreacion(new \DateTime(date('Y-m-d H:i')));
