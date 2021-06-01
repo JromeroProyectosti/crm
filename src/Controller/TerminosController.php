@@ -195,11 +195,12 @@ class TerminosController extends AbstractController
             $observacion=$agendaObservacionRepository->findOneBy(['agenda'=>$contrato->getAgenda(),'status'=>[12,13]],['id'=>'desc']);
             
         }else{
-            $filename = sprintf('desestimiento-'.$contrato->getId().'-%s.pdf',rand(0,9000));
-            $anexo->setPdf($filename);
-            $entityManager->persist($anexo);
-            $entityManager->flush();
-            
+            if($anexo->getPdf()==null){
+                $filename = sprintf('desestimiento-'.$contrato->getId().'-%s.pdf',rand(0,9000));
+                $anexo->setPdf($filename);
+                $entityManager->persist($anexo);
+                $entityManager->flush();
+            }
         }
         $html = $this->renderView('terminos/print.html.twig', array(
             'anexo' => $anexo,
