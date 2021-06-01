@@ -81,10 +81,12 @@
                                 <a href="{{ path('terminos_show', {'id': contrato.id}) }}" class="btn btn-primary btn-sm"><i class="fas fa-eye"></i></a>
                             
                             {% for anexo in contrato.contratoAnexos %}
-                                {% if anexo.isDesiste %}
+                                {% if anexo.isDesiste and anexo.pdf is not null %}
                                 <a href="{{url_web}}{{pdf_contrato}}{{anexo.pdf}}" class="btn btn-success btn-sm"><i class="fas fa-file-pdf"></i></a>
                        
-                                {% endif %}
+                                {% else %}
+                                <button onclick="javascript:generaPdf('{{ path('terminos_pdf', {'id': contrato.id}) }}')" class="btn btn-primary btn-sm btn-pdf"><i class="far fa-check-circle"></i></button>
+                                {% endif %}  
                                 
                             {% else %}
                                 <button onclick="javascript:generaPdf('{{ path('terminos_pdf', {'id': contrato.id}) }}')" class="btn btn-primary btn-sm btn-pdf"><i class="far fa-check-circle"></i></button>
