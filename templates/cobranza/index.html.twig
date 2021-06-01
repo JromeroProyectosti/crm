@@ -84,9 +84,9 @@
                         </td>
                         <td>
 
-                                <a href="{{ path('verpagos_index', {'id': contrato.id}) }}" class="btn btn-primary btn-sm"><i class="far fa-plus-square"></i></a>
+                                <a href="{{ path('cobranza_index', {'id': contrato.id}) }}" class="btn btn-primary btn-sm"><i class="far fa-plus-square"></i></a>
                             
-                                <a href="{{ path('verpagos_view', {'id': contrato.id}) }}" class="btn btn-success btn-sm"><i class="fas fa-eye"></i></a>
+                                <a href="{{ path('cobranza_view', {'id': contrato.id}) }}" class="btn btn-success btn-sm"><i class="fas fa-eye"></i></a>
                                 {% if contrato.agenda.status.id == 14 %}
                                     <a href="#" class="btn btn-warning btn-sm"><i class="fas fa-retweet"></i></a>
 
@@ -99,9 +99,9 @@
                         </td>
                         {% else %}
                         <td>
-                            <a href="{{ path('verpagos_index', {'id': contrato.id}) }}" class="btn btn-primary btn-sm"><i class="far fa-plus-square"></i></a>
+                            <a href="{{ path('cobranza_index', {'id': contrato.id}) }}" class="btn btn-primary btn-sm"><i class="far fa-plus-square"></i></a>
                             
-                            <a href="{{ path('verpagos_view', {'id': contrato.id}) }}" class="btn btn-success btn-sm"><i class="fas fa-eye"></i></a>
+                            <a href="{{ path('cobranza_view', {'id': contrato.id}) }}" class="btn btn-success btn-sm"><i class="fas fa-eye"></i></a>
 
                         </td>
                         {% endif %}
