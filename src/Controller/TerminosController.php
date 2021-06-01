@@ -201,6 +201,7 @@ class TerminosController extends AbstractController
                 $entityManager->persist($anexo);
                 $entityManager->flush();
             }
+            $observacion=$agendaObservacionRepository->findOneBy(['agenda'=>$contrato->getAgenda(),'status'=>[12,13]],['id'=>'desc']);
         }
         $html = $this->renderView('terminos/print.html.twig', array(
             'anexo' => $anexo,
