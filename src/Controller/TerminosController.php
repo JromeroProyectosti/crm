@@ -198,11 +198,12 @@ class TerminosController extends AbstractController
             $observacion=$agendaObservacionRepository->findOneBy(['agenda'=>$contrato->getAgenda(),'status'=>[12,13]],['id'=>'desc']);
             
         }else{
-            if($anexo->getPdf()==null){
+            if($anexo_desiste->getPdf()==null){
                 $filename = sprintf('desestimiento-'.$contrato->getId().'-%s.pdf',rand(0,9000));
-                $anexo->setPdf($filename);
-                $entityManager->persist($anexo);
+                $anexo_desiste->setPdf($filename);
+                $entityManager->persist($anexo_desiste);
                 $entityManager->flush();
+                $anexo=$anexo_desiste;
             }
             $observacion=$agendaObservacionRepository->findOneBy(['agenda'=>$contrato->getAgenda(),'status'=>[12,13]],['id'=>'desc']);
         }
