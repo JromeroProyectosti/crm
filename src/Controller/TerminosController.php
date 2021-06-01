@@ -165,7 +165,10 @@ class TerminosController extends AbstractController
         $anexos=$contrato->getContratoAnexos();
         $crear_anexo=true;
         foreach($anexos as $anexo){
-            $crear_anexo=false;
+            if($anexo->getIsDesiste()){
+                $crear_anexo=false;
+                $anexo_desiste=$anexo;
+            }
         }
         if($crear_anexo){
             $filename = sprintf('desestimiento-'.$contrato->getId().'-%s.pdf',rand(0,9000));
