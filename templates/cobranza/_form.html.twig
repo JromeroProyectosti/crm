@@ -23,12 +23,14 @@
                         </div>
                         <div class="col-sm-12 col-md-3">
                             <small class="text-muted">Respuesta (*)</small>
-                            {{form_row(form.respuesta,{'label':false,'attr':{'class':'form-control'}})}}
+                            {{form_row(form.respuesta,{'label':false,'attr':{'class':'form-control cbo-respuesta'}})}}
                         
                         </div>
                         <div class="col-sm-12 col-md-3">
-                            <small class="text-muted">Fecha Compromiso (*)</small>
-                            {{form_row(form.fechaCompromiso,{'label':false,'attr':{'class':'form-control datetimepicker-compromiso'}})}}
+                            <div id="compromiso">
+                                <small class="text-muted">Fecha Compromiso (*)</small>
+                                {{form_row(form.fechaCompromiso,{'label':false,'attr':{'class':'form-control datetimepicker-compromiso'}})}}
+                            </div>
                         </div>
                         
                         <div class="col-sm-12 col-md-12">
@@ -89,7 +91,26 @@
         console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
 
     });  
-
+    $("#compromiso").hide();
     $(".datetimepicker-compromiso").prop('required',false);
- 
+    
+    $(".cbo-respuesta").on('change',function(){
+        
+
+        $.ajax({
+            method: "POST",
+            url: "/cobranza/"+$(this).val()+"/compromiso",
+            data: { name: "John", location: "Boston" }
+          })
+            .done(function( msg ) {
+              if(msg=="true"){
+                $("#compromiso").show();
+                $(".datetimepicker-compromiso").prop('required',true);
+              }else{
+                $("#compromiso").hide();
+                $(".datetimepicker-compromiso").prop('required',false);
+                $(".datetimepicker-compromiso").val('');
+              }
+            });
+    })
 </script>

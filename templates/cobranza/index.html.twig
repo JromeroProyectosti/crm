@@ -64,6 +64,7 @@
                 {% for cuota in cuotas %}
               
                 {% set contrato = cuota.contrato %}
+                {% set enmora = cuota.monto - cuota.pagado %}
                     <tr>
                         <td>{{ contrato.id }}</td>
                         <td align="center">{{ contrato.lote }}</td>
@@ -73,7 +74,7 @@
                         <td align="center">{{ contrato.fechaCreacion|date('d-m-Y H:i') }}</td>
                         <td align="center">{{ cuota.fechaPago|date('d-m-Y') }}</td>
                         <td align="center">{{ cuota.numero }}</td>
-                        <td align="center">{{ cuota.monto - cuota.pagado }}</td>
+                        <td align="center">${{ enmora|number_format(0, ',', '.') }}</td>
                         <td align="center">{{ ultimoPago(contrato.id) ? ultimoPago(contrato.id) |date('d-m-Y H:i') : '' }}
                             
                         </td>

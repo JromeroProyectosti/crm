@@ -2,29 +2,25 @@
 
 namespace App\Controller;
 
-use App\Entity\Pago;
+
 use App\Entity\Cobranza;
+use App\Entity\Pago;
 use App\Entity\Usuario;
 use App\Entity\Cuota;
-use App\Entity\PagoCuotas;
 use App\Entity\Contrato;
 use App\Entity\Importacion;
-use App\Form\PagoType;
+use App\Entity\CobranzaRespuesta;
 use App\Form\CobranzaType;
 use App\Form\ImportacionType;
 use App\Repository\ImportacionRepository;
 use App\Repository\ContratoRepository;
 use App\Repository\ContratoRolRepository;
-use App\Repository\PagoRepository;
 use App\Repository\CobranzaRepository;
+use App\Repository\PagoRepository;
 use App\Repository\ModuloPerRepository;
 use App\Repository\CuotaRepository;
 use App\Repository\CuentaRepository;
-use App\Repository\PagoCuentasRepository;
-use App\Repository\PagoCanalRepository;
-use App\Repository\PagoTipoRepository;
 use App\Repository\CuentaCorrienteRepository;
-use App\Repository\PagoCuotasRepository;
 use App\Repository\VencimientoRepository;
 use App\Repository\UsuarioRepository;
 use App\Repository\ConfiguracionRepository;
@@ -603,5 +599,20 @@ class CobranzaController extends AbstractController
         $entityManager->persist($contrato);
         $entityManager->flush();
         return true;
+    }
+
+    /**
+     * @Route("/{id}/compromiso", name="cobranza_compromiso", methods={"GET","POST"})
+     */
+    public function fechaCompromiso(Request $request, CobranzaRespuesta $cobranzaRespuesta): Response
+    {
+        if($cobranzaRespuesta->getIsFechaCompromiso()){
+            $respuesta="true";
+        }else{
+            $respuesta="false";
+        }
+        return $this->render('cobranza/respuesta.html.twig', [
+            'respuesta' => $respuesta,           
+        ]);
     }
 }
