@@ -75,9 +75,15 @@ class Cuota
      */
     private $anexo;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Cobranza::class, mappedBy="cuota")
+     */
+    private $cobranzas;
+
     public function __construct()
     {
         $this->pagoCuotas = new ArrayCollection();
+        $this->cobranzas = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -231,6 +237,36 @@ class Cuota
     public function setAnexo(?ContratoAnexo $anexo): self
     {
         $this->anexo = $anexo;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Cobranza[]
+     */
+    public function getCobranzas(): Collection
+    {
+        return $this->cobranzas;
+    }
+
+    public function addCobranza(Cobranza $cobranza): self
+    {
+        if (!$this->cobranzas->contains($cobranza)) {
+            $this->cobranzas[] = $cobranza;
+            $cobranza->setCuota($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCobranza(Cobranza $cobranza): self
+    {
+        if ($this->cobranzas->removeElement($cobranza)) {
+            // set the owning side to null (unless already changed)
+            if ($cobranza->getCuota() === $this) {
+                $cobranza->setCuota(null);
+            }
+        }
 
         return $this;
     }

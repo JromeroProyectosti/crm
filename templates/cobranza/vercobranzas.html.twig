@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Cobranza{% endblock %}
+
+{% block body %}
+<div class="card">
+    <div class="card-header">
+        <h1>Folio: {{contrato.id}}</h1>
+    </div>
+    <div class="card-body table-responsive p-0" >
+            
+        <table class="table table-head-fixed text-nowrap table-striped table-sm">
+            <thead>
+                <tr>
+                    <th  align="center">Lote</th>
+                    <th  align="center">Cuota</th>
+                    <th align="center">Fecha/Horan Ingreso</th>
+                    <th align="center">Función Cobranza</th>
+                    <th  align="center">Respuesta</th>
+                    <th align="center">Fecha Compromiso</th>
+                    <th align="center">Observación</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for cobranza in cobranzas %}
+                <tr
+                {% if cobranza.isNulo %}
+                    class="table-danger"
+                {% endif %}
+                >
+                    <td align="right">{{cobranza.cuota.contrato.lote}}</td>
+                    <td align="center">{{cobranza.cuota.numero}}</td>
+                    <td align="center">{{cobranza.fechaHora|date('Y-m-d H:i')}}</td>
+                    <td align="right">{{cobranza.funcion}}</td>
+                    <td align="right">{{cobranza.respuesta}}</td>
+                    <td>{{cobranza.fechaCompromiso ? cobranza.fechaCompromiso|date('Y-m-d'):''}}</td>
+                    <td>
+                        <span class="d-inline-block text-truncate" style="max-width: 150px;">
+                            {{cobranza.observacion}}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="btn-group" role="group" aria-label="Basic example">
+                            <a href="{{path('cobranza_edit',{'id':cobranza.id})}}" class="btn btn-warning"><i class="fas fa-edit"></i></a>
+                            <a href="{{path('cobranza_delete',{'id':cobranza.id})}}" class="btn btn-danger"><i class="fas fa-trash"></i></a>
+                        </div>
+
+                    </td>
+                    
+                        
+                </tr>
+
+            {% endfor %}
+
+        </tbody>
+        </table>
+        </div>
+        <div class="card-footer">
+           
+                <a href="{{path('cobranza_new',{'id':cuota.id})}}" class="btn btn-primary" >Agregar cobranza</a>
+
+        </div>
+    </div>
+    
+{% endblock %}

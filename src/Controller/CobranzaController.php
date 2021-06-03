@@ -3,17 +3,20 @@
 namespace App\Controller;
 
 use App\Entity\Pago;
+use App\Entity\Cobranza;
 use App\Entity\Usuario;
 use App\Entity\Cuota;
 use App\Entity\PagoCuotas;
 use App\Entity\Contrato;
 use App\Entity\Importacion;
 use App\Form\PagoType;
+use App\Form\CobranzaType;
 use App\Form\ImportacionType;
 use App\Repository\ImportacionRepository;
 use App\Repository\ContratoRepository;
 use App\Repository\ContratoRolRepository;
 use App\Repository\PagoRepository;
+use App\Repository\CobranzaRepository;
 use App\Repository\ModuloPerRepository;
 use App\Repository\CuotaRepository;
 use App\Repository\CuentaRepository;
@@ -314,105 +317,8 @@ class CobranzaController extends AbstractController
             'pagina'=>$pagina->getNombre(),
         ]);
     }
-    /**
-     * @Route("/upload", name="pago_upload", methods={"GET","POST"})
-     */
-    public function upload(Request $request){
-        $brochureFile = $_FILES['file']['name'][0];
-            
-        // this condition is needed because the 'brochure' field is not required
-        // so the PDF file must be processed only when a file is uploaded
-        if ($brochureFile) {
+   
 
-
-            $fichero_subido = $this->getParameter('url_root').
-            $this->getParameter('img_pagos') . basename($_FILES['file']['name'][0]);
-            
-           /* if (move_uploaded_file($_FILES['file']['tmp_name'][0], $fichero_subido)) {
-                echo "El fichero es válido y se subió con éxito.\n";
-            } else {
-                echo "¡Posible ataque de subida de ficheros!\n";
-            }*/
-
-            //echo filesize($_FILES['file']['tmp_name'][0]);
-            $source=$_FILES['file']['tmp_name'][0];
-            $imgInfo = getimagesize($source); 
-            
-            $mime = $imgInfo['mime']; 
-             
-            // Creamos una imagen
-            switch($mime){ 
-                case 'image/jpeg': 
-                    $image = imagecreatefromjpeg($source); 
-                    break; 
-                case 'image/png': 
-                    $image = imagecreatefrompng($source); 
-                    break; 
-                case 'image/gif': 
-                    $image = imagecreatefromgif($source); 
-                    break; 
-                default: 
-                    $image = imagecreatefromjpeg($source); 
-            } 
-
-            $quality=100;
-            if(filesize($_FILES['file']['tmp_name'][0])>1000000){
-                $quality=75;
-            }
-            if(filesize($_FILES['file']['tmp_name'][0])>2000000){
-                $quality=60;
-            }
-            if(filesize($_FILES['file']['tmp_name'][0])>3000000){
-                $quality=50;
-            }
-            if(filesize($_FILES['file']['tmp_name'][0])>4000000){
-                $quality=40;
-            }
-            // Guardamos la imagen
-            imagejpeg($image, $fichero_subido, $quality); 
-            /*
-            $originalFilename = pathinfo($brochureFile->getClientOriginalName(), PATHINFO_FILENAME);
-            // this is needed to safely include the file name as part of the URL
-            $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()',$originalFilename);
-            $newFilename = $safeFilename.'-'.uniqid().'.'.$brochureFile->guessExtension();
-
-            // Move the file to the directory where brochures are stored
-            echo $this->getParameter('url_root').
-            $this->getParameter('pagos');
-            $brochureFile->move($this->getParameter('url_root').
-                $this->getParameter('pagos'),
-                $newFilename
-            );
-            */
-        }
-
-
-        return $this->redirectToRoute('cobranza_index');
-    }
-
-    /**
-     * @Route("/generalotes", name="cobranza_generalotes", methods={"GET","POST"})
-     */
-    public function generalotes(ContratoRepository $contratoRepository,ConfiguracionRepository $configuracionRepository){
-
-
-        $contratos=$contratoRepository->findBy(['lote'=>null]);
-        $configuracion=$configuracionRepository->find(1);
-        $lote=1;
-        $entityManager = $this->getDoctrine()->getManager();
-        
-        foreach($contratos as $contrato){
-            $contrato->setLote($lote);
-
-            $entityManager->persist($contrato);
-            $entityManager->flush();
-            $lote++;
-            if($lote>$configuracion->getLotes()){
-                $lote=1;
-            }
-        }
-        return $this->redirectToRoute('cobranza_index');
-    }
     /**
      * @Route("/{id}", name="cobranza_show", methods={"GET"})
      */
@@ -433,17 +339,18 @@ class CobranzaController extends AbstractController
     /**
      * @Route("/{id}/vercobranza", name="vercobranza_index", methods={"GET","POST"})
      */
-    public function verpagos(Request $request, Contrato $contrato,PagoRepository $pagoRepository,ModuloPerRepository $moduloPerRepository): Response
+    public function vercobranzas(Request $request, Cuota $cuota,CobranzaRepository $cobranzaRepository,ModuloPerRepository $moduloPerRepository): Response
     {
         $this->denyAccessUnlessGranted('view','cobranza');
         $user=$this->getUser();
         $pagina=$moduloPerRepository->findOneByName('cobranza',$user->getEmpresaActual());
-        $pagos=$pagoRepository->findByContrato($contrato);
+        $cobranzas=$cobranzaRepository->findByContrato($cuota->getContrato()->getId());
 
-        return $this->render('pago/verpagos.html.twig', [
-            'pagos' => $pagos,
+        return $this->render('cobranza/vercobranzas.html.twig', [
+            'cobranzas' => $cobranzas,
             'pagina'=>"Ingreso ". $pagina->getNombre(),
-            'contrato'=>$contrato,
+            'contrato'=>$cuota->getContrato(),
+            'cuota'=>$cuota
         ]);
     }
 
@@ -479,34 +386,38 @@ class CobranzaController extends AbstractController
     /**
      * @Route("/{id}/new", name="cobranza_new", methods={"GET","POST"})
      */
-    public function new(Request $request,Contrato $contrato,CuotaRepository $cuotaRepository,PagoCuotasRepository $pagoCuotasRepository,ModuloPerRepository $moduloPerRepository): Response
+    public function new(Request $request,
+                        Cuota $cuota,
+                        CuotaRepository $cuotaRepository,
+                        ModuloPerRepository $moduloPerRepository,
+                        UsuarioRepository $usuarioRepository): Response
     {
         $this->denyAccessUnlessGranted('create','cobranza');
         $user=$this->getUser();
         $pagina=$moduloPerRepository->findOneByName('cobranza',$user->getEmpresaActual());
-        $pago = new Pago();
-        $pago->setFechaRegistro(new \DateTime(date('Y-m-d H:i:s')));
-        $pago->setUsuarioRegistro($user);
-        $form = $this->createForm(PagoType::class, $pago);
-       
-        $form->add('fechaPago',DateType::class,array('widget'=>'single_text','html5'=>false));
+        $cobranza = new Cobranza();
+        $cobranza->setFechaHora(new \DateTime(date('Y-m-d H:i:s')));
+        $cobranza->setUsuarioRegistro($usuarioRepository->find($user->getId()));
+        $cobranza->setCuota($cuota);
+        $form = $this->createForm(cobranzaType::class, $cobranza);
+        $form->add('fechaHora',DateType::class,array('widget'=>'single_text','html5'=>false));
+        $form->add('fechaCompromiso',DateType::class,array('widget'=>'single_text','html5'=>false));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($pago);
+            $entityManager->persist($cobranza);
             $entityManager->flush();
             
-            $this->asociarPagos($contrato,$cuotaRepository,$pagoCuotasRepository,$pago);
             
            
-            return $this->redirectToRoute('verpagos_index',['id'=>$contrato->getId()]);
+            return $this->redirectToRoute('vercobranza_index',['id'=>$cuota->getId()]);
            
         }
 
         return $this->render('cobranza/new.html.twig', [
-            'pago' => $pago,
-            'contrato'=>$contrato,
+            'cobranza' => $cobranza,
+            'contrato'=>$cuota->getContrato(),
             'pagina'=>"Agregar ".$pagina->getNombre(),
             'form' => $form->createView(),
         ]);
@@ -516,46 +427,27 @@ class CobranzaController extends AbstractController
     /**
      * @Route("/{id}/edit", name="cobranza_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, Pago $pago,CuotaRepository $cuotaRepository,PagoCuotasRepository $pagoCuotasRepository,ModuloPerRepository $moduloPerRepository): Response
+    public function edit(Request $request, Cobranza $cobranza,CuotaRepository $cuotaRepository,ModuloPerRepository $moduloPerRepository): Response
     {
         $this->denyAccessUnlessGranted('edit','cobranza');
         $user=$this->getUser();
         $pagina=$moduloPerRepository->findOneByName('cobranza',$user->getEmpresaActual());
-        $pagoCuotas=$pago->getPagoCuotas();
-        foreach($pagoCuotas as $pagoCuota){
-            $cuota=$pagoCuota->getCuota();
-            $contrato=$cuota->getContrato();
-        }
-        $form = $this->createForm(PagoType::class, $pago);
-        $form->add('fechaRegistro',DateType::class,array('widget'=>'single_text','html5'=>false));
-        $form->add('fechaPago',DateType::class,array('widget'=>'single_text','html5'=>false));
+        
+        $form = $this->createForm(CobranzaType::class, $cobranza);
+        $form->add('fechaHora',DateType::class,array('widget'=>'single_text','html5'=>false));
+        $form->add('fechaCompromiso',DateType::class,array('widget'=>'single_text','html5'=>false));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
-            $entityManager = $this->getDoctrine()->getManager();
-            $contrato=null;
-            $pagoCuotas=$pago->getPagoCuotas();
-            foreach($pagoCuotas as $pagoCuota){
-                $cuota=$pagoCuota->getCuota();
-                $contrato=$cuota->getContrato();
-                $cuota->setPagado($cuota->getPagado()-$pagoCuota->getMonto());
-                $entityManager->remove($pagoCuota);
-                $entityManager->flush();
-
-            }
-
-            $this->asociarPagos($contrato,$cuotaRepository,$pagoCuotasRepository,$pago);
-            if(null != $contrato){
-                return $this->redirectToRoute('verpagos_index',['id'=>$contrato->getId()]);
-            }else{
-                return $this->redirectToRoute('cobranza_index');
-            }
+            
+            return $this->redirectToRoute('vercobranza_index',['id'=>$cobranza->getCuota()->getId()]);
+            
         }
 
         return $this->render('cobranza/edit.html.twig', [
-            'pago' => $pago,
-            'contrato'=>$contrato,
+            'cobranza' => $cobranza,
+            'contrato'=>$cobranza->getCuota()->getContrato(),
             'form' => $form->createView(),
             'pagina'=>'Editar '.$pagina->getNombre(),
         ]);
@@ -598,35 +490,20 @@ class CobranzaController extends AbstractController
     }
    
     /**
-     * @Route("/{id}", name="cobranza_delete", methods={"DELETE"})
+     * @Route("/{id}/delete", name="cobranza_delete", methods={"GET","POST"})
      */
-    public function delete(Request $request, Pago $pago): Response
+    public function delete(Request $request, Cobranza $cobranza): Response
     {
         $this->denyAccessUnlessGranted('full','cobranza');
         $user=$this->getUser();
-        if ($this->isCsrfTokenValid('delete'.$pago->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $pago->setUsuarioAnulacion($user);
-            $pago->setFechaAnulacion(new \DateTime(date("Y-m-d H:i")));
-            $pago->setAnulado(true);
-            $entityManager->persist($pago);
-            $entityManager->flush();
-            $contrato=null;
-            $pagoCuotas=$pago->getPagoCuotas();
-            foreach($pagoCuotas as $pagoCuota){
-                $cuota=$pagoCuota->getCuota();
-                $contrato=$cuota->getContrato();
-                $cuota->setPagado($cuota->getPagado()-$pagoCuota->getMonto());
-                $entityManager->remove($pagoCuota);
-                $entityManager->flush();
+        
+        $entityManager = $this->getDoctrine()->getManager();
+        
+        $cobranza->setIsNulo(true);
+        $entityManager->persist($cobranza);
+        $entityManager->flush();
 
-            }
-        }
-        if(null != $contrato){
-            return $this->redirectToRoute('verpagos_index',['id'=>$contrato->getId()]);
-        }else{
-            return $this->redirectToRoute('cobranza_index');
-        }
+        return $this->redirectToRoute('vercobranza_index',['id'=>$cobranza->getCuota()->getId()]);
     }
 
 
