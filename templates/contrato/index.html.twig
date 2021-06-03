@@ -87,6 +87,14 @@
                                 {% endif %}
 
                         </td>
+                        {% else %}
+
+                            {% if contrato.pdf is null %}
+                                <a href="{{ path('contrato_pdf', {'id': contrato.id}) }}" class="btn btn-success btn-sm"><i class="fas fa-file-pdf"></i></a>
+                            {% else %}
+
+                                <a href="{{url_web}}{{pdf_contrato}}{{contrato.pdf}}" class="btn btn-success btn-sm"><i class="fas fa-file-pdf"></i></a>
+                            {% endif %}
                         {% endif %}
                     </tr>
                 {% else %}
