@@ -74,13 +74,12 @@ class ContratoController extends AbstractController
             case 1:
                 $query=$contratoRepository->findByPers(null,$user->getEmpresaActual(),$compania,$filtro,null,$fecha);
                 $companias=$cuentaRepository->findByPers(null,$user->getEmpresaActual());
-            break;
+                break;
             case 7:
                 $query=$contratoRepository->findByPers(null,null,$compania,$filtro,null,$fecha." and c.tramitador = ".$user->getId());
                 $companias=$cuentaRepository->findByPers($user->getId());
                 break;
             case 12://Cobradores
-            
                 $fecha.=" and c.lote in (".implode(",",$user->getLotes()).") ";
                 $query=$contratoRepository->findByPers(null,$user->getEmpresaActual(),$compania,$filtro,null,$fecha);
                 $companias=$cuentaRepository->findByPers(null,$user->getEmpresaActual());
