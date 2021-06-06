@@ -47,20 +47,25 @@
                         <th>{{ knp_pagination_sortable(cuotas, 'Rut', 'contrato.rut') }} {% if cuotas.isSorted('contrato.rut') %} <i class="fas fa-sort"></i>{% endif %}</th>
                         <th>{{ knp_pagination_sortable(cuotas, 'Fecha Contrato', 'contrato.fechaCreacion') }} {% if cuotas.isSorted('contrato.fechaCreacion') %} <i class="fas fa-sort"></i>{% endif %}</th>
                         <th>{{ knp_pagination_sortable(cuotas, 'Vencimiento', 'fechaPago') }} {% if cuotas.isSorted('fechaPago') %} <i class="fas fa-sort"></i>{% endif %}</th>
-                        <th>{{ knp_pagination_sortable(cuotas, 'Cuota', 'numero') }} {% if cuotas.isSorted('numero') %} <i class="fas fa-sort"></i>{% endif %}</th>
-                        <th>{{ knp_pagination_sortable(cuotas, '$ En Mora', 'monto') }} {% if cuotas.isSorted('monto') %} <i class="fas fa-sort"></i>{% endif %}</th>
+                        
+                        <th>$ En Mora</th>
                         
                         <th>Último Pago</th>
+                        <th>{{ knp_pagination_sortable(cuotas, 'Ultima Función', 'contrato.ultimaFuncion') }} {% if cuotas.isSorted('contrato.ultimaFuncion') %} <i class="fas fa-sort"></i>{% endif %}</th>
+                        <th>{{ knp_pagination_sortable(cuotas, 'Q. Mov.', 'contrato.qMov') }} {% if cuotas.isSorted('contrato.qMov') %} <i class="fas fa-sort"></i>{% endif %}</th>
+                        
                         {% if finalizado is null or not finalizado %}
-                            
+
                         <th><i class="fas fa-traffic-light"></i></th>
                         
                         
                         {% endif %}
+                        
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
+    
                 {% for cuota in cuotas %}
               
                 {% set contrato = cuota.contrato %}
@@ -73,24 +78,30 @@
                         <td align="center">{{ contrato.rut }}</td>
                         <td align="center">{{ contrato.fechaCreacion|date('d-m-Y H:i') }}</td>
                         <td align="center">{{ cuota.fechaPago|date('d-m-Y') }}</td>
-                        <td align="center">{{ cuota.numero }}</td>
-                        <td align="center">${{ enmora|number_format(0, ',', '.') }}</td>
+                        <td align="right">${{ montoDeuda(contrato.id)|number_format(0, ',', '.') }}</td>
                         <td align="center">{{ ultimoPago(contrato.id) ? ultimoPago(contrato.id) |date('d-m-Y H:i') : '' }}
-                            
+                        <td align="center">{{ contrato.ultimaFuncion ? contrato.ultimaFuncion : '' }}
+                        <td align="center">{{ contrato.qMov ? contrato.qMov : '' }}
+                              
                         </td>
                         
                         {% if finalizado is null or not finalizado %}
                         <td>
                            {{semaforo(cuota.fechaPago|date('Y-m-d'))|raw}}
                         </td>
+                             
                         <td>
 
                                 <a href="{{ path('vercobranza_index', {'id': cuota.id}) }}" class="btn btn-primary btn-sm"><i class="far fa-plus-square"></i></a>
+                                <a href="{{ path('vercobranza_view', {'id': contrato.id}) }}" class="btn btn-success btn-sm"><i class="far fa-eye"></i></a>
                             
                         </td>
                         {% else %}
+                        
                         <td>
                             <a href="{{ path('vercobranza_index', {'id': contrato.id}) }}" class="btn btn-primary btn-sm"><i class="far fa-plus-square"></i></a>
+                            <a href="{{ path('vercobranza_view', {'id': contrato.id}) }}" class="btn btn-success btn-sm"><i class="far fa-eye"></i></a>
+                            
                         </td>
                         {% endif %}
                         

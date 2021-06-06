@@ -252,6 +252,16 @@ class Contrato
      */
     private $fechaPdfAnexo;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $ultimaFuncion;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $qMov;
+
     
     public function __construct()
     {
@@ -871,6 +881,30 @@ class Contrato
     public function setFechaPdfAnexo(?\DateTimeInterface $fechaPdfAnexo): self
     {
         $this->fechaPdfAnexo = $fechaPdfAnexo;
+
+        return $this;
+    }
+
+    public function getUltimaFuncion(): ?string
+    {
+        return $this->ultimaFuncion;
+    }
+
+    public function setUltimaFuncion(?string $ultimaFuncion): self
+    {
+        $this->ultimaFuncion = $ultimaFuncion;
+
+        return $this;
+    }
+
+    public function getQMov(): ?int
+    {
+        return $this->qMov;
+    }
+
+    public function setQMov(?int $qMov): self
+    {
+        $this->qMov = $qMov;
 
         return $this;
     }

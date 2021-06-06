@@ -3,6 +3,7 @@
 namespace App\Twig;
 use App\Entity\Vencimiento;
 use App\Entity\Pago;
+use App\Entity\Cuota;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -33,6 +34,7 @@ class AppExtension extends AbstractExtension
             new TwigFunction('suma_mes',[$this,'suma_mes']),
             new TwigFunction('semaforo',[$this,'semaforo']),
             new TwigFunction('ultimoPago',[$this,'ultimoPago']),
+            new TwigFunction('montoDeuda',[$this,'montoDeuda']),
         ];
     }
 
@@ -109,5 +111,14 @@ class AppExtension extends AbstractExtension
             $ultimoPago=$pago->getFechaPago()->format('Y-m-d')." ".$pago->getHoraPago()->format('H:i');
         }
         return $ultimoPago;
+    }
+    public function montoDeuda($contrato){
+        $em=$this->container->get('doctrine');
+        $vencimiento=$em->getRepository(Vencimiento::class)->findAll();
+
+        $otros=' DATEDIFF(now(),c.fechaPago)>'.$vencimiento[0]->getValMax();
+        $cuota=$em->getRepository(Cuota::class)->deudaTotal($contrato,$otros);
+        
+        return $cuota[0][1]-$cuota[0][2];
     }
 }

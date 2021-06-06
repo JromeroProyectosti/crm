@@ -12,7 +12,6 @@ class CobranzaType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('fechaHora')
             ->add('respuesta')
             ->add('funcion')
             ->add('observacion')

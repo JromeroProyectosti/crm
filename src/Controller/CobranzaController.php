@@ -132,6 +132,8 @@ class CobranzaController extends AbstractController
         }
         //$companias=$cuentaRepository->findByPers($user->getId());
         //$query=$contratoRepository->findAll();
+
+      
         $cuotas=$paginator->paginate(
             $query, /* query NOT result */
             $request->query->getInt('page', 1), /*page number*/
@@ -326,7 +328,7 @@ class CobranzaController extends AbstractController
             $cuota=$pagoCuota->getCuota();
             $contrato=$cuota->getContrato();
         }
-        return $this->render('pago/show.html.twig', [
+        return $this->render('cobranza/show.html.twig', [
             'pago' => $pago,
             'contrato'=>$contrato,
             'pagina'=>"Ver Pago",
@@ -355,11 +357,11 @@ class CobranzaController extends AbstractController
      */
     public function verpagosShow(Request $request, Contrato $contrato,PagoRepository $pagoRepository,ModuloPerRepository $moduloPerRepository): Response
     {
-        $this->denyAccessUnlessGranted('view','pago');
+        $this->denyAccessUnlessGranted('view','cobranza');
         $user=$this->getUser();
-        $pagina=$moduloPerRepository->findOneByName('pago',$user->getEmpresaActual());
+        $pagina=$moduloPerRepository->findOneByName('cobranza',$user->getEmpresaActual());
     
-        return $this->render('pago/verpagos_show.html.twig', [
+        return $this->render('cobranza/vercobranza_show.html.twig', [
             'pagina'=>"Detalle ".$pagina->getNombre(),
             'contrato'=>$contrato,
         ]);
@@ -395,8 +397,9 @@ class CobranzaController extends AbstractController
         $cobranza->setFechaHora(new \DateTime(date('Y-m-d H:i:s')));
         $cobranza->setUsuarioRegistro($usuarioRepository->find($user->getId()));
         $cobranza->setCuota($cuota);
+        $contrato=$cuota->getContrato();
         $form = $this->createForm(cobranzaType::class, $cobranza);
-        $form->add('fechaHora',DateType::class,array('widget'=>'single_text','html5'=>false));
+        //$form->add('fechaHora',DateType::class,array('widget'=>'single_text','html5'=>false));
         $form->add('fechaCompromiso',DateType::class,array('widget'=>'single_text','html5'=>false));
         $form->handleRequest($request);
 
@@ -405,8 +408,15 @@ class CobranzaController extends AbstractController
             $entityManager->persist($cobranza);
             $entityManager->flush();
             
+
             
-           
+            
+            $qmov=$contrato->getQMov();
+            $qmov++;
+            $contrato->setQMov($qmov);
+            $contrato->setUltimaFuncion($cobranza->getFuncion()->getNombre());
+            $entityManager->persist($contrato);
+            $entityManager->flush();
             return $this->redirectToRoute('vercobranza_index',['id'=>$cuota->getId()]);
            
         }

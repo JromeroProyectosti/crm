@@ -23,6 +23,7 @@ class CuotaRepository extends ServiceEntityRepository
         $query->join('c.contrato','co');
         $query->join('co.agenda','a');
         $query->join('a.cuenta','cu');
+        
         if($vigente){
             $query->andWhere('c.monto>c.pagado or c.pagado is null');
             $query->andWhere('c.anular is null or c.anular = false');
@@ -104,6 +105,24 @@ class CuotaRepository extends ServiceEntityRepository
         ->setMaxResults(1);
         return $query->getQuery()
             ->getOneOrNullResult()
+        ;
+    }
+
+    public function deudaTotal($contrato,$otros=false)
+    {
+
+        $query=$this->createQueryBuilder('c')
+        ->select(array('sum(c.monto)','sum(c.pagado)'))
+        ->andWhere('c.contrato=:contra');
+        if($otros){
+            $query->andWhere($otros);
+        }
+        $query->andWhere('c.monto>c.pagado or c.pagado is null')
+        ->andWhere('c.anular is null or c.anular = false')
+        ->setParameter('contra', $contrato)
+        ->groupBy('c.contrato');
+        return $query->getQuery()
+            ->getResult()
         ;
     }
     // /**

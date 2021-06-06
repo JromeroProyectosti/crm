@@ -103,7 +103,20 @@ class PagoCuotasRepository extends ServiceEntityRepository
                         $entityManager->flush();
                     }
                 }
+
+                //tomamos las cuotas y reseteamos el q_mov de las cobranzas
+                $cobranzas = $cuota->getCobranzas();
+                $qMov=0;
+                foreach($cobranzas as $cobranza){
+                    $qMov++;
+                }
+                if($contrato->getQMov()-$qMov>0){
+                    $contrato->setQMov($contrato->getQMov()-$qMov);
+                    $entityManager->persist($contrato);
+                    $entityManager->flush();
+                }
             }else{
+                //si estan todas las cuotas pagadas, buscamos la ultima cuota pagada y agregamos el monto sobrante a esa cuota
                 if($pago->getMonto()-$total>0){
                     $cuota=$cuotaRepository->findOneByUltimaPagada($contrato->getId());
                     if($cuota){
@@ -119,6 +132,17 @@ class PagoCuotasRepository extends ServiceEntityRepository
 
                         $entityManager->persist($cuota);
                         $entityManager->flush();
+                        //tomamos las cuotas y reseteamos el q_mov de las cobranzas
+                        $cobranzas = $cuota->getCobranzas();
+                        $qMov=0;
+                        foreach($cobranzas as $cobranza){
+                            $qMov++;
+                        }
+                        if($contrato->getQMov()-$qMov>0){
+                            $contrato->setQMov($contrato->getQMov()-$qMov);
+                            $entityManager->persist($contrato);
+                            $entityManager->flush();
+                        }
                     }
                 }
             }
