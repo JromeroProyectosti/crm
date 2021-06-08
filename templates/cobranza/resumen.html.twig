@@ -54,7 +54,7 @@
 
                         <td>{{ num }}</td>
                         <td>{{cobranza[0].usuarioRegistro.nombre}}</td>
-                        <td>{{ cobranza[0].fechaHora|date("Y-m-d H:i")}}</td>
+                        <td>{{ cobranza[0].fechaHora|date("Y-m-d")}}</td>
                         <td align="right">{{ cobranza[1] }}</td>
                         
                         {% set total = total + 1 %}
