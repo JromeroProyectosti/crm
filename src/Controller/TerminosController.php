@@ -91,7 +91,7 @@ class TerminosController extends AbstractController
             $query, /* query NOT result */
             $request->query->getInt('page', 1), /*page number*/
             20 /*limit per page*/,
-            array('defaultSortFieldName' => 'id', 'defaultSortDirection' => 'desc'));
+            array('defaultSortFieldName' => 'c.fechaTermino', 'defaultSortDirection' => 'desc'));
         return $this->render('terminos/index.html.twig', [
             'contratos' => $contratos,
             'bFiltro'=>$filtro,

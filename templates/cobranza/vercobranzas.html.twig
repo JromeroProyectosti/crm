@@ -15,7 +15,7 @@
                     <th  align="center">Lote</th>
                     <th> Cobrador</th>
                     <th  align="center">Cuota</th>
-                    <th align="center">Fecha/Hora Ingreso</th>
+                    <th align="center">Fecha Ingreso</th>
                     <th align="center">Función Cobranza</th>
                     <th  align="center">Respuesta</th>
                     <th align="center">Fecha Compromiso</th>
@@ -33,7 +33,7 @@
                     <td align="right">{{cobranza.cuota.contrato.lote}}</td>
                     <td align="right">{{cobranza.usuarioRegistro.nombre}}</td>
                     <td align="center">{{cobranza.cuota.numero}}</td>
-                    <td align="center">{{cobranza.fechaHora|date('Y-m-d H:i')}}</td>
+                    <td align="center">{{cobranza.fechaHora|date('Y-m-d')}}</td>
                     <td align="center">{{cobranza.funcion}}</td>
                     <td align="center">{{cobranza.respuesta}}</td>
                     <td>{{cobranza.fechaCompromiso ? cobranza.fechaCompromiso|date('Y-m-d'):''}}</td>

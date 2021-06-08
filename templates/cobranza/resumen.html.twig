@@ -40,38 +40,36 @@
                     <tr>
                         <th></th>
                         <th>Colaborador</th>
-                        <th>{{ knp_pagination_sortable(pagos, 'Fecha Comprobante', 'pago.fechaPago') }} {% if pagos.isSorted('pago.fechaPago') %} <i class="fas fa-sort"></i>{% endif %}</th>
-                        <th>{{ knp_pagination_sortable(pagos, 'Fecha Ingreso', 'pago.fechaRegistro') }} {% if pagos.isSorted('pago.fechaRegistro') %} <i class="fas fa-sort"></i>{% endif %}</th>
-                        <th>{{ knp_pagination_sortable(pagos, 'Monto Pagado', 'pago.monto') }} {% if pagos.isSorted('pago.monto') %} <i class="fas fa-sort"></i>{% endif %}</th>
-                        
+                        <th>Fecha</th>
+                        <th>Q Mov</th>
                     </tr>
                 </thead>
                 <tbody>
                 {% set total=0 %}
                 {% set num=1 %}
-                {% for pago in pagos %}
+                {% for cobranza in cobranzas %}
               
                 
                     <tr>
 
                         <td>{{ num }}</td>
-                        <td>{{pago.usuarioRegistro.nombre}}</td>
-                        <td>{{ pago.fechaPago|date("Y-m-d H:i")}}</td>
-                        <td>{{ pago.fechaRegistro|date("Y-m-d H:i") }}</td>
-                        <td align="right">${{ pago.monto|number_format(0, ',', '.') }}</td>
-                        {% set total = total + pago.monto %}
+                        <td>{{cobranza[0].usuarioRegistro.nombre}}</td>
+                        <td>{{ cobranza[0].fechaHora|date("Y-m-d H:i")}}</td>
+                        <td align="right">{{ cobranza[1] }}</td>
+                        
+                        {% set total = total + 1 %}
                         {% set num = num + 1 %}
                     </tr>
                 {% else %}
                     <tr>
-                        <td colspan="5">No hay pagos</td>
+                        <td colspan="5">No hay cobranzas</td>
                     </tr>
                 {% endfor %}
                 
                     <tr>
-                    <td colspan="4" align="right">Total:</td>
+                    <td colspan="2" align="right">Total:</td>
                     <td  align="right">
-                         <strong>${{ total|number_format(0,",",".") }}</strong>
+                         <strong>{{ total|number_format(0,",",".") }}</strong>
                     </td>
                     </tr>
                 </tbody>
@@ -82,7 +80,7 @@
             <div class="card-footer clearfix">
                 {# display navigation #}
            <div class="navigation">
-               {{ knp_pagination_render(pagos,'@KnpPaginator/Pagination/twitter_bootstrap_v4_pagination.html.twig',{},{
+               {{ knp_pagination_render(cobranzas,'@KnpPaginator/Pagination/twitter_bootstrap_v4_pagination.html.twig',{},{
                'position': 'centered',
                'rounded': true,
                }) }}

@@ -248,9 +248,9 @@ class CobranzaController extends AbstractController
     }
 
     /**
-     * @Route("/resumen", name="cobranza_resumen", methods={"GET"})
+     * @Route("/resumen", name="cobranza_resumen", methods={"GET"}) 
      */
-    public function resumen(ContratoRepository $contratoRepository, CuotaRepository $cuotaRepository,PagoRepository $pagoRepository,PaginatorInterface $paginator,ModuloPerRepository $moduloPerRepository,Request $request,CuentaRepository $cuentaRepository): Response
+    public function resumen(CuentaRepository $cuentaRepository,CobranzaRepository $cobranzaRepository,PaginatorInterface $paginator,ModuloPerRepository $moduloPerRepository,Request $request): Response
     {
 
         $this->denyAccessUnlessGranted('view','cobranza');
@@ -273,7 +273,7 @@ class CobranzaController extends AbstractController
             $dateInicio=date('Y-m-d');
             $dateFin=date('Y-m-d');
         }
-        $fecha="p.fechaRegistro between '$dateInicio' and '$dateFin 23:59:59'";
+        $fecha="c.fechaHora between '$dateInicio' and '$dateFin 23:59:59'";
       
         switch($user->getUsuarioTipo()->getId()){
             case 1://tramitador
@@ -281,33 +281,33 @@ class CobranzaController extends AbstractController
             case 4:
             case 8:
             case 12:
-                $query=$pagoRepository->findByPers(null,null,null,$filtro,$fecha);
+                $query=$cobranzaRepository->findByContratoGroup(null,null,null,$filtro,$fecha);
                 $companias=$cuentaRepository->findByPers(null,$user->getEmpresaActual());
 
                 break;
             case 11://Administrativo
                 //$query=$contratoRepository->findByPers(null,$user->getEmpresaActual(),$compania,$filtro,null,$fecha,true);
-                $query=$pagoRepository->findByPers($user->getId(),null,null,$filtro,$fecha);
+                $query=$cobranzaRepository->findByContratoGroup($user->getId(),null,null,$filtro,$fecha);
                 $companias=$cuentaRepository->findByPers(null,$user->getEmpresaActual());
              break;
             
             default:
                 //$query=$contratoRepository->findByPers(null,null,$compania,$filtro,null,$fecha,true);
-                $query=$pagoRepository->findByPers($user->getId(),null,null,$filtro,$fecha);
+                $query=$cobranzaRepository->findByContratoGroup($user->getId(),null,null,$filtro,$fecha);
                 $companias=$cuentaRepository->findByPers(null);
                 
             break;
         }
         //$companias=$cuentaRepository->findByPers($user->getId());
         //$query=$contratoRepository->findAll();
-        $pagos=$paginator->paginate(
+        $cobranzas=$paginator->paginate(
             $query, /* query NOT result */
             $request->query->getInt('page', 1), /*page number*/
             20 /*limit per page*/,
             array('defaultSortFieldName' => 'id', 'defaultSortDirection' => 'desc'));
         
-        return $this->render('pago/resumen.html.twig', [
-            'pagos' => $pagos,
+        return $this->render('cobranza/resumen.html.twig', [
+            'cobranzas' => $cobranzas,
             'companias'=>$companias,
             'bCompania'=>$compania,
             'dateInicio'=>$dateInicio,
@@ -394,7 +394,7 @@ class CobranzaController extends AbstractController
         $user=$this->getUser();
         $pagina=$moduloPerRepository->findOneByName('cobranza',$user->getEmpresaActual());
         $cobranza = new Cobranza();
-        $cobranza->setFechaHora(new \DateTime(date('Y-m-d H:i:s')));
+        $cobranza->setFechaHora(new \DateTime(date('Y-m-d')));
         $cobranza->setUsuarioRegistro($usuarioRepository->find($user->getId()));
         $cobranza->setCuota($cuota);
         $contrato=$cuota->getContrato();
@@ -414,7 +414,9 @@ class CobranzaController extends AbstractController
             $qmov=$contrato->getQMov();
             $qmov++;
             $contrato->setQMov($qmov);
-            $contrato->setUltimaFuncion($cobranza->getFuncion()->getNombre());
+            $contrato->setUltimaFuncion($cobranza->getRespuesta()->getNombre());
+            $contrato->setFechaCompromiso($cobranza->getFechaCompromiso());
+            
             $entityManager->persist($contrato);
             $entityManager->flush();
             return $this->redirectToRoute('vercobranza_index',['id'=>$cuota->getId()]);
@@ -510,105 +512,6 @@ class CobranzaController extends AbstractController
         $entityManager->flush();
 
         return $this->redirectToRoute('vercobranza_index',['id'=>$cobranza->getCuota()->getId()]);
-    }
-
-
-    public function asociarPagos($contrato,$cuotaRepository,$pagoCuotasRepository,$pago){
-        $entityManager = $this->getDoctrine()->getManager();
-        $contrato->setIsFinalizado(false);
-
-        do{
-
-            $pagostatus=false;
-            $cuota=$cuotaRepository->findOneByPrimeraVigente($contrato->getId());
-            $pagoCuotas=$pagoCuotasRepository->findByPago($pago->getId());
-
-            if(null == $pagoCuotas["total"]){
-                $total=0;
-            }else{
-                $total=$pagoCuotas["total"];
-            }
-            if($cuota){
-
-                //cuando el pago es menor o igual a la deuda.
-                if(($pago->getMonto()-$total)<=($cuota->getMonto()-$cuota->getPagado())){
-                    
-                    $cuota->setPagado($cuota->getPagado()+($pago->getMonto()-$total));
-
-                    $entityManager->persist($cuota);
-                    $entityManager->flush();
-
-                    $pagoCuota=new PagoCuotas();
-                    $pagoCuota->setCuota($cuota);
-                    $pagoCuota->setPago($pago);
-                    $pagoCuota->setMonto($pago->getMonto()-$total);
-                    $entityManager->persist($pagoCuota);
-                    $entityManager->flush();
-                }else{
-                    
-                    
-                    if(($pago->getMonto()-$total)>=($cuota->getMonto()-$cuota->getPagado())){
-                        
-                        
-                        $pagoCuota=new PagoCuotas();
-                        $pagoCuota->setCuota($cuota);
-                        $pagoCuota->setPago($pago);
-                        $pagoCuota->setMonto($cuota->getMonto()-$cuota->getPagado());
-                        $entityManager->persist($pagoCuota);
-                        $entityManager->flush();
-
-                        $cuota->setPagado($cuota->getMonto());
-                        $entityManager->persist($cuota);
-                        $entityManager->flush();
-                        $pagostatus=true;
-                    }else if(($pago->getMonto()-$total)<($cuota->getMonto()-$cuota->getPagado())){
-                        
-                        
-                        $pagoCuota=new PagoCuotas();
-                        $pagoCuota->setCuota($cuota);
-                        $pagoCuota->setPago($pago);
-                        $pagoCuota->setMonto(($pago->getMonto()-$total));
-                        $entityManager->persist($pagoCuota);
-                        $entityManager->flush();
-
-                        $cuota->setPagado(($pago->getMonto()-$total)+$cuota->getPagado());
-
-                        $entityManager->persist($cuota);
-                        $entityManager->flush();
-                    }
-                }
-            }else{
-                if($pago->getMonto()-$total>0){
-                    $cuota=$cuotaRepository->findOneByUltimaPagada($contrato->getId());
-                    if($cuota){
-
-                        $pagoCuota=new PagoCuotas();
-                        $pagoCuota->setCuota($cuota);
-                        $pagoCuota->setPago($pago);
-                        $pagoCuota->setMonto(($pago->getMonto()-$total));
-                        $entityManager->persist($pagoCuota);
-                        $entityManager->flush();
-
-                        $cuota->setPagado(($pago->getMonto()-$total)+$cuota->getPagado());
-
-                        $entityManager->persist($cuota);
-                        $entityManager->flush();
-                    }
-                }
-            }
-
-        }while($pagostatus);
-
-        $cuota=$cuotaRepository->findOneByPrimeraVigente($contrato->getId());
-
-        if($cuota){
-            $contrato->setIsFinalizado(false);
-        }else{
-            $contrato->setIsFinalizado(true);
-        }
-        $entityManager->persist($contrato);
-        $entityManager->flush();
-        return true;
     }
 
     /**

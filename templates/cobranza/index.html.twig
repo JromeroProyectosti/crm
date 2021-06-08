@@ -51,7 +51,8 @@
                         <th>$ En Mora</th>
                         
                         <th>Último Pago</th>
-                        <th>{{ knp_pagination_sortable(cuotas, 'Ultima Función', 'contrato.ultimaFuncion') }} {% if cuotas.isSorted('contrato.ultimaFuncion') %} <i class="fas fa-sort"></i>{% endif %}</th>
+                        <th>{{ knp_pagination_sortable(cuotas, 'Ultima Respuesta', 'contrato.ultimaFuncion') }} {% if cuotas.isSorted('contrato.ultimaFuncion') %} <i class="fas fa-sort"></i>{% endif %}</th>
+                        <th>{{ knp_pagination_sortable(cuotas, 'Fecha Compromiso', 'contrato.fechaCompromiso') }} {% if cuotas.isSorted('contrato.fechaCompromiso') %} <i class="fas fa-sort"></i>{% endif %}</th>
                         <th>{{ knp_pagination_sortable(cuotas, 'Q. Mov.', 'contrato.qMov') }} {% if cuotas.isSorted('contrato.qMov') %} <i class="fas fa-sort"></i>{% endif %}</th>
                         
                         {% if finalizado is null or not finalizado %}
@@ -79,8 +80,9 @@
                         <td align="center">{{ contrato.fechaCreacion|date('d-m-Y H:i') }}</td>
                         <td align="center">{{ cuota.fechaPago|date('d-m-Y') }}</td>
                         <td align="right">${{ montoDeuda(contrato.id)|number_format(0, ',', '.') }}</td>
-                        <td align="center">{{ ultimoPago(contrato.id) ? ultimoPago(contrato.id) |date('d-m-Y H:i') : '' }}
-                        <td align="center">{{ contrato.ultimaFuncion ? contrato.ultimaFuncion : '' }}
+                        <td align="center">{{ ultimoPago(contrato.id) ? ultimoPago(contrato.id) |date('d-m-Y H:i') : '' }}</td>
+                        <td align="center">{{ contrato.ultimaFuncion ? contrato.ultimaFuncion : '' }}</td>
+                        <td align="center">{{ contrato.fechaCompromiso ? contrato.fechaCompromiso|date('d-m-Y'):''}}</td>
                         <td align="center">{{ contrato.qMov ? contrato.qMov : '' }}
                               
                         </td>

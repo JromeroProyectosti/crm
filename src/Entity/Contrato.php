@@ -262,6 +262,11 @@ class Contrato
      */
     private $qMov;
 
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $fechaCompromiso;
+
     
     public function __construct()
     {
@@ -905,6 +910,18 @@ class Contrato
     public function setQMov(?int $qMov): self
     {
         $this->qMov = $qMov;
+
+        return $this;
+    }
+
+    public function getFechaCompromiso(): ?\DateTimeInterface
+    {
+        return $this->fechaCompromiso;
+    }
+
+    public function setFechaCompromiso(?\DateTimeInterface $fechaCompromiso): self
+    {
+        $this->fechaCompromiso = $fechaCompromiso;
 
         return $this;
     }
