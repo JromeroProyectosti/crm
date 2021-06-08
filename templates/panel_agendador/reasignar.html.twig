@@ -8,11 +8,15 @@
 <div class="row">
     <div class="col-sm-9 col-md-4">
         <small class="text-muted">Compañia</small>
-        <select name="cboCuenta" class="form-control" onchange="javascript:agendadores(this.value)" required>
+        <select name="cboCuenta" class="form-control" onchange="javascript:agendadores(this.value)" required disabled>
             <option value=""></option>
 
             {% for cuenta in cuentas %}
-                <option value="{{cuenta.id}}">{{cuenta.nombre}}</option>
+                <option value="{{cuenta.id}}"
+                {% if cuenta.id == agenda.cuenta.id %}
+                selected
+                {% endif %}
+                >{{cuenta.nombre}}</option>
             {% endfor %}
         </select>
     </div>
@@ -52,5 +56,23 @@
         }else{
             $("#agendadores").html('');
         }
+    
     }
+    $(document).ready(function(){
+        console.log("paso");
+         $.ajax({
+             url:"/agenda/{{agenda.cuenta.id}}/agendadores",
+             type: "get",
+             data: "agendador={{agenda.agendador.id}}",
+             dataType: "html",
+             cache: false,
+             contentType: false,
+             processData: false,
+             async: true,
+             success:function(data){
+                 $("#agendadores").html(data);
+             }
+     
+         });
+    });
 </script>

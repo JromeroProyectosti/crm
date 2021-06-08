@@ -265,8 +265,9 @@
         function getReasignar(status){
             $.ajax({
                 url:"{{path('panel_agendador_reasignar')}}",
-                type: "post",
+                type: "get",
                 dataType: "html",
+                data: "agenda={{agenda.id}}",
                 cache: false,
                 contentType: false,
                 processData: false,

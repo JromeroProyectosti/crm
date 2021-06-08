@@ -124,12 +124,15 @@ class PanelAgendadorController extends AbstractController
     /**
      * @Route("/reasignar", name="panel_agendador_reasignar", methods={"GET","POST"})
      */
-    public function reasignar(Request $request,UsuarioRepository $usuarioRepository):Response
+    public function reasignar(Request $request,UsuarioRepository $usuarioRepository,AgendaRepository $agendaRepository):Response
     {
         $user=$this->getUser();
+        $agenda_id=$request->query->get('agenda');
+        $agenda=$agendaRepository->find($agenda_id);
         $empresa=$this->getDoctrine()->getRepository(Empresa::class)->find($user->getEmpresaActual());
         return $this->render('panel_agendador/reasignar.html.twig', [
-            'cuentas'=>$empresa->getCuentas(),            
+            'cuentas'=>$empresa->getCuentas(),
+            'agenda'=> $agenda,     
         ]);
     }
     /**
