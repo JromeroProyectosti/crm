@@ -53,7 +53,7 @@
                         <th>Último Pago</th>
                         <th>{{ knp_pagination_sortable(cuotas, 'Ultima Respuesta', 'contrato.ultimaFuncion') }} {% if cuotas.isSorted('contrato.ultimaFuncion') %} <i class="fas fa-sort"></i>{% endif %}</th>
                         <th>{{ knp_pagination_sortable(cuotas, 'Fecha Compromiso', 'contrato.fechaCompromiso') }} {% if cuotas.isSorted('contrato.fechaCompromiso') %} <i class="fas fa-sort"></i>{% endif %}</th>
-                        <th>{{ knp_pagination_sortable(cuotas, 'Q. Mov.', 'contrato.qMov') }} {% if cuotas.isSorted('contrato.qMov') %} <i class="fas fa-sort"></i>{% endif %}</th>
+                        <th>{{ knp_pagination_sortable(cuotas, 'Q. Ges.', 'contrato.qMov') }} {% if cuotas.isSorted('contrato.qMov') %} <i class="fas fa-sort"></i>{% endif %}</th>
                         
                         {% if finalizado is null or not finalizado %}
 

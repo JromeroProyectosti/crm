@@ -58,6 +58,11 @@ class Cobranza
      */
     private $usuarioRegistro;
 
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $fecha;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -155,6 +160,18 @@ class Cobranza
     public function setUsuarioRegistro(?Usuario $usuarioRegistro): self
     {
         $this->usuarioRegistro = $usuarioRegistro;
+
+        return $this;
+    }
+
+    public function getFecha(): ?\DateTimeInterface
+    {
+        return $this->fecha;
+    }
+
+    public function setFecha(?\DateTimeInterface $fecha): self
+    {
+        $this->fecha = $fecha;
 
         return $this;
     }

@@ -100,7 +100,7 @@ class CobranzaRepository extends ServiceEntityRepository
         }
 
       
-        $query->groupBy('c.usuarioRegistro,c.fechaHora ');
+        $query->groupBy('c.usuarioRegistro,c.fecha ');
         return $query->getQuery()
             ->getResult()
         ;

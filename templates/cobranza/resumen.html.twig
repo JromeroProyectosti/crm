@@ -41,7 +41,7 @@
                         <th></th>
                         <th>Colaborador</th>
                         <th>Fecha</th>
-                        <th>Q Mov</th>
+                        <th>Q Ges</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -54,7 +54,7 @@
 
                         <td>{{ num }}</td>
                         <td>{{cobranza[0].usuarioRegistro.nombre}}</td>
-                        <td>{{ cobranza[0].fechaHora|date("Y-m-d")}}</td>
+                        <td>{{ cobranza[0].fecha|date("Y-m-d")}}</td>
                         <td align="right">{{ cobranza[1] }}</td>
                         
                         {% set total = total +  cobranza[1] %}

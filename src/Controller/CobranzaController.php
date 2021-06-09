@@ -312,7 +312,7 @@ class CobranzaController extends AbstractController
             'bCompania'=>$compania,
             'dateInicio'=>$dateInicio,
             'dateFin'=>$dateFin,
-            'pagina'=>$pagina->getNombre(),
+            'pagina'=>"Gestión ".$pagina->getNombre(),
         ]);
     }
    
@@ -394,7 +394,8 @@ class CobranzaController extends AbstractController
         $user=$this->getUser();
         $pagina=$moduloPerRepository->findOneByName('cobranza',$user->getEmpresaActual());
         $cobranza = new Cobranza();
-        $cobranza->setFechaHora(new \DateTime(date('Y-m-d')));
+        $cobranza->setFechaHora(new \DateTime(date('Y-m-d H:i')));
+        $cobranza->setFecha(new \DateTime(date('Y-m-d')));
         $cobranza->setUsuarioRegistro($usuarioRepository->find($user->getId()));
         $cobranza->setCuota($cuota);
         $contrato=$cuota->getContrato();
@@ -426,7 +427,7 @@ class CobranzaController extends AbstractController
         return $this->render('cobranza/new.html.twig', [
             'cobranza' => $cobranza,
             'contrato'=>$cuota->getContrato(),
-            'pagina'=>"Agregar ".$pagina->getNombre(),
+            'pagina'=>"Agregar Gestión ".$pagina->getNombre(),
             'form' => $form->createView(),
         ]);
     }

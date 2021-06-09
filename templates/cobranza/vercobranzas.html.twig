@@ -32,8 +32,7 @@
                 >
                     <td align="right">{{cobranza.cuota.contrato.lote}}</td>
                     <td align="right">{{cobranza.usuarioRegistro.nombre}}</td>
-                    <td align="center">{{cobranza.cuota.numero}}</td>
-                    <td align="center">{{cobranza.fechaHora|date('Y-m-d')}}</td>
+                    <td align="center">{{cobranza.fechaHora|date('Y-m-d H:i')}}</td>
                     <td align="center">{{cobranza.funcion}}</td>
                     <td align="center">{{cobranza.respuesta}}</td>
                     <td>{{cobranza.fechaCompromiso ? cobranza.fechaCompromiso|date('Y-m-d'):''}}</td>
@@ -60,7 +59,7 @@
         </div>
         <div class="card-footer">
            
-                <a href="{{path('cobranza_new',{'id':cuota.id})}}" class="btn btn-primary" >Agregar cobranza</a>
+                <a href="{{path('cobranza_new',{'id':cuota.id})}}" class="btn btn-primary" >Agregar gestión</a>
 
         </div>
     </div>
