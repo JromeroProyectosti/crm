@@ -109,7 +109,7 @@ class NocontestaController extends AbstractController
             $agenda->setStatus($agendaStatusRepository->find(11));
             $cuenta=$request->request->get('cboCuenta');
             $usuario=$request->request->get('cboAgendador');
-            $agenda->setCuenta($cuentaRepository->find($cuenta));
+            //$agenda->setCuenta($cuentaRepository->find($cuenta));
             $agenda->setAgendador($usuarioRepository->find($usuario));
             $entityManager = $this->getDoctrine()->getManager();
 

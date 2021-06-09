@@ -39,6 +39,7 @@
                         <span class="d-inline-block text-truncate" style="max-width: 150px;">
                             {{cobranza.observacion}}
                         </span>
+                        <button type="button" class="btn btn-sm btn-success" data-toggle="popover" title="Observación Completa" data-content="{{cobranza.observacion|raw}}">Ver Más</button>
                     </td>
                     <td>
                         <div class="btn-group" role="group" aria-label="Basic example">
@@ -63,4 +64,16 @@
         </div>
     </div>
     
+    <script>
+        $(function () {
+            $('[data-toggle="popover"]').popover()
+            $('.popover-dismiss').popover({
+                trigger: 'focus'
+              });
+            
+              $('[data-toggle="popover"]').popover({
+                  template: '<div class="popover" role="tooltip"><div class="arrow"><</div><h3 class="popover-header"></h3><div class="popover-body"></div></div>',
+              });
+        });
+    </script>
 {% endblock %}
