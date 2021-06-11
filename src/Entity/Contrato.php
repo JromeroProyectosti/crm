@@ -267,12 +267,18 @@ class Contrato
      */
     private $fechaCompromiso;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Cobranza::class, mappedBy="contrato", orphanRemoval=true)
+     */
+    private $cobranzas;
+
     
     public function __construct()
     {
         $this->contratoRols = new ArrayCollection();
         $this->detalleCuotas = new ArrayCollection();
         $this->contratoAnexos = new ArrayCollection();
+        $this->cobranzas = new ArrayCollection();
         
     }
 
@@ -922,6 +928,36 @@ class Contrato
     public function setFechaCompromiso(?\DateTimeInterface $fechaCompromiso): self
     {
         $this->fechaCompromiso = $fechaCompromiso;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Cobranza[]
+     */
+    public function getCobranzas(): Collection
+    {
+        return $this->cobranzas;
+    }
+
+    public function addCobranza(Cobranza $cobranza): self
+    {
+        if (!$this->cobranzas->contains($cobranza)) {
+            $this->cobranzas[] = $cobranza;
+            $cobranza->setContrato($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCobranza(Cobranza $cobranza): self
+    {
+        if ($this->cobranzas->removeElement($cobranza)) {
+            // set the owning side to null (unless already changed)
+            if ($cobranza->getContrato() === $this) {
+                $cobranza->setContrato(null);
+            }
+        }
 
         return $this;
     }

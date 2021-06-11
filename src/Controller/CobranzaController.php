@@ -337,18 +337,18 @@ class CobranzaController extends AbstractController
     /**
      * @Route("/{id}/vercobranza", name="vercobranza_index", methods={"GET","POST"})
      */
-    public function vercobranzas(Request $request, Cuota $cuota,CobranzaRepository $cobranzaRepository,ModuloPerRepository $moduloPerRepository): Response
+    public function vercobranzas(Request $request, Contrato $contrato,CobranzaRepository $cobranzaRepository,ModuloPerRepository $moduloPerRepository): Response
     {
         $this->denyAccessUnlessGranted('view','cobranza');
         $user=$this->getUser();
         $pagina=$moduloPerRepository->findOneByName('cobranza',$user->getEmpresaActual());
-        $cobranzas=$cobranzaRepository->findByContrato($cuota->getContrato()->getId());
+        $cobranzas=$cobranzaRepository->findByContrato($contrato->getId());
 
         return $this->render('cobranza/vercobranzas.html.twig', [
             'cobranzas' => $cobranzas,
             'pagina'=>"Ingreso ". $pagina->getNombre(),
-            'contrato'=>$cuota->getContrato(),
-            'cuota'=>$cuota
+            'contrato'=>$contrato,
+            
         ]);
     }
 
@@ -385,7 +385,7 @@ class CobranzaController extends AbstractController
      * @Route("/{id}/new", name="cobranza_new", methods={"GET","POST"})
      */
     public function new(Request $request,
-                        Cuota $cuota,
+                        Contrato $contrato,
                         CuotaRepository $cuotaRepository,
                         ModuloPerRepository $moduloPerRepository,
                         UsuarioRepository $usuarioRepository): Response
@@ -397,8 +397,8 @@ class CobranzaController extends AbstractController
         $cobranza->setFechaHora(new \DateTime(date('Y-m-d H:i')));
         $cobranza->setFecha(new \DateTime(date('Y-m-d')));
         $cobranza->setUsuarioRegistro($usuarioRepository->find($user->getId()));
-        $cobranza->setCuota($cuota);
-        $contrato=$cuota->getContrato();
+        $cobranza->setContrato($contrato);
+        
         $form = $this->createForm(cobranzaType::class, $cobranza);
         //$form->add('fechaHora',DateType::class,array('widget'=>'single_text','html5'=>false));
         $form->add('fechaCompromiso',DateType::class,array('widget'=>'single_text','html5'=>false));
@@ -420,13 +420,13 @@ class CobranzaController extends AbstractController
             
             $entityManager->persist($contrato);
             $entityManager->flush();
-            return $this->redirectToRoute('vercobranza_index',['id'=>$cuota->getId()]);
+            return $this->redirectToRoute('vercobranza_index',['id'=>$contrato->getId()]);
            
         }
 
         return $this->render('cobranza/new.html.twig', [
             'cobranza' => $cobranza,
-            'contrato'=>$cuota->getContrato(),
+            'contrato'=>$contrato,
             'pagina'=>"Agregar Gestión ".$pagina->getNombre(),
             'form' => $form->createView(),
         ]);
@@ -450,7 +450,7 @@ class CobranzaController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
             
-            return $this->redirectToRoute('vercobranza_index',['id'=>$cobranza->getCuota()->getId()]);
+            return $this->redirectToRoute('vercobranza_index',['id'=>$cobranza->getContrato()->getId()]);
             
         }
 
@@ -512,7 +512,7 @@ class CobranzaController extends AbstractController
         $entityManager->persist($cobranza);
         $entityManager->flush();
 
-        return $this->redirectToRoute('vercobranza_index',['id'=>$cobranza->getCuota()->getId()]);
+        return $this->redirectToRoute('vercobranza_index',['id'=>$cobranza->getContrato()->getId()]);
     }
 
     /**

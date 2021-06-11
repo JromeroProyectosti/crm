@@ -46,12 +46,7 @@ class Cobranza
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $isNulo;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=Cuota::class, inversedBy="cobranzas")
-     */
-    private $cuota;
-
+    
     /**
      * @ORM\ManyToOne(targetEntity=Usuario::class)
      * @ORM\JoinColumn(nullable=false)
@@ -62,6 +57,12 @@ class Cobranza
      * @ORM\Column(type="date", nullable=true)
      */
     private $fecha;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Contrato::class, inversedBy="cobranzas")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $contrato;
 
     public function getId(): ?int
     {
@@ -140,17 +141,7 @@ class Cobranza
         return $this;
     }
 
-    public function getCuota(): ?Cuota
-    {
-        return $this->cuota;
-    }
-
-    public function setCuota(?Cuota $cuota): self
-    {
-        $this->cuota = $cuota;
-
-        return $this;
-    }
+    
 
     public function getUsuarioRegistro(): ?Usuario
     {
@@ -172,6 +163,18 @@ class Cobranza
     public function setFecha(?\DateTimeInterface $fecha): self
     {
         $this->fecha = $fecha;
+
+        return $this;
+    }
+
+    public function getContrato(): ?Contrato
+    {
+        return $this->contrato;
+    }
+
+    public function setContrato(?Contrato $contrato): self
+    {
+        $this->contrato = $contrato;
 
         return $this;
     }

@@ -21,8 +21,8 @@ class CobranzaRepository extends ServiceEntityRepository
     public function findByContrato($value)
     {
         $query=$this->createQueryBuilder('c')
-        ->join('c.cuota','cu')
-        ->andWhere('cu.contrato = :val');
+      
+        ->andWhere('c.contrato = :val');
         
 
         $query->setParameter('val', $value)
@@ -36,8 +36,8 @@ class CobranzaRepository extends ServiceEntityRepository
 
     public function findByPers($usuario=null,$empresa=null,$compania=null,$filtro=null,$otros=null){
         $query=$this->createQueryBuilder('c');
-        $query->join('c.cuota','cuo');
-        $query->join('cuo.contrato','co');
+        
+        $query->join('c.contrato','co');
         $query->join('co.agenda','a');
         $query->join('a.cuenta','cu');
         if(!is_null($empresa)){
@@ -72,8 +72,7 @@ class CobranzaRepository extends ServiceEntityRepository
     public function findByContratoGroup($usuario=null,$empresa=null,$compania=null,$filtro=null,$otros=null){
         $query=$this->createQueryBuilder('c');
         $query->select(array('c','count(c.id)'));
-        $query->join('c.cuota','cuo');
-        $query->join('cuo.contrato','co');
+        $query->join('c.contrato','co');
         $query->join('co.agenda','a');
         $query->join('a.cuenta','cu');
         if(!is_null($empresa)){

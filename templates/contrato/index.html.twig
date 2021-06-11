@@ -95,6 +95,14 @@
 
                                 <a href="{{url_web}}{{pdf_contrato}}{{contrato.pdf}}" class="btn btn-success btn-sm"><i class="fas fa-file-pdf"></i></a>
                             {% endif %}
+                            {% if contrato.agenda.status.id == 14 %}
+                                    <a href="#" class="btn btn-warning btn-sm"><i class="fas fa-retweet"></i></a>
+
+                                {% else %}
+                                    <a href="{{ path('contrato_terminar', {'id': contrato.id}) }}" class="btn btn-danger btn-sm"><i class="fas fa-handshake-slash"></i></a>
+                                    <!--<a href="#" class="btn btn-danger btn-sm"><i class="fas fa-handshake-slash"></i></a>-->
+                                    
+                                {% endif %}
                         </td>
                         {% endif %}
                     </tr>
