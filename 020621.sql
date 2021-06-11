@@ -6,7 +6,7 @@ ALTER TABLE cobranza ADD CONSTRAINT FK_AE20EF3DD9BA57A2 FOREIGN KEY (respuesta_i
 ALTER TABLE cobranza ADD CONSTRAINT FK_AE20EF3D6A7CF079 FOREIGN KEY (cuota_id) REFERENCES cuota (id);
 ALTER TABLE cobranza_funcion ADD CONSTRAINT FK_79CE3564521E1991 FOREIGN KEY (empresa_id) REFERENCES empresa (id);
 ALTER TABLE cobranza_respuesta ADD CONSTRAINT FK_B792E924521E1991 FOREIGN KEY (empresa_id) REFERENCES empresa (id);
-ALTER TABLE cobranza_respuesta ADD is_fecha_compromiso TINYINT(1) DEFAULT NULL
+ALTER TABLE cobranza_respuesta ADD is_fecha_compromiso TINYINT(1) DEFAULT NULL;
 ALTER TABLE cobranza ADD usuario_registro_id INT NOT NULL, CHANGE funcion_id funcion_id INT DEFAULT NULL, CHANGE respuesta_id respuesta_id INT DEFAULT NULL, CHANGE cuota_id cuota_id INT DEFAULT NULL, CHANGE fecha_compromiso fecha_compromiso DATETIME DEFAULT NULL, CHANGE is_nulo is_nulo TINYINT(1) DEFAULT NULL;
 ALTER TABLE cobranza ADD CONSTRAINT FK_AE20EF3D1EEFD20 FOREIGN KEY (usuario_registro_id) REFERENCES usuario (id);
 CREATE INDEX IDX_AE20EF3D1EEFD20 ON cobranza (usuario_registro_id);
