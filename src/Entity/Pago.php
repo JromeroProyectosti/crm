@@ -68,7 +68,7 @@ class Pago
     private $usuarioRegistro;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=true)
      */
     private $comprobante;
 
@@ -232,7 +232,7 @@ class Pago
         return $this->comprobante;
     }
 
-    public function setComprobante(string $comprobante): self
+    public function setComprobante(?string $comprobante): self
     {
         $this->comprobante = $comprobante;
 

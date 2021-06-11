@@ -8,3 +8,5 @@ DROP INDEX IDX_AE20EF3D6A7CF079 ON cobranza;
 ALTER TABLE cobranza ADD contrato_id INT NOT NULL, CHANGE funcion_id funcion_id INT DEFAULT NULL, CHANGE respuesta_id respuesta_id INT DEFAULT NULL, CHANGE fecha_compromiso fecha_compromiso DATETIME DEFAULT NULL, CHANGE is_nulo is_nulo TINYINT(1) DEFAULT NULL, CHANGE fecha fecha DATE DEFAULT NULL;
 ALTER TABLE cobranza ADD CONSTRAINT FK_AE20EF3D70AE7BF1 FOREIGN KEY (contrato_id) REFERENCES contrato (id);
 CREATE INDEX IDX_AE20EF3D70AE7BF1 ON cobranza (contrato_id);
+
+ALTER TABLE `pago` CHANGE `comprobante` `comprobante` LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL;

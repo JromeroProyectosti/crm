@@ -105,7 +105,7 @@ class PagoCuotasRepository extends ServiceEntityRepository
                 }
 
                 //tomamos las cuotas y reseteamos el q_mov de las cobranzas
-                $cobranzas = $cuota->getCobranzas();
+                $cobranzas = $contrato->getCobranzas();
                 $qMov=0;
                 foreach($cobranzas as $cobranza){
                     $qMov++;
@@ -133,7 +133,7 @@ class PagoCuotasRepository extends ServiceEntityRepository
                         $entityManager->persist($cuota);
                         $entityManager->flush();
                         //tomamos las cuotas y reseteamos el q_mov de las cobranzas
-                        $cobranzas = $cuota->getCobranzas();
+                        $cobranzas = $contrato->getCobranzas();
                         $qMov=0;
                         foreach($cobranzas as $cobranza){
                             $qMov++;

@@ -91,22 +91,12 @@
                         <td>
                            {{semaforo(cuota.fechaPago|date('Y-m-d'))|raw}}
                         </td>
-                             
+                        {% endif %}  
                         <td>
-
-                                <a href="{{ path('vercobranza_index', {'id': contrato.id}) }}" class="btn btn-primary btn-sm"><i class="far fa-plus-square"></i></a>
-                                <a href="{{ path('vercobranza_view', {'id': contrato.id}) }}" class="btn btn-success btn-sm"><i class="far fa-eye"></i></a>
-                            
-                        </td>
-                        {% else %}
-                        
-                        <td>
+                            <a href="{{ path('cobranza_lote', {'id': contrato.id}) }}" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
                             <a href="{{ path('vercobranza_index', {'id': contrato.id}) }}" class="btn btn-primary btn-sm"><i class="far fa-plus-square"></i></a>
                             <a href="{{ path('vercobranza_view', {'id': contrato.id}) }}" class="btn btn-success btn-sm"><i class="far fa-eye"></i></a>
-                            
                         </td>
-                        {% endif %}
-                        
                     </tr>
                 {% else %}
                     <tr>

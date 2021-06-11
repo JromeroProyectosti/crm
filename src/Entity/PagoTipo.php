@@ -37,6 +37,11 @@ class PagoTipo
      */
     private $estado;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $isBoucher;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -91,5 +96,17 @@ class PagoTipo
     }
     public function __toString(){
         return $this->getNombre();
+    }
+
+    public function getIsBoucher(): ?bool
+    {
+        return $this->isBoucher;
+    }
+
+    public function setIsBoucher(?bool $isBoucher): self
+    {
+        $this->isBoucher = $isBoucher;
+
+        return $this;
     }
 }

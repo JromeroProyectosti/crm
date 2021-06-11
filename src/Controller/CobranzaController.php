@@ -432,6 +432,33 @@ class CobranzaController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("/{id}/lote", name="cobranza_lote", methods={"GET","POST"})
+     */
+    public function lote(Request $request, Contrato $contrato,ModuloPerRepository $moduloPerRepository,ConfiguracionRepository $configuracionRepository): Response
+    { 
+        $this->denyAccessUnlessGranted('edit','cobranza');
+        $user=$this->getUser();
+        $pagina=$moduloPerRepository->findOneByName('cobranza',$user->getEmpresaActual());
+
+        $configuracion=$configuracionRepository->find(1);
+        $lotes=$configuracion->getLotes();
+
+        if($request->request->get('cboLotes')){
+            $contrato->setLote($request->request->get('cboLotes'));
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($contrato);
+            $entityManager->flush();
+            return $this->redirectToRoute('cobranza_index',['id'=>$contrato->getId()]);
+        }
+
+
+        return $this->render('cobranza/lote.html.twig', [
+            'contrato'=>$contrato,
+            'pagina'=>'Editar Lote Contrato',
+            'lotes'=>$lotes,
+        ]);
+    }
 
     /**
      * @Route("/{id}/edit", name="cobranza_edit", methods={"GET","POST"})

@@ -36,7 +36,7 @@
                         </div>
                         <div class="col-sm-12 col-md-4">
                             <small class="text-muted">Tipo Deposito (*)</small>
-                            {{form_row(form.pagoTipo,{'label':false,'attr':{'class':'form-control'}})}}
+                            {{form_row(form.pagoTipo,{'label':false,'attr':{'class':'form-control cboTipo'}})}}
                         </div>
                         <div class="col-sm-12 col-md-4">
                             <small class="text-muted">Cta. Cte. (*)</small>
@@ -65,7 +65,7 @@
                 {% endif %}
                 <div class="card-footer">
                     {% if contrato.isFinalizado is null or not contrato.isFinalizado %}
-                    <button class="btn btn-primary btn-guardar" type="submit" style="display: none;">{{ button_label|default('Guardar') }}</button>
+                    <button class="btn btn-primary btn-guardar" type="submit" >{{ button_label|default('Guardar') }}</button>
                     {% endif %}
                 </div>
             </div>
@@ -90,6 +90,18 @@
     {{ form_end(form) }}
 
 <script>
+
+   $('.cboTipo').change(function(){
+        $.ajax({
+            method: "POST",
+            url: "/pago/"+$(this).val()+"/isboucher",
+           
+          })
+        .done(function( msg ) {
+             console.log(msg['isBoucher']);
+            
+        });
+    });
     $('.monto').change(function(){
 
         $("#m-monto").html($.number( $(this).val(), 0, ',', '.' ));
@@ -121,6 +133,7 @@
 
     });
    
+    
     var newName;
     Dropzone.options.myAwesomeDropzone = { // The camelized version of the ID of the form element
         url: "{{path('pago_upload')}}",
@@ -145,15 +158,30 @@
                 {% if pago.comprobante is not empty %}
                     if(newName==null){
                         $("#my-awesome-dropzone").submit();
+                        console.log("paso 1");
                     }else{
                         e.preventDefault();
                         e.stopPropagation();
                         myDropzone.processQueue();
+                        console.log("paso 2");
                     }
                 {% else %}
-                    e.preventDefault();
-                    e.stopPropagation();
-                    myDropzone.processQueue();
+                    $.ajax({
+                        method: "POST",
+                        url: "/pago/"+$('cboTipo').val()+"/isboucher",
+                    })
+                    .done(function( msg ) {
+                        console.log(msg['isBoucher']);
+                        /*if(msg['isBoucher']){
+                            e.preventDefault();
+                            e.stopPropagation();
+                            myDropzone.processQueue();
+                        }else{
+                            $("#my-awesome-dropzone").submit();
+                        }*/
+                    });
+                   
+                    console.log("paso 3 ");
                 {% endif %}
             });
 
@@ -174,6 +202,7 @@
                 // Maybe show form again, and notify user of error
                 alert("Error, la imagen no se puede subir. Intenta bajar el peso de esta");
             });
+            
             this.on("success", function(file, serverResponse) {
                 // Called after the file successfully uploaded.
                 console.log(serverResponse);
@@ -184,7 +213,7 @@
                 // Create the remove button
                 $(".comprobante").val(newName);
                 var removeButton = Dropzone.createElement("<button class='btn btn-danger'>Eliminar</button>");
-                $(".btn-guardar").show();
+                
 
                 // Capture the Dropzone instance as closure.
                 var _this = this;

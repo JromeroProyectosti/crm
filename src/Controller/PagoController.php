@@ -8,6 +8,7 @@ use App\Entity\Cuota;
 use App\Entity\PagoCuotas;
 use App\Entity\Contrato;
 use App\Entity\Importacion;
+use App\Entity\PagoTipo;
 use App\Form\PagoType;
 use App\Form\ImportacionType;
 use App\Repository\ImportacionRepository;
@@ -520,7 +521,7 @@ class PagoController extends AbstractController
                         $pago->setCuentaCorriente($cuentaCorrienteRepository->find($datos[9]));
                         $pago->setNcomprobante($datos[10]);
                         $pago->setComprobante($datos[11]);
-                        $pago->setUsuarioRegistro($usuarioRepository->find($user->getId()));
+                        $pago->setUsuarioRegistro($datos[12]);
                         $entityManager->persist($pago);
                         $entityManager->flush();
 
@@ -697,8 +698,18 @@ class PagoController extends AbstractController
             'pagina'=>'Editar '.$pagina->getNombre(),
         ]);
     }
-
-   
+    /**
+     * @Route("/{id}/isboucher", name="pago_isboucher", methods={"GET","POST"})
+     */
+    public function isBoucher(Request $request,PagoTIpo $pagoTipo):Response
+    {
+        if($pagoTipo->getIsBoucher()){
+            return $this->json(['isBoucher'=>true]);
+        }else{
+            return $this->json(['isBoucher'=>false]);
+        }
+    }
+    
     /**
      * @Route("/{id}", name="pago_delete", methods={"DELETE"})
      */
