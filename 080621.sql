@@ -9,4 +9,4 @@ ALTER TABLE cobranza ADD contrato_id INT NOT NULL, CHANGE funcion_id funcion_id 
 ALTER TABLE cobranza ADD CONSTRAINT FK_AE20EF3D70AE7BF1 FOREIGN KEY (contrato_id) REFERENCES contrato (id);
 CREATE INDEX IDX_AE20EF3D70AE7BF1 ON cobranza (contrato_id);
 
-ALTER TABLE `pago` CHANGE `comprobante` `comprobante` LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL;
+ALTER TABLE pago_tipo ADD is_boucher TINYINT(1) DEFAULT NULL;
