@@ -91,7 +91,7 @@ class DesconoceController  extends AbstractController{
             $query, /* query NOT result */
             $request->query->getInt('page', 1), /*page number*/
             20 /*limit per page*/,
-            array('defaultSortFieldName' => 'c.fechaDesiste', 'defaultSortDirection' => 'desc'));
+            array('defaultSortFieldName' => 'fechaDesiste', 'defaultSortDirection' => 'desc'));
         return $this->render('desconoce/index.html.twig', [
             'contratos' => $contratos,
             'bFiltro'=>$filtro,
