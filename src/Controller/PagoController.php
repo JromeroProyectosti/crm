@@ -614,22 +614,39 @@ class PagoController extends AbstractController
     /**
      * @Route("/{id}/new", name="pago_new", methods={"GET","POST"})
      */
-    public function new(Request $request,Contrato $contrato,CuotaRepository $cuotaRepository,PagoCuotasRepository $pagoCuotasRepository,ModuloPerRepository $moduloPerRepository): Response
+    public function new(Request $request,
+                        Contrato $contrato,
+                        CuotaRepository $cuotaRepository,
+                        PagoCuotasRepository $pagoCuotasRepository,
+                        PagoTipoRepository $pagoTipoRepository,
+                        ModuloPerRepository $moduloPerRepository): Response
     {
         $this->denyAccessUnlessGranted('create','pago');
         $user=$this->getUser();
         $pagina=$moduloPerRepository->findOneByName('pago',$user->getEmpresaActual());
+        $entityManager = $this->getDoctrine()->getManager();
+        $tipoPago=false;
+        if(isset($_POST['cboTipo']))
+            $tipoPago=$_POST['cboTipo'];
+        
+            
+
         $pago = new Pago();
+        if($tipoPago){
+            $tipo=$pagoTipoRepository->find($tipoPago);
+            $pago->setPagoTipo($tipo);
+            $pago->setComprobante("nodisponible.png");
+        }
         $pago->setFechaRegistro(new \DateTime(date('Y-m-d H:i:s')));
         $pago->setUsuarioRegistro($user);
         $form = $this->createForm(PagoType::class, $pago);
-       
-       
+    
+    
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $fechaPago=$request->request->get('fechaPago');
-            $entityManager = $this->getDoctrine()->getManager();
+            
             $pago->setFechaPago(new \DateTime(date('Y-m-d H:i',strtotime($fechaPago))));
             $pago->setHoraPago(new \DateTime(date('H:i',strtotime($fechaPago))));
             $entityManager->persist($pago);
@@ -637,17 +654,29 @@ class PagoController extends AbstractController
             
             $pagoCuotasRepository->asociarPagos($contrato,$cuotaRepository,$pagoCuotasRepository,$pago);
             
-           
+        
             return $this->redirectToRoute('verpagos_index',['id'=>$contrato->getId()]);
-           
+        
         }
+        
+        if($tipoPago){
+            return $this->render('pago/new.html.twig', [
+                'pago' => $pago,
+                'contrato'=>$contrato,
+                'pagina'=>"Agregar ".$pagina->getNombre(),
+                'form' => $form->createView(),
+                'isBoucher'=>$tipo->getIsBoucher(),
+                'etapa'=>1,
+            ]);
+        }else{
 
-        return $this->render('pago/new.html.twig', [
-            'pago' => $pago,
-            'contrato'=>$contrato,
-            'pagina'=>"Agregar ".$pagina->getNombre(),
-            'form' => $form->createView(),
-        ]);
+            return $this->render('pago/tipoPago.html.twig', [
+                
+                'contrato'=>$contrato,
+                'pagoTipos'=>$pagoTipoRepository->findAll(),
+             ] );
+        }
+        
     }
 
 
@@ -696,6 +725,7 @@ class PagoController extends AbstractController
             'contrato'=>$contrato,
             'form' => $form->createView(),
             'pagina'=>'Editar '.$pagina->getNombre(),
+            'etapa'=>2,
         ]);
     }
     /**

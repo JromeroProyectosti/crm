@@ -459,7 +459,7 @@ class CobranzaController extends AbstractController
             'lotes'=>$lotes,
         ]);
     }
-
+    
     /**
      * @Route("/{id}/edit", name="cobranza_edit", methods={"GET","POST"})
      */
