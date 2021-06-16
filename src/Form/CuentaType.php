@@ -13,7 +13,7 @@ class CuentaType extends AbstractType
     {
         $builder
             ->add('nombre')
-            
+            ->add('vigenciaContratos')
         ;
     }
 

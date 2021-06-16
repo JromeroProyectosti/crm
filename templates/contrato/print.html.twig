@@ -89,14 +89,7 @@ un contrato de prestaci&oacute;n de servicios jur&iacute;dicos, desglosando su c
     sin perjuicio, de las facultades privativas del respectivo tribunal de establecer plazos acorde con el funcionamiento del mismo 
     seg&uacute;n corresponda. La obligaci&oacute;n del estudio jur&iacute;dico es una obligaci&oacute;n de medios, vale decir, se 
     compromete a actuar diligentemente en todas las gestiones y tr&aacute;mites necesarios del proceso judicial. 
-    <strong>El presente contrato tiene un plazo y vigencia de 
-        {% if contrato.agenda.cuenta.id==7 %}
-        12 meses
-        {% else %}
-        24 meses 
-        {% endif %}
-        
-        contado desde la firma, que es el tiempo en que durar&aacute;n los 
+    <strong>El presente contrato tiene un plazo y vigencia de {{ contrato.agenda.cuenta.vigenciaContratos}} meses contado desde la firma, que es el tiempo en que durar&aacute;n los 
     servicios contratados.</strong></p>
 
 <p align="justify"><strong>CUARTO: Del estudio y reserva;</strong> Para el adecuado estudio y asesor&iacute;a de lo se&ntilde;alado precedentemente, el 

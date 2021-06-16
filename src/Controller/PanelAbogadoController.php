@@ -336,7 +336,7 @@ class PanelAbogadoController extends AbstractController
         }
         //$contrato->setCiudad($agenda->getCiudadCliente());
         $contrato->setFechaPrimeraCuota(new \DateTime(date('Y-m-d')));
-        $contrato->setVigencia(24);
+        $contrato->setVigencia($agenda->getCuenta()->getVigenciaContratos());
         $form = $this->createForm(ContratoType::class, $contrato, [
             'action' =>$this->generateUrl('panel_abogado_contrata',['id'=>$agenda->getId()])
         ]);
@@ -383,6 +383,10 @@ class PanelAbogadoController extends AbstractController
                 $entityManager->persist($contratoRol);
                 $entityManager->flush();
             }
+
+            $contrato->setFolio($contrato->getId());
+            $entityManager->persist($contrato);
+            $entityManager->flush();
 
            
            

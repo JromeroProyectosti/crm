@@ -272,6 +272,11 @@ class Contrato
      */
     private $cobranzas;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $folio;
+
     
     public function __construct()
     {
@@ -958,6 +963,18 @@ class Contrato
                 $cobranza->setContrato(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getFolio(): ?string
+    {
+        return $this->folio;
+    }
+
+    public function setFolio(?string $folio): self
+    {
+        $this->folio = $folio;
 
         return $this;
     }

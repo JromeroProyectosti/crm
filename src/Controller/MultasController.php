@@ -84,13 +84,30 @@ class MultasController extends AbstractController
     /**
      * @Route("/{id}/new", name="multa_new", methods={"GET","POST"})
      */
-    public function new(Request $request,Cuota $cuota,CuotaRepository $cuotaRepository,PagoCuotasRepository $pagoCuotasRepository,ModuloPerRepository $moduloPerRepository): Response
+    public function new(Request $request,
+                        Cuota $cuota,
+                        CuotaRepository $cuotaRepository,
+                        PagoTipoRepository $pagoTipoRepository,
+                        PagoCuotasRepository $pagoCuotasRepository,
+                        ModuloPerRepository $moduloPerRepository): Response
     {
         $this->denyAccessUnlessGranted('create','multas');
         $user=$this->getUser();
         $pagina=$moduloPerRepository->findOneByName('multas',$user->getEmpresaActual());
         $contrato=$cuota->getContrato();
+
+        $tipoPago=false;
+        if(isset($_POST['cboTipo']))
+            $tipoPago=$_POST['cboTipo'];
+        
+
         $pago = new Pago();
+
+        if($tipoPago){
+            $tipo=$pagoTipoRepository->find($tipoPago);
+            $pago->setPagoTipo($tipo);
+            $pago->setComprobante("nodisponible.png");
+        }
         $pago->setFechaRegistro(new \DateTime(date('Y-m-d H:i:s')));
         $pago->setUsuarioRegistro($user);
         $pago->setMonto($cuota->getMonto());
@@ -117,47 +134,106 @@ class MultasController extends AbstractController
            
         }
 
-        return $this->render('multas/new.html.twig', [
-            'pago' => $pago,
-            'contrato'=>$contrato,
-            'pagina'=>"Pagar ".$pagina->getNombre(),
-            'form' => $form->createView(),
-        ]);
+        if($tipoPago){
+            return $this->render('multas/new.html.twig', [
+                'pago' => $pago,
+                'contrato'=>$contrato,
+                'pagina'=>"Pagar ".$pagina->getNombre(),
+                'form' => $form->createView(),
+                'isBoucher'=>$tipo->getIsBoucher(),
+                'etapa'=>1,
+            ]);
+        }else{
+
+            return $this->render('multas/tipoPago.html.twig', [
+                
+                'contrato'=>$contrato,
+                'pagoTipos'=>$pagoTipoRepository->findAll(),
+             ] );
+        }
     }
      /**
      * @Route("/{id}/edit", name="multa_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request,Cuota $cuota,CuotaRepository $cuotaRepository,PagoCuotasRepository $pagoCuotasRepository,ModuloPerRepository $moduloPerRepository): Response
+    public function edit(Request $request, Pago $pago,CuotaRepository $cuotaRepository,PagoCuotasRepository $pagoCuotasRepository,ModuloPerRepository $moduloPerRepository): Response
     {
         $this->denyAccessUnlessGranted('edit','multas');
         $user=$this->getUser();
         $pagina=$moduloPerRepository->findOneByName('multas',$user->getEmpresaActual());
-        $contrato=$cuota->getContrato();
-        $error_toast='';
-        $form = $this->createForm(CuotaType::class, $cuota);
-       
-       
+        $pagoCuotas=$pago->getPagoCuotas();
+        foreach($pagoCuotas as $pagoCuota){
+            $cuota=$pagoCuota->getCuota();
+            $contrato=$cuota->getContrato();
+        }
+        $form = $this->createForm(PagoType::class, $pago);
+        //$form->add('fechaRegistro',DateType::class,array('widget'=>'single_text','html5'=>false));
+        //$form->add('fechaPago',DateType::class,array('widget'=>'single_text','html5'=>false));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            
+            $this->getDoctrine()->getManager()->flush();
             $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($cuota);
-            $entityManager->flush();
-            $error_toast="Toast.fire({
-                icon: 'success',
-                title: 'Multa modificada con exito!!'
-              })";
-            return $this->redirectToRoute('verpagos_index',['id'=>$contrato,'error_toast'=>$error_toast]);
-           
+            $contrato=null;
+            $pagoCuotas=$pago->getPagoCuotas();
+            foreach($pagoCuotas as $pagoCuota){
+                $cuota=$pagoCuota->getCuota();
+                $contrato=$cuota->getContrato();
+                $cuota->setPagado($cuota->getPagado()-$pagoCuota->getMonto());
+                $entityManager->remove($pagoCuota);
+                $entityManager->flush();
+
+            }
+
+            $pagoCuotasRepository->asociarPagos($contrato,$cuotaRepository,$pagoCuotasRepository,$pago,true);
+            if(null != $contrato){
+                return $this->redirectToRoute('verpagos_index',['id'=>$contrato->getId()]);
+            }else{
+                return $this->redirectToRoute('pago_index');
+            }
         }
-
         return $this->render('multas/edit.html.twig', [
-            'cuota' => $cuota,
+            'pago' => $pago,
             'contrato'=>$contrato,
-            'pagina'=>"Editar ".$pagina->getNombre(),
             'form' => $form->createView(),
+            'pagina'=>'Editar '.$pagina->getNombre(),
+            'etapa'=>2,
         ]);
+    }
+    /**
+     * @Route("/{id}", name="multa_delete", methods={"DELETE"})
+     */
+    public function delete(Request $request, Pago $pago): Response
+    {
+        $this->denyAccessUnlessGranted('full','multa');
+        $user=$this->getUser();
+        if ($this->isCsrfTokenValid('delete'.$pago->getId(), $request->request->get('_token'))) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $pago->setUsuarioAnulacion($user);
+            $pago->setFechaAnulacion(new \DateTime(date("Y-m-d H:i")));
+            $pago->setAnulado(true);
+            $entityManager->persist($pago);
+            $entityManager->flush();
+            $contrato=null;
+            $pagoCuotas=$pago->getPagoCuotas();
+            foreach($pagoCuotas as $pagoCuota){
+                $cuota=$pagoCuota->getCuota();
+                $contrato=$cuota->getContrato();
+                $cuota->setPagado($cuota->getPagado()-$pagoCuota->getMonto());
+                $contrato=$cuota->getContrato();
 
+                $entityManager->remove($pagoCuota);
+                $entityManager->flush();
+
+                $contrato->setIsFinalizado(false);
+                $entityManager->persist($contrato);
+                $entityManager->flush();
+
+            }
+        }
+        if(null != $contrato){
+            return $this->redirectToRoute('verpagos_index',['id'=>$contrato->getId()]);
+        }else{
+            return $this->redirectToRoute('pago_index');
+        }
     }
 }

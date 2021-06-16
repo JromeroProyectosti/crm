@@ -68,7 +68,9 @@ class AgendaController extends AbstractController
                 $cuentas=$cuentaRepository->findBy(['empresa'=>$user->getEmpresaActual()]);
             break;
             default:
-                $cuentas=$cuentaRepository->findByPers($usuarioRepository->find($user->getId()));
+                $cuentas=$cuentaRepository->findBy(['empresa'=>$user->getEmpresaActual()]);
+                //$cuentas=$cuentaRepository->findByPers($usuarioRepository->find($user->getId()));
+                break;
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -283,9 +285,10 @@ class AgendaController extends AbstractController
             $agendador=$request->query->get('agendador');
         }
         if($user->getUsuarioTipo()->getId()>4){
-                $agendadores= $usuarioRepository->findByCuenta($cuenta->getId(),['id'=>$user->getId()]);
+            $agendadores= $usuarioRepository->findBy(['id'=>$user->getId()]);
         }else{
-               $agendadores= $usuarioRepository->findByCuenta($cuenta->getId(),['usuarioTipo'=>5,'estado'=>1]);
+            $agendadores= $usuarioRepository->findByCuenta($cuenta->getId(),['usuarioTipo'=>5,'estado'=>1]);
+            
                
         }
 

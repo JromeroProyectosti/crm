@@ -56,7 +56,39 @@
                         </div>
                     </div> 
                 </div>
-                {% if pago.comprobante is not empty %}
+                
+                <div class="card-footer">
+                    {% if contrato.isFinalizado is null or not contrato.isFinalizado %}
+                    <div class="row">
+                        <div class="col-2">
+                        <button class="btn btn-primary btn-guardar" type="submit" >{{ button_label|default('Guardar') }}</button>
+                        </div>
+                        <div class="col-10">
+                            <div class="alert alert-danger" role="alert" style="display: none;">
+                                Debe subir una imagen para poder ingresar pago.
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+        </div>
+        <div class="col-sm-12  col-md-4">
+            <div class="card">
+                <div class="card-body table-responsive pad">
+                    <div class="dz-default dz-message">
+
+                        <button class="dz-button" type="button">
+                        <div class="dropzone-previews">
+                            Arrastra el comprobante aqui o puedes hacer click <strong>aquí</strong> y busca la imagen.
+                            <p>Solo acepta <strong>.jpg, .gif y png</strong></p>
+                        </div>
+                    </button>
+                    </div>
+                </div>
+            </div>
+            {% if pago.comprobante is not empty %}
                 
             
                     <div class="card">
@@ -67,28 +99,6 @@
                         </div>
                     </div>
                 {% endif %}
-                <div class="card-footer">
-                    {% if contrato.isFinalizado is null or not contrato.isFinalizado %}
-                    <button class="btn btn-primary btn-guardar" type="submit" >{{ button_label|default('Guardar') }}</button>
-                    {% endif %}
-                </div>
-            </div>
-            
-        </div>
-        <div class="col-sm-12  col-md-4">
-            <div class="card">
-                <div class="card-body table-responsive pad">
-                    <div class="dz-default dz-message">
-                        <button class="dz-button" type="button">
-                        <div class="dropzone-previews">
-                            Arrastra el comprobante aqui o puedes hacer click <strong>aquí</strong> y busca la imagen.
-                            <p>Solo acepta <strong>.jpg, .gif y png</strong></p>
-                        </div>
-                    </button>
-                    </div>
-                </div>
-            </div>
-            
         </div>
     </div>   
     {{ form_end(form) }}
@@ -129,6 +139,7 @@
    
     {% if etapa==1 %}
     $(".btn-guardar").prop("disabled",true);
+    $(".alert-danger").show();
     {% endif %}
 
     var newName;
@@ -213,6 +224,7 @@
                 
                 {% if etapa==1 %}
                 $(".btn-guardar").prop("disabled",false);
+                $(".alert-danger").hide();
                 {% endif %}
                 // Capture the Dropzone instance as closure.
                 var _this = this;
@@ -228,6 +240,7 @@
                     $(".comprobante").val('');
                     {% if etapa==1 %}
                     $(".btn-guardar").prop("disabled",true);
+                    $(".alert-danger").show();
                     {% endif %}
                     // If you want to the delete the file on the server as well,
                     // you can do the AJAX request here.

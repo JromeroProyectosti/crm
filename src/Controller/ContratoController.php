@@ -384,7 +384,7 @@ class ContratoController extends AbstractController
             'agenda'=>$contrato->getAgenda(),
             'form' => $form->createView(),
             'juzgados'=>$juzgados,
-            'pagina'=>$pagina->getNombre(),
+            'pagina'=>$pagina->getNombre()." N° ".$contrato->getId(),
             'tramitadores'=>$usuarioRepository->findByCuenta($contrato->getAgenda()->getCuenta()->getId(),['usuarioTipo'=>7]),
             'diasPagos'=>$diasPagoRepository->findAll(),
             'sucursales'=>$sucursalRepository->findBy(['cuenta'=>$contrato->getAgenda()->getCuenta()->getId()]),
@@ -410,7 +410,7 @@ class ContratoController extends AbstractController
         $this->denyAccessUnlessGranted('create','panel_abogado');
         $user=$this->getUser();
         $juzgados=$juzgadoRepository->findAll();
-        $contrato->setVigencia(24);
+       
         $form = $this->createForm(ContratoType::class, $contrato);
         $form->add('fechaPrimeraCuota',DateType::class,array('widget'=>'single_text','html5'=>false));
         $form->add('vigencia');

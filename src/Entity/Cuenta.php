@@ -70,6 +70,11 @@ class Cuenta
      */
     private $importacions;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $vigenciaContratos;
+
   
 
     public function __construct()
@@ -296,6 +301,18 @@ class Cuenta
                 $importacion->setCuenta(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getVigenciaContratos(): ?int
+    {
+        return $this->vigenciaContratos;
+    }
+
+    public function setVigenciaContratos(?int $vigenciaContratos): self
+    {
+        $this->vigenciaContratos = $vigenciaContratos;
 
         return $this;
     }

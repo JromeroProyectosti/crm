@@ -694,8 +694,8 @@ class PagoController extends AbstractController
             $contrato=$cuota->getContrato();
         }
         $form = $this->createForm(PagoType::class, $pago);
-        $form->add('fechaRegistro',DateType::class,array('widget'=>'single_text','html5'=>false));
-        $form->add('fechaPago',DateType::class,array('widget'=>'single_text','html5'=>false));
+        //$form->add('fechaRegistro',DateType::class,array('widget'=>'single_text','html5'=>false));
+        //$form->add('fechaPago',DateType::class,array('widget'=>'single_text','html5'=>false));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -712,7 +712,7 @@ class PagoController extends AbstractController
 
             }
 
-            $this->asociarPagos($contrato,$cuotaRepository,$pagoCuotasRepository,$pago);
+            $pagoCuotasRepository->asociarPagos($contrato,$cuotaRepository,$pagoCuotasRepository,$pago);
             if(null != $contrato){
                 return $this->redirectToRoute('verpagos_index',['id'=>$contrato->getId()]);
             }else{

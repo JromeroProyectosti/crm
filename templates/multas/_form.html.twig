@@ -55,15 +55,7 @@
                         </div>
                     </div> 
                 </div>
-                {% if pago.comprobante is not empty %}
                 
-            
-                    <div class="card">
-                        <div class="card-body table-responsive pad">
-                            <img src="{{url_web}}{{img_pagos}}{{pago.comprobante}}">
-                        </div>
-                    </div>
-                {% endif %}
                 <div class="card-footer">
                     {% if contrato.isFinalizado is null or not contrato.isFinalizado %}
                     <button class="btn btn-primary" type="submit">{{ button_label|default('Guardar') }}</button>
@@ -86,6 +78,15 @@
                 </div>
             </div>
             
+            {% if pago.comprobante is not empty %}
+                
+            
+                    <div class="card">
+                        <div class="card-body table-responsive pad">
+                            <img src="{{url_web}}{{img_pagos}}{{pago.comprobante}}">
+                        </div>
+                    </div>
+                {% endif %}
         </div>
     </div>   
     {{ form_end(form) }}
