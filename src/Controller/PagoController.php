@@ -521,7 +521,7 @@ class PagoController extends AbstractController
                         $pago->setCuentaCorriente($cuentaCorrienteRepository->find($datos[9]));
                         $pago->setNcomprobante($datos[10]);
                         $pago->setComprobante($datos[11]);
-                        $pago->setUsuarioRegistro($datos[12]);
+                        $pago->setUsuarioRegistro($usuarioRepository->find($datos[12]));
                         $entityManager->persist($pago);
                         $entityManager->flush();
 
