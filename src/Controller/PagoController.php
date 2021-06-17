@@ -515,8 +515,8 @@ class PagoController extends AbstractController
                         $pago->setMonto($datos[3]);
                         $pago->setBoleta($datos[4]);
                         $pago->setObservacion($datos[5]);
-                        $pago->setFechaPago(new \DateTime(date('Y-m-d',strtotime($datos[6]))));
-                        $pago->setHoraPago(new \DateTime(date('H:i',strtotime($datos[7]))));
+                        $pago->setFechaPago(new \DateTime(date('Y-m-d H:i',strtotime($datos[6]))));
+                        $pago->setHoraPago(new \DateTime(date('H:i',strtotime($datos[6]))));
                         $pago->setFechaRegistro(new \DateTime(date('Y-m-d H:i',strtotime($datos[8]))));
                         $pago->setCuentaCorriente($cuentaCorrienteRepository->find($datos[9]));
                         $pago->setNcomprobante($datos[10]);
