@@ -459,6 +459,7 @@ class PagoController extends AbstractController
                                 ContratoRepository $contratoRepository,
                                 UsuarioRepository $usuarioRepository):Response
     {
+        set_time_limit(0);
         $user=$this->getUser();
         $importacion = new Importacion();
         $importacion->setFechaCarga(new \DateTime(date("Y-m-d H:i:s")));
