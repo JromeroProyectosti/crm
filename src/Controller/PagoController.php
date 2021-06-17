@@ -525,7 +525,7 @@ class PagoController extends AbstractController
                         $entityManager->persist($pago);
                         $entityManager->flush();
 
-                        $this->asociarPagos($contratoRepository->find($datos[0]),$cuotaRepository,$pagoCuotasRepository,$pago);
+                        $pagoCuotasRepository->asociarPagos($contratoRepository->find($datos[0]),$cuotaRepository,$pagoCuotasRepository,$pago);
                     }
                 } catch (FileException $e) {
                 }
