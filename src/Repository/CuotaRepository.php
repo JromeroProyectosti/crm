@@ -28,7 +28,7 @@ class CuotaRepository extends ServiceEntityRepository
             $query->andWhere('c.monto>c.pagado or c.pagado is null');
             $query->andWhere('c.anular is null or c.anular = false');
             $query->andWhere(' co.isFinalizado = false or co.isFinalizado is null'); 
-            //$query->andWhere(' a.status not in (12,13)'); 
+
         }else{
             $query->andWhere(' co.isFinalizado=true');
         }
@@ -51,7 +51,6 @@ class CuotaRepository extends ServiceEntityRepository
                 if(!is_null($usuario))
                     $query->andWhere('co.tramitador = '.$usuario);
                 break;
-
         }
         
         
