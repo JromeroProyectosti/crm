@@ -199,6 +199,7 @@ class MultasController extends AbstractController
             'etapa'=>2,
         ]);
     }
+    
     /**
      * @Route("/{id}", name="multa_delete", methods={"DELETE"})
      */
