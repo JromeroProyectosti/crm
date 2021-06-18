@@ -510,17 +510,17 @@ class PagoController extends AbstractController
                         
                         if($datos[0]=="") break;
 
-                        $fechaPago=str_replace(" : ","00:00", strtotime($datos[6]));
-                        $fechaRegistro=str_replace(" : ","00:00", strtotime($datos[8]));
+                        $fechaPago=str_replace(" : ","00:00", $datos[6]);
+                        $fechaRegistro=str_replace(" : ","00:00", $datos[8]);
                         $pago=new Pago();
                         $pago->setPagoTipo($pagoTipoRepository->find($datos[1]));
                         $pago->setPagoCanal($pagoCanalRepository->find($datos[2]));
                         $pago->setMonto($datos[3]);
                         $pago->setBoleta($datos[4]);
                         $pago->setObservacion($datos[5]);
-                        $pago->setFechaPago(new \DateTime(date('Y-m-d H:i',$fechaPago)));
-                        $pago->setHoraPago(new \DateTime(date('H:i',$fechaPago)));
-                        $pago->setFechaRegistro(new \DateTime(date('Y-m-d H:i',$fechaRegistro)));
+                        $pago->setFechaPago(new \DateTime(date('Y-m-d H:i',strtotime($fechaPago))));
+                        $pago->setHoraPago(new \DateTime(date('H:i',strtotime($fechaPago))));
+                        $pago->setFechaRegistro(new \DateTime(date('Y-m-d H:i',strtotime($fechaRegistro))));
                         $pago->setCuentaCorriente($cuentaCorrienteRepository->find($datos[9]));
                         $pago->setNcomprobante($datos[10]);
                         $pago->setComprobante($datos[11]);
