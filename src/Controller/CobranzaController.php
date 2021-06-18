@@ -138,7 +138,7 @@ class CobranzaController extends AbstractController
             $query, /* query NOT result */
             $request->query->getInt('page', 1), /*page number*/
             20 /*limit per page*/,
-            array('defaultSortFieldName' => 'fechaPago', 'defaultSortDirection' => 'Asc'));
+            array('defaultSortFieldName' => 'fechaHora, usuarioRegistro ', 'defaultSortDirection' => 'Asc'));
         
         return $this->render('cobranza/index.html.twig', [
             'cuotas' => $cuotas,
