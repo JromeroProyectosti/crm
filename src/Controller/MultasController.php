@@ -152,54 +152,44 @@ class MultasController extends AbstractController
              ] );
         }
     }
-     /**
+
+    /**
      * @Route("/{id}/edit", name="multa_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, Pago $pago,CuotaRepository $cuotaRepository,PagoCuotasRepository $pagoCuotasRepository,ModuloPerRepository $moduloPerRepository): Response
+    public function edit(Request $request,Cuota $cuota,CuotaRepository $cuotaRepository,PagoCuotasRepository $pagoCuotasRepository,ModuloPerRepository $moduloPerRepository): Response
     {
         $this->denyAccessUnlessGranted('edit','multas');
         $user=$this->getUser();
         $pagina=$moduloPerRepository->findOneByName('multas',$user->getEmpresaActual());
-        $pagoCuotas=$pago->getPagoCuotas();
-        foreach($pagoCuotas as $pagoCuota){
-            $cuota=$pagoCuota->getCuota();
-            $contrato=$cuota->getContrato();
-        }
-        $form = $this->createForm(PagoType::class, $pago);
-        //$form->add('fechaRegistro',DateType::class,array('widget'=>'single_text','html5'=>false));
-        //$form->add('fechaPago',DateType::class,array('widget'=>'single_text','html5'=>false));
+        $contrato=$cuota->getContrato();
+        $error_toast='';
+        $form = $this->createForm(CuotaType::class, $cuota);
+
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+
             $entityManager = $this->getDoctrine()->getManager();
-            $contrato=null;
-            $pagoCuotas=$pago->getPagoCuotas();
-            foreach($pagoCuotas as $pagoCuota){
-                $cuota=$pagoCuota->getCuota();
-                $contrato=$cuota->getContrato();
-                $cuota->setPagado($cuota->getPagado()-$pagoCuota->getMonto());
-                $entityManager->remove($pagoCuota);
-                $entityManager->flush();
+            $entityManager->persist($cuota);
+            $entityManager->flush();
+            $error_toast="Toast.fire({
+                icon: 'success',
+                title: 'Multa modificada con exito!!'
+              })";
+            return $this->redirectToRoute('multas_view',['id'=>$contrato,'error_toast'=>$error_toast]);
 
-            }
-
-            $pagoCuotasRepository->asociarPagos($contrato,$cuotaRepository,$pagoCuotasRepository,$pago,true);
-            if(null != $contrato){
-                return $this->redirectToRoute('verpagos_index',['id'=>$contrato->getId()]);
-            }else{
-                return $this->redirectToRoute('pago_index');
-            }
         }
+
         return $this->render('multas/edit.html.twig', [
-            'pago' => $pago,
+            'cuota' => $cuota,
             'contrato'=>$contrato,
+            'pagina'=>"Editar ".$pagina->getNombre(),
             'form' => $form->createView(),
-            'pagina'=>'Editar '.$pagina->getNombre(),
-            'etapa'=>2,
         ]);
+
     }
-    
+     
     /**
      * @Route("/{id}", name="multa_delete", methods={"DELETE"})
      */
