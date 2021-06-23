@@ -277,6 +277,11 @@ class Contrato
      */
     private $folio;
 
+    /**
+     * @ORM\OneToOne(targetEntity=Lotes::class, cascade={"persist", "remove"})
+     */
+    private $idLote;
+
     
     public function __construct()
     {
@@ -975,6 +980,18 @@ class Contrato
     public function setFolio(?string $folio): self
     {
         $this->folio = $folio;
+
+        return $this;
+    }
+
+    public function getIdLote(): ?Lotes
+    {
+        return $this->idLote;
+    }
+
+    public function setIdLote(?Lotes $idLote): self
+    {
+        $this->idLote = $idLote;
 
         return $this;
     }

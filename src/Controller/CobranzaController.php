@@ -25,6 +25,7 @@ use App\Repository\VencimientoRepository;
 use App\Repository\UsuarioRepository;
 use App\Repository\ConfiguracionRepository;
 use App\Repository\DiasPagoRepository;
+use App\Repository\LotesRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -435,17 +436,20 @@ class CobranzaController extends AbstractController
     /**
      * @Route("/{id}/lote", name="cobranza_lote", methods={"GET","POST"})
      */
-    public function lote(Request $request, Contrato $contrato,ModuloPerRepository $moduloPerRepository,ConfiguracionRepository $configuracionRepository): Response
+    public function lote(Request $request, 
+                        Contrato $contrato,
+                        ModuloPerRepository $moduloPerRepository,
+                        LotesRepository $lotesRepository,
+                        ConfiguracionRepository $configuracionRepository): Response
     { 
         $this->denyAccessUnlessGranted('edit','cobranza');
         $user=$this->getUser();
         $pagina=$moduloPerRepository->findOneByName('cobranza',$user->getEmpresaActual());
 
         $configuracion=$configuracionRepository->find(1);
-        $lotes=$configuracion->getLotes();
-
+       
         if($request->request->get('cboLotes')){
-            $contrato->setLote($request->request->get('cboLotes'));
+            $contrato->setIdLote($lotesRepository->find($request->request->get('cboLotes')));
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($contrato);
             $entityManager->flush();
@@ -456,7 +460,7 @@ class CobranzaController extends AbstractController
         return $this->render('cobranza/lote.html.twig', [
             'contrato'=>$contrato,
             'pagina'=>'Editar Lote Contrato',
-            'lotes'=>$lotes,
+            'lotes'=>$lotesRepository->findBy(['empresa'=>$user->getEmpresaActual()]),
         ]);
     }
     

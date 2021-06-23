@@ -19,6 +19,34 @@ class LotesRepository extends ServiceEntityRepository
         parent::__construct($registry, Lotes::class);
     }
 
+    public function findHabilitados()
+    {
+        $query=$this->createQueryBuilder('l')
+        ->leftJoin('l.usuarioLotes','ul')
+        ->andWhere('ul.id is null')
+        ->andWhere('l.estado = true')
+        ->orderBy('l.orden','ASC');
+    
+    return $query->getQuery()
+        ->getResult()
+    ;
+
+    }
+    public function findPrimerDisponible(): ?Lotes
+    {
+        $query=$this->createQueryBuilder('l')
+        ->andWhere('l.isUtilizado = false')
+        ->andWhere('l.estado = true')
+        ->orderBy('l.orden','ASC');
+    
+    return $query->setMaxResults(1)
+        ->getQuery()
+        ->getOneOrNullResult()
+    ;
+
+    }
+
+    
     // /**
     //  * @return Lotes[] Returns an array of Lotes objects
     //  */

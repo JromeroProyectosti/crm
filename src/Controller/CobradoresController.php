@@ -7,6 +7,7 @@ use App\Entity\Empresa;
 use App\Entity\UsuarioCuenta;
 use App\Entity\Cuenta;
 use App\Entity\UsuarioStatus;
+use App\Entity\UsuarioLote;
 use App\Entity\Privilegio;
 use App\Entity\PrivilegioTipousuario;
 use App\Form\UsuarioType;
@@ -15,6 +16,7 @@ use App\Repository\PrivilegioRepository;
 use App\Repository\UsuarioRepository;
 use App\Repository\UsuarioTipoRepository;
 use App\Repository\ModuloPerRepository;
+use App\Repository\LotesRepository;
 use App\Repository\UsuarioTipoDocumentoRepository;
 use App\Repository\UsuarioNoDisponibleRepository;
 use App\Repository\ConfiguracionRepository;
@@ -72,6 +74,7 @@ class CobradoresController extends AbstractController
                         ModuloPerRepository $moduloPerRepository,
                         PrivilegioTipousuarioRepository $privilegioTipousuarioRepository,
                         PrivilegioRepository $privilegioRepository,
+                        LotesRepository $lotesRepository,
                         ConfiguracionRepository $configuracionRepository,
                         UsuarioTipoDocumentoRepository $tipoDocumento): Response
     {
@@ -148,7 +151,18 @@ class CobradoresController extends AbstractController
                 $entityManager->persist($usuario);
                 $entityManager->flush();
             }
+            $lotes=$_POST['cboLotes'];
             
+            
+            foreach($lotes as $lote){
+                
+                $usuarioLote=new UsuarioLote();            
+                $usuarioLote->setUsuario($usuario);
+                $usuarioLote->setLote($lotesRepository->find($lote));
+
+                $entityManager->persist($usuarioLote);
+                $entityManager->flush();
+            }
             $privilegioTipousuarios=$privilegioTipousuarioRepository->findBy(['tipousuario'=>$usuario->getUsuarioTipo()->getId()]);
             foreach($privilegioTipousuarios as $privilegioTipousuario){
                 $privilegio=$privilegioRepository->findBy(["moduloPer"=>$privilegioTipousuario->getModuloPer()->getId(),"usuario"=>$usuario->getId()]);
@@ -175,7 +189,7 @@ class CobradoresController extends AbstractController
             'form' => $form->createView(),
             'pagina'=>$pagina->getNombre(),
             'cuentas'=>$cuentas,
-            'lotes'=>$configuracion->getLotes(),
+            'lotes'=>$lotesRepository->findHabilitados(),
             'statues'=>$statues,
             'tipo_documentos'=>$tipoDocumento->findAll(),
         ]);
@@ -204,6 +218,7 @@ class CobradoresController extends AbstractController
                         ModuloPerRepository $moduloPerRepository,
                         UsuarioTipoDocumentoRepository $tipoDocumento,
                         UserPasswordEncoderInterface $encoder,
+                        LotesRepository $lotesRepository,
                         ConfiguracionRepository $configuracionRepository,
                         UsuarioNoDisponibleRepository $usuarioNoDisponibleRepository): Response
     {
@@ -267,8 +282,26 @@ class CobradoresController extends AbstractController
             foreach($usuarioCuentas as $usuarioCuenta){
                 $usuario->removeUsuarioCuenta($usuarioCuenta);
             }
+
+
+            $usuarioLotes=$usuario->getUsuarioLotes();
+            foreach($usuarioLotes as $usuarioLote){
+                
+                $entityManager->remove($usuarioLote);
+                $entityManager->flush();
+            }
             $lotes=$_POST['cboLotes'];
-            $usuario->setLotes($lotes);
+            
+            
+            foreach($lotes as $lote){
+                
+                $usuarioLote=new UsuarioLote();            
+                $usuarioLote->setUsuario($usuario);
+                $usuarioLote->setLote($lotesRepository->find($lote));
+
+                $entityManager->persist($usuarioLote);
+                $entityManager->flush();
+            }
             $getcuentas=$_POST['cboEmpresa'];
          
             foreach($getcuentas as $getcuenta){
@@ -297,13 +330,14 @@ class CobradoresController extends AbstractController
             'form' => $form->createView(),
             'pagina'=>$pagina->getNombre(),
             'cuentas'=>$cuentas,
-            'lotes'=>$configuracion->getLotes(),
+            'lotes'=>$lotesRepository->findHabilitados(),
             'statues'=>$statues,
             'id_cuenta'=>$usuarioCuenta->getCuenta()->getId(),
             'cuentas_sel'=>$usuario->getUsuarioCuentas(),
             'tipo_documentos'=>$tipoDocumento->findAll(),
             'hora_inicio'=>$horaInicio,
-            'hora_fin'=>$horaFin,
+            'hora_fin'=>$horaFin
+            
         ]);
     }
     /**

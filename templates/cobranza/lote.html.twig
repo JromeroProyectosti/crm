@@ -14,19 +14,21 @@
             <div class="card-body table-responsive pad">
                 <form action="{{path('cobranza_lote',{'id':contrato.id}) }}" method="POST">
                     <div class="row">
-                        <div class="col-sm-12 col-md-3">
+                        <div class="col-sm-6 col-md-3">
                             <small class="text-muted">Lote</small><br>
                             <select name="cboLotes" id="" class="form-control">
-                                {% for i in 1..lotes %}
-                                <option value="{{i}}" 
-                                {% if i == contrato.lote %}
-                                    selected
-                                {% endif %}
-                                >{{i}}</option>
+                                {% for lote in lotes %}
+                                    <option value="{{lote.id}}"
+                                    {% if lote.id == contrato.idLote.id %}
+                                        selected
+                                    {% endif %}
+                                    >{{lote.nombre}}</option>
                                 {% endfor %}
-                                
                             </select>
                             
+                        </div>
+                        <div class="col-sm-6 col-md-3 asociado">
+
                         </div>
                     </div>
                     <div class="row">
@@ -40,4 +42,7 @@
         </div>
     </div>
 </div>
+<script>
+    
+</script>
 {% endblock %}

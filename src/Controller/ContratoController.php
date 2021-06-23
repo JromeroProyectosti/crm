@@ -21,6 +21,7 @@ use App\Repository\AgendaStatusRepository;
 use App\Repository\ModuloPerRepository;
 use App\Repository\CuotaRepository;
 use App\Repository\ConfiguracionRepository;
+use App\Repository\LotesRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -404,7 +405,8 @@ class ContratoController extends AbstractController
                             UsuarioTipoRepository $usuarioTipoRepository,
                             ConfiguracionRepository $configuracionRepository,
                             ContratoRepository $contratoRepository,
-                            ContratoFunciones $contratoFunciones
+                            ContratoFunciones $contratoFunciones,
+                            LotesRepository $lotesRepository
                             ): Response
     {
         $this->denyAccessUnlessGranted('create','panel_abogado');
@@ -419,12 +421,23 @@ class ContratoController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
             $configuracion=$configuracionRepository->find(1);
-
+            $entityManager = $this->getDoctrine()->getManager();
             //configuramos el Lote al cual caera::
-            $ult_contrato=$contratoRepository->findLoteMax($user->getEmpresaActual());
-            $lote=1;
-            if(null != $ult_contrato){
-                $lote= $ult_contrato->getLote()>=$configuracion->getLotes()?1:$ult_contrato->getLote()+1;
+            //$ult_contrato=$contratoRepository->findLoteMax($user->getEmpresaActual());
+            $lote=$lotesRepository->findPrimerDisponible();
+            if(null == $lote){
+                $lotes=$lotesRepository->findBy(['empresa'=>$user->getEmpresaActual()]);
+                foreach($lotes as $lote){
+                    $lote->setIsUtilizado(false);
+                    $entityManager->persist($lote);
+                    $entityManager->flush();
+                }
+                $lote=$lotesRepository->findPrimerDisponible();
+
+            }else{
+                $lote->setIsUtilizado(true);
+                $entityManager->persist($lote);
+                $entityManager->flush();
             }
 
 
@@ -432,8 +445,8 @@ class ContratoController extends AbstractController
             $contrato->setFechaCreacion(new \DateTime(date("Y-m-d H:i:s")));
             $contrato->setSucursal($sucursalRepository->find($request->request->get('cboSucursal')));
             $contrato->setTramitador($usuarioRepository->find($request->request->get('cboTramitador')));
-            $contrato->setLote($lote);
-            $entityManager = $this->getDoctrine()->getManager();
+            $contrato->setIdLote($lote);
+            
             $agenda=$contrato->getAgenda();
 
             $usuario=$usuarioRepository->findOneBy(['username'=>$contrato->getEmail()]);

@@ -63,12 +63,17 @@
 					<select name="cboLotes[]" class="select3" multiple="multiple" data-placeholder="Selecciona Lotes" style="width: 100%;" required>
 						<option></option>
 						
-						{% for lote in 1..lotes %}
-							<option value="{{lote}}"
-							{% if lote in usuario.lotes %}
-							selected
-							{% endif %}
-							>Lote {{lote}}</option>
+						{% for lote in lotes %}
+							<option value="{{lote.id}}"
+							>{{lote.nombre}}</option>
+						{% endfor %}
+						{% for usuarioLote in usuario.usuarioLotes %}
+							<option value="{{usuarioLote.lote.id}}"
+								
+									selected
+								
+							>{{usuarioLote.lote.nombre}}</option>
+							
 						{% endfor %}
 					</select>
 				</div>

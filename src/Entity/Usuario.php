@@ -294,6 +294,11 @@ class Usuario implements UserInterface
      */
     private $lotes = [];
 
+    /**
+     * @ORM\OneToMany(targetEntity=UsuarioLote::class, mappedBy="usuario")
+     */
+    private $usuarioLotes;
+
     
     
     public function __construct()
@@ -309,6 +314,7 @@ class Usuario implements UserInterface
         $this->contratos = new ArrayCollection();
         $this->usuarioContratos = new ArrayCollection();
         $this->usuarioNoDisponibles = new ArrayCollection();
+        $this->usuarioLotes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -1202,6 +1208,36 @@ class Usuario implements UserInterface
     public function setLotes(?array $lotes): self
     {
         $this->lotes = $lotes;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|UsuarioLote[]
+     */
+    public function getUsuarioLotes(): Collection
+    {
+        return $this->usuarioLotes;
+    }
+
+    public function addUsuarioLote(UsuarioLote $usuarioLote): self
+    {
+        if (!$this->usuarioLotes->contains($usuarioLote)) {
+            $this->usuarioLotes[] = $usuarioLote;
+            $usuarioLote->setUsuario($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUsuarioLote(UsuarioLote $usuarioLote): self
+    {
+        if ($this->usuarioLotes->removeElement($usuarioLote)) {
+            // set the owning side to null (unless already changed)
+            if ($usuarioLote->getUsuario() === $this) {
+                $usuarioLote->setUsuario(null);
+            }
+        }
 
         return $this;
     }
