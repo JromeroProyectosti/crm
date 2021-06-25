@@ -206,7 +206,7 @@ class ComisionController extends AbstractController
             $request->query->getInt('page', 1), /*page number*/
             20 /*limit per page*/,
             array('defaultSortFieldName' => 'id', 'defaultSortDirection' => 'desc'));
-        return $this->render('comision/comision_agendador.html.twig', [
+        return $this->render('comision/comision_cobrador.html.twig', [
             //'controller_name' => 'ComisionController',
             //'contratos' => $query,
             'agendas' => $agendas,
