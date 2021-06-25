@@ -305,7 +305,7 @@ class CobranzaController extends AbstractController
             $query, /* query NOT result */
             $request->query->getInt('page', 1), /*page number*/
             20 /*limit per page*/,
-            array('defaultSortFieldName' => 'fechaHora, usuarioRegistro', 'defaultSortDirection' => 'desc'));
+            array('defaultSortFieldName' => 'usuarioRegistro,fecha', 'defaultSortDirection' => 'desc'));
         
         return $this->render('cobranza/resumen.html.twig', [
             'cobranzas' => $cobranzas,
