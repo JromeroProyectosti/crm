@@ -287,7 +287,7 @@ class AgendaController extends AbstractController
         if($user->getUsuarioTipo()->getId()>4){
             $agendadores= $usuarioRepository->findBy(['id'=>$user->getId()]);
         }else{
-            $agendadores= $usuarioRepository->findByCuenta($cuenta->getId(),['usuarioTipo'=>5,'estado'=>1]);
+            $agendadores= $usuarioRepository->findBy(['usuarioTipo'=>5,'estado'=>1]);
             
                
         }
