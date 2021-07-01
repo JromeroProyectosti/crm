@@ -264,6 +264,7 @@ class ContratoController extends AbstractController
                     SucursalRepository $sucursalRepository,
                     DiasPagoRepository $diasPagoRepository,
                     UsuarioRepository $usuarioRepository,
+                    CuentaRepository $cuentaRepository,
                     ModuloPerRepository $moduloPerRepository,
                     CuotaRepository $cuotaRepository,
                     \Knp\Snappy\Pdf $snappy): Response
@@ -279,7 +280,8 @@ class ContratoController extends AbstractController
         $form->handleRequest($request);
         //buscamos la primera cuota para sabes si tiene algun pago asociado:::
         $cuota=$cuotaRepository->findOneByUltimaPagada($contrato->getId());
-    
+        $companias=$cuentaRepository->findByPers(null,$user->getEmpresaActual());
+        
         $tienePago=false;
         if(null != $cuota){
             foreach( $cuota->getPagoCuotas() as $pago){
@@ -288,10 +290,13 @@ class ContratoController extends AbstractController
         }
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
+
+            $compania=$_POST['cboCompanias'];
             $contrato->setSucursal($sucursalRepository->find($request->request->get('cboSucursal')));
             $contrato->setDiaPago($request->request->get('chkDiasPago'));
             $contrato->setTramitador($usuarioRepository->find($request->request->get('cboTramitador')));
             $contrato->setFechaPrimerPago(new \DateTime(date($request->request->get('txtFechaPago')."-1 00:00:00")));
+
             $entityManager = $this->getDoctrine()->getManager();
             $contrato->setPdf(null);
             $entityManager->persist($contrato);
@@ -302,6 +307,7 @@ class ContratoController extends AbstractController
             $agenda->setTelefonoCliente($contrato->getTelefono());
             $agenda->setEmailCliente($contrato->getEmail());
             $agenda->setReunion($contrato->getReunion());
+            $agenda->setCuenta($cuentaRepository->find($compania));
             $entityManager->persist($agenda);
             $entityManager->flush();
             if(!$tienePago){
@@ -381,6 +387,7 @@ class ContratoController extends AbstractController
 
         return $this->render('contrato/edit.html.twig', [
             'contrato' => $contrato,
+            'companias'=>$companias,
             'tienePago'=>$tienePago,
             'agenda'=>$contrato->getAgenda(),
             'form' => $form->createView(),

@@ -5,6 +5,7 @@ namespace App\Controller;
 
 use App\Entity\Cobranza;
 use App\Entity\Pago;
+use App\Entity\Lotes;
 use App\Entity\Usuario;
 use App\Entity\Cuota;
 use App\Entity\Contrato;
@@ -464,6 +465,19 @@ class CobranzaController extends AbstractController
         ]);
     }
     
+    /**
+     * @Route("/{id}/cobrador", name="cobranza_cobrador", methods={"GET","POST"})
+     */
+    public function cobrador(Request $request, 
+                        Lotes $lotes): Response
+    { 
+        $usuarioLotes =$lotes->getUsuarioLotes();
+        $cobradores=array();
+        foreach($usuarioLotes as $usuarioLote){
+            $cobradores=array("nombre"=>$usuarioLote->getUsuario()->getNombre());
+        }
+        return $this->json($cobradores);
+    }
     /**
      * @Route("/{id}/edit", name="cobranza_edit", methods={"GET","POST"})
      */

@@ -16,7 +16,7 @@
                     <div class="row">
                         <div class="col-sm-6 col-md-3">
                             <small class="text-muted">Lote</small><br>
-                            <select name="cboLotes" id="" class="form-control">
+                            <select name="cboLotes" id="" class="form-control lotes">
                                 {% for lote in lotes %}
                                     <option value="{{lote.id}}"
                                     {% if lote.id == contrato.idLote.id %}
@@ -27,8 +27,9 @@
                             </select>
                             
                         </div>
-                        <div class="col-sm-6 col-md-3 asociado">
-
+                        <div class="col-sm-6 col-md-3">
+                            <small class="text-muted">Cobrador</small><br>
+                            <div class="asociado"></div>
                         </div>
                     </div>
                     <div class="row">
@@ -43,6 +44,27 @@
     </div>
 </div>
 <script>
-    
+    $(".lotes").on('change',function(){
+        $.ajax({
+            url:"/cobranza/"+$(this).val()+"/cobrador",
+            type: "post",
+            dataType: "html",
+            cache: false,
+            contentType: false,
+            processData: false,
+            async: true,
+            beforeSend: function(){
+                //$("#status").html(' <div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i><div class="text-bold pt-2">Loading...</div></div>');
+                
+            },
+            success:function(data){
+                console.log(data);
+                data_array= JSON.parse(data);
+                console.log(data_array);
+                $(".asociado").html(data_array['nombre']);
+                //$("#contrato").html("");
+            }});
+        
+    })
 </script>
 {% endblock %}

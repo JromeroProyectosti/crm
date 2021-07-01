@@ -4,6 +4,21 @@
        
         <h4>Datos Cliente</h4>
         <div class="row">
+            <div class="col-8">
+                <small class="text-muted">Compañia</small>
+                
+                    <select name="cboCompanias" class="form-control" onchange="javascript:cambiaCompania(this.value)">
+                        {% for compania in companias %}
+                            <option {% if compania.id==contrato.agenda.cuenta.id %}
+                                selected
+                            {% endif %}
+                            value ="{{compania.id}}" >{{compania.nombre}}</option>
+                        {% endfor %}
+                    </select>
+            </div>
+        </div>
+        <div class="row">
+            
             <div class="col-sm-12 col-md-3">
                 <small class="text-muted">Nombre</small><br>
                 {{form_row(form.nombre,{'label':false,'attr':{'class':'form-control'}})}}
@@ -91,7 +106,7 @@
             </div>
             <div class="col-sm-12 col-md-3">
                 <small class="text-muted">Sucursal</small>
-                <select name="cboSucursal" id="sucursal" required class="form-control">
+                <select name="cboSucursal" id="sucursal" required class="form-control sucursal">
                     <option value=""></option>
                     {% for sucursal in sucursales %}
                         <option value="{{sucursal.id}}"
@@ -108,7 +123,7 @@
             </div>
             <div class="col-sm-12 col-md-3">
                 <small class="text-muted">Tramitador</small>
-                <select name="cboTramitador" id="tramitador" required class="form-control">
+                <select name="cboTramitador" id="tramitador" required class="form-control tramitador">
                     <option value=""></option>
                     {% for tramitador in tramitadores %}
                         <option value="{{tramitador.id}}"
@@ -456,7 +471,66 @@
         checkAbono();
         recalcula();
     });
+    function cambiaCompania(status){
+        $.ajax({
+            url:"{{path('panel_abogado_compania',{'id':agenda.id})}}",
+            type: "get",
+            dataType: "html",
+            data:"compania="+status,
+            cache: false,
+            contentType: false,
+            processData: false,
+            async: true,
+            beforeSend: function(){
+                $("#status").html(' <div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i><div class="text-bold pt-2">Loading...</div></div>');
+                
+            },
+            success:function(data){
+                $("#status").html(data);
+                //$("#contrato").html("");
 
+                
+
+                $.ajax({
+                    url:"/panel_abogado/"+status+"/sucursales",
+                    type: "post",
+                    dataType: "html",
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    async: true,
+                    beforeSend: function(){
+                        //$("#status").html(' <div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i><div class="text-bold pt-2">Loading...</div></div>');
+                        
+                    },
+                    success:function(data){
+                        $("#sucursal").find('option').remove();
+                        $("#sucursal").append(data);
+                        //$("#contrato").html("");
+                    }});
+                
+                    $.ajax({
+                        url:"/panel_abogado/"+status+"/tramitadores",
+                        type: "post",
+                        dataType: "html",
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        async: true,
+                        beforeSend: function(){
+                            //$("#status").html(' <div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i><div class="text-bold pt-2">Loading...</div></div>');
+                            
+                        },
+                        success:function(data){
+                            $("#tramitador").find('option').remove();
+                            $("#tramitador").append(data);
+                            //$("#contrato").html("");
+                        }});
+
+            }
+
+        });
+    }
     function checkAbono(){
         {% if not tienePago %}
         if($('.chk-bono').prop( "checked" )){
