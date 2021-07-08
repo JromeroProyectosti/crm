@@ -413,6 +413,7 @@ class ContratoController extends AbstractController
                             ConfiguracionRepository $configuracionRepository,
                             ContratoRepository $contratoRepository,
                             ContratoFunciones $contratoFunciones,
+                            CuentaRepository $cuentaRepository,
                             LotesRepository $lotesRepository
                             ): Response
     {
