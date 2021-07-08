@@ -118,7 +118,13 @@ class AppExtension extends AbstractExtension
 
         $otros=' DATEDIFF(now(),c.fechaPago)>'.$vencimiento[0]->getValMax();
         $cuota=$em->getRepository(Cuota::class)->deudaTotal($contrato,$otros);
+       
+        if(count($cuota)>0){
+            return $cuota[0][1]-$cuota[0][2];
+        }else{
+            return 0;
+        }
         
-        return $cuota[0][1]-$cuota[0][2];
+        
     }
 }
