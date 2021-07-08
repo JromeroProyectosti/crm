@@ -112,7 +112,7 @@
     {% if total>0 %}
         
     
-        {{ render(controller('App\\Controller\\AgendaController::resumenagendadores', {'agendaStatus':status,'fechainicio':dateInicio,'fechafin':dateFin,'compania':bCompania,'filtro':bFiltro,'totalStatus':total,'tipoFecha':tipoFecha})) }}
+        {{ render(controller('App\\Controller\\AgendaController::resumenagendadores', {'agendaStatus':statuesGroup,'fechainicio':dateInicio,'fechafin':dateFin,'compania':bCompania,'filtro':bFiltro,'totalStatus':total,'tipoFecha':tipoFecha})) }}
         {% endif %}
 </section>
 {% endif %}

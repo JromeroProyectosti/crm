@@ -419,7 +419,8 @@ class ContratoController extends AbstractController
         $this->denyAccessUnlessGranted('create','panel_abogado');
         $user=$this->getUser();
         $juzgados=$juzgadoRepository->findAll();
-       
+        $companias=$cuentaRepository->findByPers(null,$user->getEmpresaActual());
+        
         $form = $this->createForm(ContratoType::class, $contrato);
         $form->add('fechaPrimeraCuota',DateType::class,array('widget'=>'single_text','html5'=>false));
         $form->add('vigencia');
@@ -547,6 +548,7 @@ class ContratoController extends AbstractController
         return $this->render('contrato/finalizar.html.twig', [
             'contrato' => $contrato,
             'agenda'=> $contrato->getAgenda(),
+            'companias'=>$companias,
             'form' => $form->createView(),
             'tienePago'=>false,
             'juzgados'=>$juzgados,

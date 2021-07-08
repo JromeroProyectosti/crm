@@ -229,7 +229,7 @@ class AgendaController extends AbstractController
         }
         //$fecha="a.fechaAsignado between '$fechainicio' and '$fechafin 23:59:59'" ;
         $nombre_status="";
-        if(null != $agendaStatus){
+        if(null != $agendaStatus ){
             $status=$this->getDoctrine()->getRepository(AgendaStatus::class)->find($agendaStatus);
             $nombre_status=$status->getNombre();
         }

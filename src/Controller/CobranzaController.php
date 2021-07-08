@@ -284,29 +284,33 @@ class CobranzaController extends AbstractController
             case 8:
             case 12:
                 $query=$cobranzaRepository->findByContratoGroup(null,null,null,$filtro,$fecha);
+                $total=$cobranzaRepository->findByContratoGroupCount(null,null,null,$filtro,$fecha);
                 $companias=$cuentaRepository->findByPers(null,$user->getEmpresaActual());
 
                 break;
             case 11://Administrativo
                 //$query=$contratoRepository->findByPers(null,$user->getEmpresaActual(),$compania,$filtro,null,$fecha,true);
                 $query=$cobranzaRepository->findByContratoGroup($user->getId(),null,null,$filtro,$fecha);
+                $total=$cobranzaRepository->findByContratoGroupCount($user->getId(),null,null,$filtro,$fecha);
                 $companias=$cuentaRepository->findByPers(null,$user->getEmpresaActual());
              break;
             
             default:
                 //$query=$contratoRepository->findByPers(null,null,$compania,$filtro,null,$fecha,true);
                 $query=$cobranzaRepository->findByContratoGroup($user->getId(),null,null,$filtro,$fecha);
+                $total=$cobranzaRepository->findByContratoGroupCount($user->getId(),null,null,$filtro,$fecha);
                 $companias=$cuentaRepository->findByPers(null);
                 
             break;
         }
+       
         //$companias=$cuentaRepository->findByPers($user->getId());
         //$query=$contratoRepository->findAll();
         $cobranzas=$paginator->paginate(
             $query, /* query NOT result */
             $request->query->getInt('page', 1), /*page number*/
             20 /*limit per page*/,
-            array('defaultSortFieldName' => 'c.usuarioRegistro,c.fecha', 'defaultSortDirection' => 'desc'));
+            array());
         
         return $this->render('cobranza/resumen.html.twig', [
             'cobranzas' => $cobranzas,
@@ -314,6 +318,7 @@ class CobranzaController extends AbstractController
             'bCompania'=>$compania,
             'dateInicio'=>$dateInicio,
             'dateFin'=>$dateFin,
+            'total'=>$total[1],
             'pagina'=>"Gestión ".$pagina->getNombre(),
         ]);
     }

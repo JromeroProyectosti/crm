@@ -75,6 +75,7 @@ class CobranzaRepository extends ServiceEntityRepository
         $query->join('c.contrato','co');
         $query->join('co.agenda','a');
         $query->join('a.cuenta','cu');
+        $query->join('c.usuarioRegistro','u');
         if(!is_null($empresa)){
             
             $query->andWhere('cu.empresa = '.$empresa);
@@ -100,11 +101,47 @@ class CobranzaRepository extends ServiceEntityRepository
 
       
         $query->groupBy('c.usuarioRegistro,c.fecha ')
-        ->orderBy('c.usuarioRegistro,c.fecha', 'ASC')
+        ->orderBy('u.nombre,c.fecha', 'ASC')
         ;
 
         return $query->getQuery()
             ->getResult()
+        ;
+
+    }
+
+    public function findByContratoGroupCount($usuario=null,$empresa=null,$compania=null,$filtro=null,$otros=null){
+        $query=$this->createQueryBuilder('c ');
+        $query->select(array('c','count(c.id)'));
+        $query->join('c.contrato','co');
+        $query->join('co.agenda','a');
+        $query->join('a.cuenta','cu');
+        $query->join('c.usuarioRegistro','u');
+        if(!is_null($empresa)){
+            
+            $query->andWhere('cu.empresa = '.$empresa);
+        }
+        if(!is_null($usuario)){
+            
+            $query->andWhere('c.usuarioRegistro = '.$usuario);
+        }
+        if(!is_null($filtro)){ 
+            $query->andWhere("(co.nombre like '%$filtro%' or co.rut like '%$filtro%')")
+         ;
+
+        }
+        if(!is_null($compania)){
+            $query->andWhere('a.cuenta = '.$compania);
+        }
+        
+        if(!is_null($otros)){ 
+            $query->andWhere($otros)
+         ;
+
+        }
+
+        return $query->getQuery()
+            ->getOneOrNullResult()
         ;
 
     }

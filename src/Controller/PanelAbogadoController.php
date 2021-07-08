@@ -133,6 +133,7 @@ class PanelAbogadoController extends AbstractController
             'dateInicio'=>$dateInicio,
             'dateFin'=>$dateFin,
             'status'=>$status,
+            'statuesGroup'=>$statuesgroup,
             'tipoFecha'=>$tipo_fecha,
         ]);
     }
