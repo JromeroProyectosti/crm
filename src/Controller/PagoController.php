@@ -254,18 +254,21 @@ class PagoController extends AbstractController
             case 8:
             case 12:
                 $query=$pagoRepository->findByPers(null,null,null,$filtro,$fecha);
+                $total=$pagoRepository->findByPersCount(null,null,null,$filtro,$fecha);
                 $companias=$cuentaRepository->findByPers(null,$user->getEmpresaActual());
 
                 break;
             case 11://Administrativo
                 //$query=$contratoRepository->findByPers(null,$user->getEmpresaActual(),$compania,$filtro,null,$fecha,true);
                 $query=$pagoRepository->findByPers($user->getId(),null,null,$filtro,$fecha);
+                $total=$pagoRepository->findByPersCount($user->getId(),null,null,$filtro,$fecha);
                 $companias=$cuentaRepository->findByPers(null,$user->getEmpresaActual());
              break;
             
             default:
                 //$query=$contratoRepository->findByPers(null,null,$compania,$filtro,null,$fecha,true);
                 $query=$pagoRepository->findByPers($user->getId(),null,null,$filtro,$fecha);
+                $total=$pagoRepository->findByPersCount($user->getId(),null,null,$filtro,$fecha);
                 $companias=$cuentaRepository->findByPers(null);
                 
             break;
@@ -284,6 +287,7 @@ class PagoController extends AbstractController
             'bCompania'=>$compania,
             'dateInicio'=>$dateInicio,
             'dateFin'=>$dateFin,
+            'total'=>$total[1],
             'pagina'=>$pagina->getNombre(),
         ]);
     }
