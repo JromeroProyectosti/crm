@@ -1,20 +1,124 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello ReporteAbogadoController!{% endblock %}
+{% block title %}{{pagina|default('')}}{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+<section>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ '/Users/Hans/sistemas/ProyectosPHP/crm/src/Controller/ReporteController.php'|file_link(0) }}">src/Controller/ReporteController.php</a></code></li>
-        <li>Your template at <code><a href="{{ '/Users/Hans/sistemas/ProyectosPHP/crm/templates/reporte/index.html.twig'|file_link(0) }}">templates/reporte/index.html.twig</a></code></li>
-    </ul>
-</div>
+    
+    <div class="card">
+        <div class="card-header">
+            Filtro
+        </div>
+        <div class="card-body">
+            
+            <form action="{{path('reporte_abogado')}}" method="get" id="bForm">
+            <div class="row">
+                <div class="col-sm-12 col-md-3">
+                    <select name="bCompania" class="form-control">
+                        <option value="0">Todos</option>
+                        {% for compania in companias %}
+                            <option value="{{compania.id}}"
+                            {% if bCompania==compania.id %}
+                                selected
+                            {% endif %}
+                            >{{compania.nombre}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-sm-12 col-md-3">
+                    <input type="text" class="form-control" name="bFiltro" placeholder="Nombre/Email/Telefono" value="{{bFiltro}}">
+                </div>
+                <div class="col-sm-12 col-md-2">
+                    <select name="bTipofecha" class="form-control">
+                        <option value="0" {% if tipoFecha==0 %}
+                            selected
+                        {% endif %}>Fecha Carga</option>
+                        <option value="1" {% if tipoFecha==1 %}
+                        selected
+                    {% endif %}>Fecha Asignado</option>
+                        <option value="2" {% if tipoFecha==2 %}
+                        selected
+                    {% endif %}>Fecha Contrato</option>
+
+                    </select>
+                </div>
+                <div class="col-sm-12 col-md-3">
+                    <input type="text" class="form-control" name="bFecha" id="bFecha"  value="">
+                </div>
+                <div class="col-sm-12 col-md-1">
+                    <button class="btn btn-primary"><i class="fas fa-search"></i></button>
+                </div>
+           
+
+            </div>
+            </form>
+        </div>  
+        
+    </div>
+</section>
+</form>
+<section>
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Listado</h3> 
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body table-responsive p-0" style="height: 300px;">
+        
+            <table class="table table-head-fixed text-nowrap table-striped table-sm">
+                <thead>
+                    <tr>
+                        <th>Abogado</th>
+                        <th>Agendados</th>
+                        <th>No Califica</th>
+                        <th>No Contrata</th>
+                        <th>Contrata</th>
+                        <th>Ratifica Termino</th>
+                        <th>Efectividad (%)</th>
+                        <th>Honorarios</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for reporte in reportes %}
+
+                    <tr>
+                        <td>{{ reporte.abogado_nombre }}</td>
+                        <td>{{ reporte.total}}</td>
+                        <td>{{ reporte.nocalifica}}</td>
+                        <td>{{ reporte.nocontrata}}</td>
+                        <td>{{ reporte.contrata}}</td>
+                        <td>{{ reporte.ratificatermino}}</td>
+                        <td>{{ (((reporte.contrata-reporte.ratificatermino)*100)/((reporte.total-reporte.nocalifica)?(reporte.total-reporte.nocalifica):1))|number_format(1,",",".")}}</td>
+                        <td>${{(reporte.monto/(reporte.contrata?reporte.contrata:1))|number_format(0,",",".")}}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="10">No hay registros</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<script>
+    $('#bFecha').daterangepicker({
+        
+        "drops": "down",
+        "startDate":"{{dateInicio}}",
+        "endDate": "{{dateFin}}",
+        "locale": {
+            "format": "YYYY-MM-DD",
+            "applyLabel": "Apply",
+            "cancelLabel": "Cancel",
+        }
+    }, function(start, end, label) {
+    console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
+    
+    });
+    
+</script>
 {% endblock %}

@@ -138,8 +138,62 @@ class AgendaRepository extends ServiceEntityRepository
         $query->select(array('a','s','count(s.id) as valor'));
         $query->join('a.status','s');
         if(!is_null($status)){
-            $query->andWhere('a.status in ('.$status.')');
+            $query->andWhere('s.id in ('.$status.')');
         }
+        if(!is_null($empresa)){
+            $query->join('a.cuenta','c');
+            $query->andWhere('c.empresa = '.$empresa);
+        }
+        switch($esAbogado){
+            case 1:
+                if(!is_null($usuario)){
+                    $query->andWhere('a.abogado = '.$usuario);
+                }else{
+                    $query->andWhere('a.abogado is not null ');
+                }
+            break;
+            case 0:
+                if(!is_null($usuario)){
+                    $query->andWhere('a.agendador = '.$usuario);
+                }
+                //$query->andWhere('(a.abogado is null or a.status in (4,6,7,8))');
+            break;
+            default:
+                if(!is_null($usuario)){
+                    $query->andWhere('a.agendador = '.$usuario);
+                }
+            break;
+            
+        }
+
+        if(!is_null($compania)){
+            $query->andWhere('a.cuenta = '.$compania);
+        }
+        if(!is_null($filtro)){ 
+            $query->andWhere("(a.nombreCliente like '%$filtro%' or a.telefonoCliente like '%$filtro%' or a.emailCliente like '%$filtro%')")
+         ;
+
+        }
+        if(!is_null($otros)){ 
+            $query->andWhere($otros)
+         ;
+
+        }
+        $query->addGroupBy('s.id');
+
+        return $query->getQuery()
+            ->getResult()
+        ;
+
+    }
+    public function findByPersReporte($usuario=null,$empresa=null,$compania=null,$status=null, $filtro=null,$esAbogado=null, $otros=null)
+    {
+        $query=$this->createQueryBuilder('a');
+        $query->select(array('a','s','count(s.id) as valor'));
+        $query->join('a.status','s');
+        $query->join('a.status','s2');
+        $query->andWhere('s.id = 7 and s2.id=5 ');
+        
         if(!is_null($empresa)){
             $query->join('a.cuenta','c');
             $query->andWhere('c.empresa = '.$empresa);
@@ -245,6 +299,68 @@ class AgendaRepository extends ServiceEntityRepository
         return $query->getQuery()
             ->getResult()
         ;
+
+    }
+
+    public function findByAgendReporte($usuario=null,$empresa=null,$compania=null,$status=null, $filtro=null,$esAbogado=null, $otros=null)
+    {
+
+
+        $query=$this->createQueryBuilder('a');
+        $query->select(array('a','u','count(u.id) as valor','sum(co.MontoContrato) as monto'));
+
+        if($esAbogado==1){
+            $query->join('a.abogado','u');
+        }else{
+            $query->join('a.agendador','u');
+        }
+         $query->join('a.contrato','co');
+        if(!is_null($status)){
+            $query->andWhere('a.status in ('.$status.')');
+        }
+        if(!is_null($empresa)){
+            $query->join('a.cuenta','c');
+            $query->andWhere('c.empresa = '.$empresa);
+        }
+        switch($esAbogado){
+            case 1:
+                if(!is_null($usuario)){
+                    $query->andWhere('a.abogado = '.$usuario);
+                }else{
+                    $query->andWhere('a.abogado is not null ');
+                }
+            break;
+            case 0:
+                if(!is_null($usuario)){
+                    $query->andWhere('a.agendador = '.$usuario);
+                }
+                //$query->andWhere('(a.abogado is null or a.status in (4,6,7,8))');
+            break;
+            default:
+                if(!is_null($usuario)){
+                    $query->andWhere('a.agendador = '.$usuario);
+                }
+            break;
+
+        }
+        
+        if(!is_null($compania)){
+            $query->andWhere('a.cuenta = '.$compania);
+        }
+        if(!is_null($filtro)){ 
+            $query->andWhere("(a.nombreCliente like '%$filtro%' or a.telefonoCliente like '%$filtro%' or a.emailCliente like '%$filtro%')")
+         ;
+
+        }
+        if(!is_null($otros)){ 
+            $query->andWhere($otros)
+         ;
+
+        }
+        $query->addGroupBy('u.id');
+
+        return $query->getQuery()
+            ->getResult();
 
     }
     // /**

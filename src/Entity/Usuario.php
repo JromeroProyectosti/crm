@@ -299,6 +299,11 @@ class Usuario implements UserInterface
      */
     private $usuarioLotes;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Reportes::class, mappedBy="usuario", orphanRemoval=true)
+     */
+    private $reportes;
+
     
     
     public function __construct()
@@ -315,6 +320,7 @@ class Usuario implements UserInterface
         $this->usuarioContratos = new ArrayCollection();
         $this->usuarioNoDisponibles = new ArrayCollection();
         $this->usuarioLotes = new ArrayCollection();
+        $this->reportes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -1236,6 +1242,36 @@ class Usuario implements UserInterface
             // set the owning side to null (unless already changed)
             if ($usuarioLote->getUsuario() === $this) {
                 $usuarioLote->setUsuario(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Reportes[]
+     */
+    public function getReportes(): Collection
+    {
+        return $this->reportes;
+    }
+
+    public function addReporte(Reportes $reporte): self
+    {
+        if (!$this->reportes->contains($reporte)) {
+            $this->reportes[] = $reporte;
+            $reporte->setUsuario($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReporte(Reportes $reporte): self
+    {
+        if ($this->reportes->removeElement($reporte)) {
+            // set the owning side to null (unless already changed)
+            if ($reporte->getUsuario() === $this) {
+                $reporte->setUsuario(null);
             }
         }
 
