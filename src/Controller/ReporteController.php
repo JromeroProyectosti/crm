@@ -149,7 +149,7 @@ class ReporteController extends AbstractController
                 "nocontrata"=>$cantNoContrata,
                 "contrata"=>$cantContrata,
                 "ratificatermino"=>$cantRatificaTermino,
-                'monto'=>$total['monto']
+                'monto'=>0
             );
 
         }
