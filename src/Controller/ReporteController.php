@@ -50,7 +50,7 @@ class ReporteController extends AbstractController
     {
         $this->denyAccessUnlessGranted('view','reporte_abogado');
         $user=$this->getUser();
-        $pagina=$moduloPerRepository->findOneByName('panel_abogado',$user->getEmpresaActual());
+        $pagina=$moduloPerRepository->findOneByName('reporte_abogado',$user->getEmpresaActual());
 
         $filtro=null;
         $compania=null;
@@ -140,6 +140,7 @@ class ReporteController extends AbstractController
                 $cantRatificaTermino=$ratificatermino['valor'];
             }
             $datos[]=array(
+                
                 "abogado_id"=>$agenda->getAbogado()->getId(),
                 "abogado_nombre"=>$agenda->getAbogado()->getNombre(),
                 "total"=>$total['valor'],
