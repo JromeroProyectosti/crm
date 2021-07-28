@@ -307,14 +307,85 @@ class AgendaRepository extends ServiceEntityRepository
 
 
         $query=$this->createQueryBuilder('a');
-        $query->select(array('a','u','count(u.id) as valor'));
+        if($status == '7'){
+            $query->select(array('a','u','count(u.id) as valor','sum(con.MontoContrato) as monto'));
+            $query->join('a.contrato','con');
+        }else{
+            $query->select(array('a','u','count(u.id) as valor'));
+        }
+        
 
         if($esAbogado==1){
             $query->join('a.abogado','u');
         }else{
             $query->join('a.agendador','u');
         }
+        
     
+        if(!is_null($status)){
+            $query->andWhere('a.status in ('.$status.')');
+        }
+        if(!is_null($empresa)){
+            $query->join('a.cuenta','c');
+            $query->andWhere('c.empresa = '.$empresa);
+        }
+        switch($esAbogado){
+            case 1:
+                if(!is_null($usuario)){
+                    $query->andWhere('a.abogado = '.$usuario);
+                }else{
+                    $query->andWhere('a.abogado is not null ');
+                }
+            break;
+            case 0:
+                if(!is_null($usuario)){
+                    $query->andWhere('a.agendador = '.$usuario);
+                }
+                //$query->andWhere('(a.abogado is null or a.status in (4,6,7,8))');
+            break;
+            default:
+                if(!is_null($usuario)){
+                    $query->andWhere('a.agendador = '.$usuario);
+                }
+            break;
+
+        }
+        
+        if(!is_null($compania)){
+            $query->andWhere('a.cuenta = '.$compania);
+        }
+        if(!is_null($filtro)){ 
+            $query->andWhere("(u.nombre like '%$filtro%')")
+         ;
+
+        }
+        if(!is_null($otros)){ 
+            $query->andWhere($otros)
+         ;
+
+        }
+        $query->addGroupBy('u.id');
+
+        return $query->getQuery()
+            ->getResult();
+
+    }
+
+    public function findByAgendReporteMontoContrato($usuario=null,$empresa=null,$compania=null,$status=null, $filtro=null,$esAbogado=null, $otros=null)
+    {
+
+
+        $query=$this->createQueryBuilder('a');
+        $query->select(array('a','sum(con.MontoContrato) as monto'));
+
+        if($esAbogado==1){
+            $query->join('a.abogado','u');
+        }else{
+            $query->join('a.agendador','u');
+        }
+
+        $query->join('a.contrato','con');
+
         if(!is_null($status)){
             $query->andWhere('a.status in ('.$status.')');
         }

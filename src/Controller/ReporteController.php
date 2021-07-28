@@ -116,6 +116,7 @@ class ReporteController extends AbstractController
             $cantNoContrata=0;
             $cantContrata=0;
             $cantRatificaTermino=0;
+            $monto=0;
             $agenda=$total[0];
             //$valor=$agenda.valor;
 
@@ -134,11 +135,14 @@ class ReporteController extends AbstractController
             $contratan=$agendaRepository->findByAgendReporte($agenda->getAbogado()->getId(),$user->getEmpresaActual(),$compania,'7',$filtro,1,$fecha);
             foreach($contratan as $contrata){
                 $cantContrata=$contrata['valor'];
+                $monto=$contrata['monto'];
             }
             $ratificantermino=$agendaRepository->findByAgendReporte($agenda->getAbogado()->getId(),$user->getEmpresaActual(),$compania,'15',$filtro,1,$fecha);
             foreach($ratificantermino as $ratificatermino){
                 $cantRatificaTermino=$ratificatermino['valor'];
             }
+
+          
             $datos[]=array(
                 
                 "abogado_id"=>$agenda->getAbogado()->getId(),
@@ -149,7 +153,7 @@ class ReporteController extends AbstractController
                 "nocontrata"=>$cantNoContrata,
                 "contrata"=>$cantContrata,
                 "ratificatermino"=>$cantRatificaTermino,
-                'monto'=>0
+                'monto'=>$monto
             );
 
         }

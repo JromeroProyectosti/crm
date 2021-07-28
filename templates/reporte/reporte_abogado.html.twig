@@ -28,7 +28,7 @@
                     </select>
                 </div>
                 <div class="col-sm-12 col-md-3">
-                    <input type="text" class="form-control" name="bFiltro" placeholder="Nombre/Email/Telefono" value="{{bFiltro}}">
+                    <input type="text" class="form-control" name="bFiltro" placeholder="Nombre abogado" value="{{bFiltro}}">
                 </div>
                 <div class="col-sm-12 col-md-2">
                     <select name="bTipofecha" class="form-control">
@@ -72,7 +72,7 @@
                     <tr>
                         <th>Abogado</th>
                         <th>Agendados</th>
-                        <th>No Califica</th>
+                        <th>No Califica AB</th>
                         <th>No Contrata</th>
                         <th>Contrata</th>
                         <th>Ratifica Termino</th>
@@ -85,13 +85,13 @@
 
                     <tr>
                         <td>{{ reporte.abogado_nombre }}</td>
-                        <td>{{ reporte.total}}</td>
-                        <td>{{ reporte.nocalifica}}</td>
-                        <td>{{ reporte.nocontrata}}</td>
-                        <td>{{ reporte.contrata}}</td>
-                        <td>{{ reporte.ratificatermino}}</td>
-                        <td>{{ (((reporte.contrata-reporte.ratificatermino)*100)/((reporte.total-reporte.nocalifica)?(reporte.total-reporte.nocalifica):1))|number_format(1,",",".")}}</td>
-                        <td>$0</td>
+                        <td align="right">{{ reporte.total}}</td>
+                        <td  align="right">{{ reporte.nocalifica}}</td>
+                        <td align="right">{{ reporte.nocontrata}}</td>
+                        <td align="right">{{ reporte.contrata}}</td>
+                        <td align="right">{{ reporte.ratificatermino}}</td>
+                        <td align="right">{{ (((reporte.contrata-reporte.ratificatermino)*100)/((reporte.total-reporte.nocalifica)?(reporte.total-reporte.nocalifica):1))|number_format(1,",",".")}}</td>
+                        <td align="right">${{(reporte.monto/(reporte.contrata?reporte.contrata:1))|number_format(0,",",".")}}</td>
                     </tr>
                     {% else %}
                     <tr>
