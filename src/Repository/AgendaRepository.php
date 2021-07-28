@@ -307,14 +307,14 @@ class AgendaRepository extends ServiceEntityRepository
 
 
         $query=$this->createQueryBuilder('a');
-        $query->select(array('a','u','count(u.id) as valor','sum(co.MontoContrato) as monto'));
+        $query->select(array('a','u','count(u.id) as valor'));
 
         if($esAbogado==1){
             $query->join('a.abogado','u');
         }else{
             $query->join('a.agendador','u');
         }
-         $query->join('a.contrato','co');
+    
         if(!is_null($status)){
             $query->andWhere('a.status in ('.$status.')');
         }

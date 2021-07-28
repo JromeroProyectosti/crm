@@ -91,7 +91,7 @@
                         <td>{{ reporte.contrata}}</td>
                         <td>{{ reporte.ratificatermino}}</td>
                         <td>{{ (((reporte.contrata-reporte.ratificatermino)*100)/((reporte.total-reporte.nocalifica)?(reporte.total-reporte.nocalifica):1))|number_format(1,",",".")}}</td>
-                        <td>${{(reporte.monto/(reporte.contrata?reporte.contrata:1))|number_format(0,",",".")}}</td>
+                        <td>$0</td>
                     </tr>
                     {% else %}
                     <tr>
