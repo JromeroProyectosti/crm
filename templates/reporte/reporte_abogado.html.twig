@@ -69,18 +69,23 @@
         
             <table class="table table-head-fixed text-nowrap table-striped table-sm">
                 <thead>
-                    <tr>
-                        <th align="right">Abogado</th>
-                        <th align="right">Agendados</th>
-                        <th align="right">No Califica AB</th>
-                        <th align="right">No Contrata</th>
-                        <th align="right">Contrata</th>
-                        <th align="right">Ratifica Termino</th>
-                        <th align="right">Efectividad (%)</th>
-                        <th align="right">Honorarios</th>
+                    <tr style="text-align: right;">
+                        <th scope="col" align="right">Abogado</th>
+                        <th scope="col" align="right">Agendados</th>
+                        <th scope="col" align="right">No Califica AB</th>
+                        <th scope="col" align="right">No Contrata</th>
+                        <th scope="col" align="right">Contrata</th>
+                        <th scope="col" align="right">Ratifica Termino</th>
+                        <th scope="col" align="right">Efectividad (%)</th>
+                        <th scope="col" align="right">Honorarios</th>
                     </tr>
                 </thead>
                 <tbody>
+                    {% set suma_total=0 %}
+                    {% set suma_nocalifica=0 %}
+                    {% set suma_nocontrata=0 %}
+                    {% set suma_contrata=0 %}
+                    {% set suma_ratificatermino=0 %}
                     {% for reporte in reportes %}
 
                     <tr>
@@ -93,12 +98,32 @@
                         <td align="right">{{ (((reporte.contrata-reporte.ratificatermino)*100)/((reporte.total-reporte.nocalifica)?(reporte.total-reporte.nocalifica):1))|number_format(1,",",".")}}</td>
                         <td align="right">${{(reporte.monto/(reporte.contrata?reporte.contrata:1))|number_format(0,",",".")}}</td>
                     </tr>
+                    {% set suma_total = suma_total + reporte.total %}
+                    {% set suma_nocalifica = suma_nocalifica + reporte.nocalifica %}
+                    {% set suma_nocontrata = suma_nocontrata + reporte.nocontrata %}
+                    {% set suma_contrata = suma_contrata + reporte.contrata %}
+                    {% set suma_ratificatermino = suma_ratificatermino + reporte.ratificatermino %}
+                    
                     {% else %}
                     <tr>
                         <td colspan="10">No hay registros</td>
                     </tr>
                     {% endfor %}
+
                 </tbody>
+                <tfoot>
+                    <tr style="text-align: right;">
+                        <th>Total</th>
+                        <th>{{ suma_total|number_format(0,",",".")}}</th>
+                        <th>{{ suma_nocalifica|number_format(0,",",".")}}</th>
+                        <th>{{ suma_nocontrata|number_format(0,",",".")}}</th>
+                        <th>{{ suma_contrata|number_format(0,",",".")}}</th>
+                        <th>{{ suma_ratificatermino|number_format(0,",",".")}}</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+
+                </tfoot>
             </table>
         </div>
     </div>
