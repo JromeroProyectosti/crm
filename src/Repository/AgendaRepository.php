@@ -323,7 +323,12 @@ class AgendaRepository extends ServiceEntityRepository
         
     
         if(!is_null($status)){
-            $query->andWhere('a.status in ('.$status.')');
+            if($status == '5'){
+                $query->andWhere('a.fechaAsignado is not null');
+            }else{
+                $query->andWhere('a.status in ('.$status.')');
+            }
+            
         }
         if(!is_null($empresa)){
             $query->join('a.cuenta','c');

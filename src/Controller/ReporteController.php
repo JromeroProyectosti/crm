@@ -107,7 +107,7 @@ class ReporteController extends AbstractController
             $agenda=$total[0];
             //$valor=$agenda.valor;
 
-            $agendados=$agendaRepository->findByAgendReporte($agenda->getAgendador()->getId(),$user->getEmpresaActual(),$compania,'5',$filtro,0,$fecha);
+            $agendados=$agendaRepository->findByAgendReporte($agenda->getAgendador()->getId(),$user->getEmpresaActual(),$compania,$statuesgroup,$filtro,0,$fecha);
             foreach($agendados as $agendado){
                 $cantAgendado=$agendado['valor'];
             }
