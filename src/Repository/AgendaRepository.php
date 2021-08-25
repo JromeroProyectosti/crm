@@ -376,6 +376,52 @@ class AgendaRepository extends ServiceEntityRepository
 
     }
 
+    public function findByCampaniaReporte($usuario=null,$empresa=null,$compania=null,$status=null, $filtro=null,$esAbogado=null, $otros=null, $campania=null)
+    {
+
+
+        $query=$this->createQueryBuilder('a');
+        if($status == '7'){
+            $query->select(array('a','count(a.id) as valor','sum(con.MontoContrato) as monto'));
+            $query->join('a.contrato','con');
+        }else{
+            $query->select(array('a','count(a.id) as valor'));
+        }
+        
+
+    
+        if(!is_null($status)){
+            if($status == '5'){
+                $query->andWhere('a.fechaAsignado is not null');
+            }else{
+                $query->andWhere('a.status in ('.$status.')');
+            }
+            
+        }
+        if(!is_null($empresa)){
+            $query->join('a.cuenta','c');
+            $query->andWhere('c.empresa = '.$empresa);
+        }
+        
+        if(!is_null($compania)){
+            $query->andWhere('a.cuenta = '.$compania);
+        }
+        if(!is_null($filtro)){
+            $query->andWhere("a.campania like '%".$filtro."%'");
+        }
+        
+        if(!is_null($otros)){ 
+            $query->andWhere($otros)
+         ;
+
+        }
+        $query->addGroupBy('a.campania');
+
+        return $query->getQuery()
+            ->getResult();
+
+    }
+
     public function findByAgendReporteMontoContrato($usuario=null,$empresa=null,$compania=null,$status=null, $filtro=null,$esAbogado=null, $otros=null)
     {
 

@@ -119,8 +119,16 @@ class CobranzaController extends AbstractController
                 $companias=$cuentaRepository->findByPers(null,$user->getEmpresaActual());
             break;
             case 12://Cobradores
-               
-                $fecha.=" and co.lote in (".implode(",",$user->getLotes()).") ";
+                $lotes;
+                foreach($user->getUsuarioLotes() as $usuarioLote){
+                    $lotes[]=$usuarioLote->getLote()->getId();
+                }
+                if(count($lotes)>0){
+                    $fecha.=" and co.idLote in (".implode(",",$lotes).") ";
+                }else{
+                    $fecha.=" and co.idLote is null ";
+                }
+                
                 $query=$cuotaRepository->findVencimiento(null,null,null,$filtro,null,true,$fecha);
                 $companias=$cuentaRepository->findByPers(null,$user->getEmpresaActual());
                 break;
