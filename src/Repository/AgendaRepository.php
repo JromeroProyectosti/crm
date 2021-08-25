@@ -406,8 +406,13 @@ class AgendaRepository extends ServiceEntityRepository
         if(!is_null($compania)){
             $query->andWhere('a.cuenta = '.$compania);
         }
+
         if(!is_null($filtro)){
             $query->andWhere("a.campania like '%".$filtro."%'");
+        }
+       
+        if(!is_null($campania)){
+            $query->andWhere("a.campania like '".$campania."'");
         }
         
         if(!is_null($otros)){ 

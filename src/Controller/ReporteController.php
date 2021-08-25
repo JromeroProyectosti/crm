@@ -365,13 +365,13 @@ class ReporteController extends AbstractController
             $monto=0;
             $agenda=$total[0];
             //$valor=$agenda.valor;
-
-            $agendados=$agendaRepository->findByCampaniaReporte(null,$user->getEmpresaActual(),$compania,5,$filtro,0,$fecha,$agenda->getCampania());
+            
+            $agendados=$agendaRepository->findByCampaniaReporte(null,$user->getEmpresaActual(),$compania,5,null,0,$fecha,$agenda->getCampania());
             foreach($agendados as $agendado){
                 $cantAgendado=$agendado['valor'];
             }
            
-            $contratan=$agendaRepository->findByCampaniaReporte(null,$user->getEmpresaActual(),$compania,'7',$filtro,0,$fecha,$agenda->getCampania());
+            $contratan=$agendaRepository->findByCampaniaReporte(null,$user->getEmpresaActual(),$compania,'7',null,0,$fecha,$agenda->getCampania());
             foreach($contratan as $contrata){
                 $cantContrata=$contrata['valor'];
                 $monto=$contrata['monto'];
