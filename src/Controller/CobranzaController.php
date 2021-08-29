@@ -100,6 +100,7 @@ class CobranzaController extends AbstractController
             case 3:
             case 4:
             case 8:
+            case 13:
             
                 $query=$cuotaRepository->findVencimiento(null,null,null,$filtro,null,true,$fecha);
                 $companias=$cuentaRepository->findByPers(null,$user->getEmpresaActual());
