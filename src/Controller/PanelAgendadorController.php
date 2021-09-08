@@ -89,6 +89,7 @@ class PanelAgendadorController extends AbstractController
             case 3:
             case 1:
             case 8:
+            case 13:
                 $query=$agendaRepository->findByPers(null,$user->getEmpresaActual(),$compania,$statues,$filtro,0,$fecha);
                 $queryresumen=$agendaRepository->findByPersGroup(null,$user->getEmpresaActual(),$compania,$statuesgroup,$filtro,0,$fecha);
                 $companias=$cuentaRepository->findByPers(null,$user->getEmpresaActual());
@@ -438,12 +439,13 @@ class PanelAgendadorController extends AbstractController
             }
 
         }
+        //var_dump($agenda->getAgendador()->getUsuarioTipo()->getStatues());
         return $this->render('panel_agendador/new.html.twig', [
             'agenda'=>$agenda,
             'error'=>$error,
             'form' => $form->createView(),
             'pagina'=>$pagina->getNombre().' | Asignar',
-            'statues'=>$agendaStatusRepository->findBy(['perfil'=>[$agenda->getAgendador()->getUsuarioTipo()->getId(),0]],['orden'=>'asc']),
+            'statues'=>$agendaStatusRepository->findBy(['id'=>$agenda->getAgendador()->getUsuarioTipo()->getStatues()],['orden'=>'asc']),
         ]);
 
     }

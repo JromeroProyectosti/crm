@@ -48,7 +48,7 @@
                         <th>{{ knp_pagination_sortable(contratos, 'Tramitador', 'tramitador') }} {% if contratos.isSorted('tramitador') %} <i class="fas fa-sort"></i>{% endif %}</th>
                         <th>{{ knp_pagination_sortable(contratos, 'Sucursal', 'sucursal') }} {% if contratos.isSorted('sucursal') %} <i class="fas fa-sort"></i>{% endif %}</th>
                         <th>{{ knp_pagination_sortable(contratos, 'Fecha Contrato', 'fechaCreacion') }} {% if contratos.isSorted('fechaCreacion') %} <i class="fas fa-sort"></i>{% endif %}</th>
-                        {% if sesion.getSesion.usuarioTipo.id in [1,4,8,7] %}
+                        {% if sesion.getSesion.usuarioTipo.id in [1,4,8,7,13] %}
                         <th>Acciones</th>
                         {% endif %}
                     </tr>
@@ -94,6 +94,10 @@
                             {% else %}
 
                                 <a href="{{url_web}}{{pdf_contrato}}{{contrato.pdf}}" class="btn btn-success btn-sm"><i class="fas fa-file-pdf"></i></a>
+                            {% endif %}
+                            {% if sesion.getSesion.usuarioTipo.id == 13 %}
+                            <a href="{{ path('contrato_show', {'id': contrato.id}) }}" class="btn btn-primary btn-sm"><i class="fas fa-eye"></i></a>
+                                
                             {% endif %}
                             {% if contrato.agenda.status.id == 14 %}
                                     <a href="#" class="btn btn-warning btn-sm"><i class="fas fa-retweet"></i></a>

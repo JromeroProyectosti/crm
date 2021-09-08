@@ -59,6 +59,12 @@ class UsuarioTipo
      */
     private $empresa;
 
+    /**
+     * @ORM\Column(type="array", nullable=true)
+     */
+    private $statues = [];
+
+
     public function __construct()
     {
         $this->usuarios = new ArrayCollection();
@@ -207,4 +213,17 @@ class UsuarioTipo
 
         return $this;
     }
+
+    public function getStatues(): ?array
+    {
+        return $this->statues;
+    }
+
+    public function setStatues(?array $statues): self
+    {
+        $this->statues = $statues;
+
+        return $this;
+    }
+
 }

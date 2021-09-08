@@ -155,6 +155,8 @@ class AgendaRepository extends ServiceEntityRepository
             case 0:
                 if(!is_null($usuario)){
                     $query->andWhere('a.agendador = '.$usuario);
+                }else{
+                    $query->andWhere('a.agendador is not null ');
                 }
                 //$query->andWhere('(a.abogado is null or a.status in (4,6,7,8))');
             break;

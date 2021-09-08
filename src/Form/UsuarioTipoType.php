@@ -14,6 +14,7 @@ class UsuarioTipoType extends AbstractType
         $builder
             ->add('nombre')
             ->add('menuCabezera')
+            
             ->add('fijar')
         ;
     }

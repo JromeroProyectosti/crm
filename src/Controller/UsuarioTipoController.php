@@ -6,6 +6,7 @@ use App\Entity\UsuarioTipo;
 use App\Entity\ModuloPer;
 use App\Form\UsuarioTipoType;
 use App\Repository\UsuarioTipoRepository;
+use App\Repository\AgendaStatusRepository;
 use App\Repository\EmpresaRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -40,7 +41,7 @@ class UsuarioTipoController extends AbstractController
     /**
      * @Route("/new", name="usuario_tipo_new", methods={"GET","POST"})
      */
-    public function new(Request $request,EmpresaRepository $empresaRepository): Response
+    public function new(Request $request,EmpresaRepository $empresaRepository,AgendaStatusRepository $agendaStatusRepository): Response
     {
         $user=$this->getUser();
         $this->denyAccessUnlessGranted('create','usuario_tipo');
@@ -82,7 +83,7 @@ class UsuarioTipoController extends AbstractController
     /**
      * @Route("/{id}/edit", name="usuario_tipo_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, UsuarioTipo $usuarioTipo): Response
+    public function edit(Request $request, UsuarioTipo $usuarioTipo,AgendaStatusRepository $agendaStatusRepository): Response
     {
         $this->denyAccessUnlessGranted('edit','usuario_tipo');
         $user=$this->getUser();
@@ -92,8 +93,11 @@ class UsuarioTipoController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $statues=$request->request->get('status');
+            $usuarioTipo->setStatues($statues);
             $this->getDoctrine()->getManager()->flush();
-
+            
+           // var_dump($statues);
             return $this->redirectToRoute('usuario_tipo_index');
         }
 
@@ -101,6 +105,7 @@ class UsuarioTipoController extends AbstractController
             'usuario_tipo' => $usuarioTipo,
             'form' => $form->createView(),
             'pagina'=>$pagina->getNombre()." / Editar",
+            'statues'=>$agendaStatusRepository->findAll(),
         ]);
     }
 
