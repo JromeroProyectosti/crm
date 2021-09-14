@@ -471,6 +471,8 @@ class AbogadosController extends AbstractController
         if ($this->isCsrfTokenValid('delete'.$usuario->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $usuario->setEstado(0);
+           
+
             $entityManager->persist($usuario);
             $entityManager->flush();
         }

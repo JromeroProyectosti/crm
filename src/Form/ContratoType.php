@@ -17,10 +17,10 @@ class ContratoType extends AbstractType
             ->add('nombre')
             ->add('email')
             ->add('telefono')
-            ->add('ciudad')
+            
             ->add('rut')
             ->add('direccion')
-            ->add('comuna')
+
             ->add('montoNivelDeuda')
             ->add('MontoContrato')
             ->add('primeraCuota')

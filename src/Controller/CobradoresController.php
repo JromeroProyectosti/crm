@@ -365,6 +365,11 @@ class CobradoresController extends AbstractController
         if ($this->isCsrfTokenValid('delete'.$usuario->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $usuario->setEstado(0);
+            $usuarioLotes=$usuario->getUsuarioLotes();
+            foreach($usuarioLotes as $usuarioLote){
+                $entityManager->remove($usuarioLote);
+               // $entityManager->flush();
+            }
             $entityManager->persist($usuario);
             $entityManager->flush();
         }

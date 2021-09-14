@@ -17,12 +17,15 @@ use App\Repository\ContratoRolRepository;
 use App\Repository\UsuarioRepository;
 use App\Repository\UsuarioTipoRepository;
 use App\Repository\AgendaStatusRepository;
+use App\Repository\CiudadRepository;
+use App\Repository\ComunaRepository;
 use App\Repository\SucursalRepository;
 use App\Repository\CuentaRepository;
 use App\Repository\ModuloRepository;
 use App\Repository\ModuloPerRepository;
 use App\Repository\DiasPagoRepository;
 use App\Repository\ReunionRepository;
+use App\Repository\RegionRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -282,7 +285,10 @@ class PanelAbogadoController extends AbstractController
                             UsuarioRepository $usuarioRepository,
                             UserPasswordEncoderInterface $encoder,
                             usuarioTipoRepository $usuarioTipoRepository,
-                            ContratoRepository $contratoRepository
+                            ContratoRepository $contratoRepository,
+                            RegionRepository $regionRepository,
+                            ComunaRepository $comunaRepository,
+                            CiudadRepository $ciudadRepository
                             ):Response
     {
         $this->denyAccessUnlessGranted('create','panel_abogado');
@@ -355,6 +361,10 @@ class PanelAbogadoController extends AbstractController
             //$contrato->setFechaPrimeraCuota(new \DateTime(date("Y-m-d 00:00:00")));
             $contrato->setFechaPrimerPago(new \DateTime(date($request->request->get('txtFechaPago')."-1 00:00:00")));
             
+
+            $contrato->setCregion($regionRepository->find($request->request->get('cboRegion')));
+            $contrato->setCciudad($ciudadRepository->find($request->request->get('cboCiudad')));
+            $contrato->setCcomuna($comunaRepository->find($request->request->get('cboComuna')));
             $entityManager = $this->getDoctrine()->getManager();
 
             
@@ -402,6 +412,7 @@ class PanelAbogadoController extends AbstractController
             'form'=>$form->createView(),
             'diasPagos'=>$diasPagoRepository->findAll(),
             'sucursales'=>$sucursalRepository->findBy(['cuenta'=>$agenda->getCuenta()->getId()]),
+            'regiones'=>$regionRepository->findAll(),
         ] );
     }
     /**

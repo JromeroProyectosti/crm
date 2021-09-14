@@ -6,6 +6,9 @@ use App\Entity\Contrato;
 use App\Entity\ContratoRol;
 use App\Entity\Usuario;
 use App\Entity\Cuota;
+use App\Entity\Region;
+use App\Entity\Ciudad;
+use App\Entity\Comuna;
 use App\Form\ContratoType;
 use App\Entity\AgendaObservacion;
 use App\Form\ContratoRolType;
@@ -22,6 +25,10 @@ use App\Repository\ModuloPerRepository;
 use App\Repository\CuotaRepository;
 use App\Repository\ConfiguracionRepository;
 use App\Repository\LotesRepository;
+use App\Repository\RegionRepository;
+use App\Repository\CiudadRepository;
+use App\Repository\ComunaRepository;
+
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -277,6 +284,9 @@ class ContratoController extends AbstractController
                     CuentaRepository $cuentaRepository,
                     ModuloPerRepository $moduloPerRepository,
                     CuotaRepository $cuotaRepository,
+                    RegionRepository $regionRepository,
+                            ComunaRepository $comunaRepository,
+                            CiudadRepository $ciudadRepository,
                     \Knp\Snappy\Pdf $snappy): Response
     {
         $this->denyAccessUnlessGranted('edit','contrato');
@@ -307,6 +317,10 @@ class ContratoController extends AbstractController
             $contrato->setTramitador($usuarioRepository->find($request->request->get('cboTramitador')));
             $contrato->setFechaPrimerPago(new \DateTime(date($request->request->get('txtFechaPago')."-1 00:00:00")));
 
+            $contrato->setCregion($regionRepository->find($request->request->get('cboRegion')));
+            $contrato->setCciudad($ciudadRepository->find($request->request->get('cboCiudad')));
+            $contrato->setCcomuna($comunaRepository->find($request->request->get('cboComuna')));
+            
             $entityManager = $this->getDoctrine()->getManager();
             $contrato->setPdf(null);
             $entityManager->persist($contrato);
@@ -406,6 +420,7 @@ class ContratoController extends AbstractController
             'tramitadores'=>$usuarioRepository->findByCuenta($contrato->getAgenda()->getCuenta()->getId(),['usuarioTipo'=>7]),
             'diasPagos'=>$diasPagoRepository->findAll(),
             'sucursales'=>$sucursalRepository->findBy(['cuenta'=>$contrato->getAgenda()->getCuenta()->getId()]),
+            'regiones'=>$regionRepository->findAll(),
         ]);
     }
 
@@ -424,7 +439,10 @@ class ContratoController extends AbstractController
                             ContratoRepository $contratoRepository,
                             ContratoFunciones $contratoFunciones,
                             CuentaRepository $cuentaRepository,
-                            LotesRepository $lotesRepository
+                            LotesRepository $lotesRepository,
+                            RegionRepository $regionRepository,
+                            ComunaRepository $comunaRepository,
+                            CiudadRepository $ciudadRepository
                             ): Response
     {
         $this->denyAccessUnlessGranted('create','panel_abogado');
@@ -441,6 +459,14 @@ class ContratoController extends AbstractController
             $this->getDoctrine()->getManager()->flush();
             $configuracion=$configuracionRepository->find(1);
             $entityManager = $this->getDoctrine()->getManager();
+
+
+            
+            $contrato->setCregion($regionRepository->find($request->request->get('cboRegion')));
+            $contrato->setCciudad($ciudadRepository->find($request->request->get('cboCiudad')));
+            $contrato->setCcomuna($comunaRepository->find($request->request->get('cboComuna')));
+
+
             //configuramos el Lote al cual caera::
             //$ult_contrato=$contratoRepository->findLoteMax($user->getEmpresaActual());
             $lote=$lotesRepository->findPrimerDisponible();
@@ -567,6 +593,7 @@ class ContratoController extends AbstractController
             'tramitadores'=>$usuarioRepository->findByCuenta($contrato->getAgenda()->getCuenta()->getId(),['usuarioTipo'=>7]),
             'diasPagos'=>$diasPagoRepository->findAll(),
             'sucursales'=>$sucursalRepository->findBy(['cuenta'=>$contrato->getAgenda()->getCuenta()->getId()]),
+            'regiones'=>$regionRepository->findAll(),
         ]);
     }
 
@@ -664,6 +691,41 @@ class ContratoController extends AbstractController
             
         ]);
     }
+
+     /**
+     * @Route("/{id}/ciudad", name="contrato_ciudad", methods={"GET","POST"})
+     */
+    function ciudad(Region $region, CiudadRepository $ciudadRepository,Request $request): Response
+    {
+        $ciudad_def=null;
+       
+        if(null != $request->query->get('ciudad')){
+            $ciudad_def=$request->query->get('ciudad');
+        }
+        $ciudades=$ciudadRepository->findBy(['region'=>$region->getId()]);
+        return $this->render('contrato/_ciudades.html.twig', [
+            'ciudades' => $ciudades,
+            'ciudad_def'=>$ciudad_def,
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/comuna", name="contrato_comuna", methods={"GET","POST"})
+     */
+    function comuna(Ciudad $ciudad, ComunaRepository $comunaRepository,Request $request): Response
+    {
+        $comuna_def=null;
+       
+        if(null != $request->query->get('comuna')){
+            $comuna_def=$request->query->get('comuna');
+        }
+        $comunas=$comunaRepository->findBy(['ciudad'=>$ciudad->getId()]);
+        return $this->render('contrato/_comunas.html.twig', [
+            'comunas' => $comunas,
+            'comuna_def'=>$comuna_def,
+        ]);
+    }
+
     /**
      * @Route("/{id}", name="contrato_delete", methods={"DELETE"})
      */

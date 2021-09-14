@@ -34,9 +34,15 @@ class Region
      */
     private $ciudades;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Contrato::class, mappedBy="cregion")
+     */
+    private $contratos;
+
     public function __construct()
     {
         $this->ciudades = new ArrayCollection();
+        $this->contratos = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -92,6 +98,36 @@ class Region
             // set the owning side to null (unless already changed)
             if ($ciudade->getRegion() === $this) {
                 $ciudade->setRegion(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Contrato[]
+     */
+    public function getContratos(): Collection
+    {
+        return $this->contratos;
+    }
+
+    public function addContrato(Contrato $contrato): self
+    {
+        if (!$this->contratos->contains($contrato)) {
+            $this->contratos[] = $contrato;
+            $contrato->setCregion($this);
+        }
+
+        return $this;
+    }
+
+    public function removeContrato(Contrato $contrato): self
+    {
+        if ($this->contratos->removeElement($contrato)) {
+            // set the owning side to null (unless already changed)
+            if ($contrato->getCregion() === $this) {
+                $contrato->setCregion(null);
             }
         }
 

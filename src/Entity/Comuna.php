@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ComunaRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -32,6 +34,16 @@ class Comuna
      * @ORM\JoinColumn(nullable=false)
      */
     private $ciudad;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Contrato::class, mappedBy="ccomuna")
+     */
+    private $contratos;
+
+    public function __construct()
+    {
+        $this->contratos = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -70,6 +82,36 @@ class Comuna
     public function setCiudad(?Ciudad $ciudad): self
     {
         $this->ciudad = $ciudad;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Contrato[]
+     */
+    public function getContratos(): Collection
+    {
+        return $this->contratos;
+    }
+
+    public function addContrato(Contrato $contrato): self
+    {
+        if (!$this->contratos->contains($contrato)) {
+            $this->contratos[] = $contrato;
+            $contrato->setCcomuna($this);
+        }
+
+        return $this;
+    }
+
+    public function removeContrato(Contrato $contrato): self
+    {
+        if ($this->contratos->removeElement($contrato)) {
+            // set the owning side to null (unless already changed)
+            if ($contrato->getCcomuna() === $this) {
+                $contrato->setCcomuna(null);
+            }
+        }
 
         return $this;
     }

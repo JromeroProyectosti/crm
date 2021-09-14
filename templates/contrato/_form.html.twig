@@ -34,24 +34,37 @@
                 {{form_row(form.email,{'label':false,'attr':{'class':'form-control','required':true,'autocomplete':"ÑÖcompletes"}})}}
                 
             </div>
-            <div class="col-sm-12 col-md-3">
-                <small class="text-muted">Dirección</small><br>
-                {{form_row(form.direccion,{'label':false,'attr':{'class':'form-control','autocomplete':"ÑÖcompletes"}})}}
-                
-            </div>
+
             <div class="col-sm-12 col-md-3">
                 <small class="text-muted">Nacionalidad</small><br>
                 {{form_row(form.pais,{'label':false,'attr':{'class':'form-control','required':true,}})}}
                 
             </div>
-            <div class="col-sm-12 col-md-3">
-                <small class="text-muted">Ciudad</small><br>
-                {{form_row(form.ciudad,{'label':false,'attr':{'class':'form-control','autocomplete':"ÑÖcompletes"}})}}
-                
+            <div class="col-sm-12 col-md-6">
+                <small class="text-muted">Region *</small>
+                <select name="cboRegion" class="form-control" onchange="javascript:getCiudades(this.value)" required>
+                <option></option>
+                {% for region in regiones %}
+
+                <option value="{{region.id}}" 
+                    {% if  region.id==contrato.cregion.id %}
+                    selected
+                    {% endif %}
+                >{{region.nombre}}</option>
+                {% endfor %}
+                </select>
             </div>
             <div class="col-sm-12 col-md-3">
-                <small class="text-muted">Comuna</small><br>
-                {{form_row(form.comuna,{'label':false,'attr':{'class':'form-control','autocomplete':"ÑÖcompletes"}})}}
+                <small class="text-muted">Ciudad *</small>
+                <div id="cciudad"></div>
+            </div>
+            <div class="col-sm-12 col-md-3">
+                <small class="text-muted">Comuna *</small>
+                <div id="ccomuna"></div>
+            </div>
+            <div class="col-sm-12 col-md-6">
+                <small class="text-muted">Dirección</small><br>
+                {{form_row(form.direccion,{'label':false,'attr':{'class':'form-control','autocomplete':"ÑÖcompletes"}})}}
                 
             </div>
             <div class="col-sm-12 col-md-3">
@@ -267,7 +280,8 @@
             </div>
             <div class="col-sm-12 col-md-3">
                 <small class="text-muted o">Vigencia en Meses</small>
-                {{form_row(form.vigencia,{'label':false,'attr':{'class':'form-control'}})}}
+                {{form_row(form.vigencia,{'label':false,'attr':{'class':'form-control','style':'visibility:hidden'}})}}
+                <strong><label for="">{{contrato.vigencia}}</label></strong> 
             </div>
             {% endif %}
         </div>
@@ -397,7 +411,40 @@
             }
         }, function(start, end, label) {
         });
-        
+        $.ajax({
+            url:"{{path('contrato_ciudad',{'id':contrato.cregion.id,'ciudad':contrato.cciudad.id})}}",
+            type: "post",
+            dataType: "html",
+            cache: false,
+            contentType: false,
+            processData: false,
+            async: true,
+            beforeSend: function(){
+                $("#cciudad").html(' <div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i><div class="text-bold pt-2">Loading...</div></div>');
+                
+            },
+            success:function(data){
+                $("#cciudad").html(data);
+            }
+
+        });
+        $.ajax({
+            url:"{{path('contrato_comuna',{'id':contrato.cciudad.id,'comuna':contrato.ccomuna.id})}}",
+            type: "post",
+            dataType: "html",
+            cache: false,
+            contentType: false,
+            processData: false,
+            async: true,
+            beforeSend: function(){
+                $("#ccomuna").html(' <div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i><div class="text-bold pt-2">Loading...</div></div>');
+                
+            },
+            success:function(data){
+                $("#ccomuna").html(data);
+            }
+
+        });
     });
     function agregarRol(){
         $.ajax({
@@ -573,5 +620,44 @@
         {% endif %}
     }
     $('.primer-pago').inputmask("9999-99");
+
+    function getCiudades(region){
+            $.ajax({
+                url:"/contrato/"+region+"/ciudad",
+                type: "post",
+                dataType: "html",
+                cache: false,
+                contentType: false,
+                processData: false,
+                async: true,
+                beforeSend: function(){
+                    $("#cciudad").html(' <div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i><div class="text-bold pt-2">Loading...</div></div>');
+                    
+                },
+                success:function(data){
+                    $("#cciudad").html(data);
+                }
+    
+            });
+        }
+    function getComunas(comuna){
+        $.ajax({
+            url:"/contrato/"+comuna+"/comuna",
+            type: "post",
+            dataType: "html",
+            cache: false,
+            contentType: false,
+            processData: false,
+            async: true,
+            beforeSend: function(){
+                $("#ccomuna").html(' <div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i><div class="text-bold pt-2">Loading...</div></div>');
+                
+            },
+            success:function(data){
+                $("#ccomuna").html(data);
+            }
+
+        });
+    }
 </script>
 

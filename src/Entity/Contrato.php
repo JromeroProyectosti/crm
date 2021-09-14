@@ -282,6 +282,21 @@ class Contrato
      */
     private $idLote;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Comuna::class, inversedBy="contratos")
+     */
+    private $ccomuna;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Ciudad::class)
+     */
+    private $cciudad;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Region::class, inversedBy="contratos")
+     */
+    private $cregion;
+
     
     public function __construct()
     {
@@ -992,6 +1007,42 @@ class Contrato
     public function setIdLote(?Lotes $idLote): self
     {
         $this->idLote = $idLote;
+
+        return $this;
+    }
+
+    public function getCcomuna(): ?Comuna
+    {
+        return $this->ccomuna;
+    }
+
+    public function setCcomuna(?Comuna $ccomuna): self
+    {
+        $this->ccomuna = $ccomuna;
+
+        return $this;
+    }
+
+    public function getCciudad(): ?Ciudad
+    {
+        return $this->cciudad;
+    }
+
+    public function setCciudad(?Ciudad $cciudad): self
+    {
+        $this->cciudad = $cciudad;
+
+        return $this;
+    }
+
+    public function getCregion(): ?Region
+    {
+        return $this->cregion;
+    }
+
+    public function setCregion(?Region $cregion): self
+    {
+        $this->cregion = $cregion;
 
         return $this;
     }
