@@ -17,7 +17,6 @@ class ContratoType extends AbstractType
             ->add('nombre')
             ->add('email')
             ->add('telefono')
-            
             ->add('rut')
             ->add('direccion')
 

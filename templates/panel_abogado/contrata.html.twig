@@ -20,6 +20,14 @@
         <small class="text-muted">Nacionalidad *</small>
 		{{form_row(form.pais,{'label':false,'attr':{'class':'form-control','required':true,'autocomplete':"ÑÖcompletes"}})}}
     </div>
+    <div class="col-sm-12 col-md-3">
+        <small class="text-muted">Sexo *</small>
+		<select name="cboSexo" required class="form-control">
+            <option></option>
+            <option value="Masculino">Masculino</option>
+            <option value="Femenino">Femenino</option>
+        </select>
+    </div>
     <div class="col-sm-12 col-md-6">
         <small class="text-muted">Region *</small>
         <select name="cboRegion" class="form-control" onchange="javascript:getCiudades(this.value)">

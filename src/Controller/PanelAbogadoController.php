@@ -365,6 +365,7 @@ class PanelAbogadoController extends AbstractController
             $contrato->setCregion($regionRepository->find($request->request->get('cboRegion')));
             $contrato->setCciudad($ciudadRepository->find($request->request->get('cboCiudad')));
             $contrato->setCcomuna($comunaRepository->find($request->request->get('cboComuna')));
+            $contrato->setSexo($request->request->get('cboSexo'));
             $entityManager = $this->getDoctrine()->getManager();
 
             

@@ -297,6 +297,11 @@ class Contrato
      */
     private $cregion;
 
+    /**
+     * @ORM\Column(type="string", length=20, nullable=true)
+     */
+    private $sexo;
+
     
     public function __construct()
     {
@@ -1043,6 +1048,18 @@ class Contrato
     public function setCregion(?Region $cregion): self
     {
         $this->cregion = $cregion;
+
+        return $this;
+    }
+
+    public function getSexo(): ?string
+    {
+        return $this->sexo;
+    }
+
+    public function setSexo(?string $sexo): self
+    {
+        $this->sexo = $sexo;
 
         return $this;
     }
