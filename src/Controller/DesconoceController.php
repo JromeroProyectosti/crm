@@ -41,18 +41,30 @@ class DesconoceController  extends AbstractController{
         $filtro=null;
         $error='';
         $error_toast="";
+        $folio=null;
+        $otros="";
         $fecha="a.status in (12,13)";
         if(null !== $request->query->get('error_toast')){
             $error_toast=$request->query->get('error_toast');
         }
         $compania=null;
-        if(null !== $request->query->get('bCompania') && $request->query->get('bCompania')!=0){
-            $compania=$request->query->get('bCompania');
-        }
 
-        if(null !== $request->query->get('bFiltro') && $request->query->get('bFiltro')!=''){
-            $filtro=$request->query->get('bFiltro');
-        }
+        if(null !== $request->query->get('bFolio') && $request->query->get('bFolio')!=''){
+            $folio=$request->query->get('bFolio');
+            $otros=" and c.folio= $folio";
+
+            $dateInicio=date('Y-m-d',mktime(0,0,0,date('m'),date('d'),date('Y'))-60*60*24*30);
+            $dateFin=date('Y-m-d');
+            
+
+        }else{
+            if(null !== $request->query->get('bCompania') && $request->query->get('bCompania')!=0){
+                $compania=$request->query->get('bCompania');
+            }
+
+            if(null !== $request->query->get('bFiltro') && $request->query->get('bFiltro')!=''){
+                $filtro=$request->query->get('bFiltro');
+            }
             
             if(null !== $request->query->get('bFecha')){
                 $aux_fecha=explode(" - ",$request->query->get('bFecha'));
@@ -63,8 +75,8 @@ class DesconoceController  extends AbstractController{
                 $dateInicio=date('Y-m-d',mktime(0,0,0,date('m'),date('d'),date('Y'))-60*60*24*30);
                 $dateFin=date('Y-m-d');
             }
-            
-
+        }
+        $fecha.=$otros;
     
         switch($user->getUsuarioTipo()->getId()){
             case 3:
@@ -95,6 +107,7 @@ class DesconoceController  extends AbstractController{
         return $this->render('desconoce/index.html.twig', [
             'contratos' => $contratos,
             'bFiltro'=>$filtro,
+            'bFolio'=>$folio,
             'companias'=>$companias,
             'bCompania'=>$compania,
             'dateInicio'=>$dateInicio,
