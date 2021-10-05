@@ -44,6 +44,7 @@ class TerminosController extends AbstractController
         $user=$this->getUser();
         $pagina=$moduloPerRepository->findOneByName('terminos',$user->getEmpresaActual());
         $filtro=null;
+        $folio=null;
         $error='';
         $error_toast="";
         $fecha="a.status = 15 ";
