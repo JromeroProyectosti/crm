@@ -47,6 +47,7 @@ class TerminosController extends AbstractController
         $error='';
         $error_toast="";
         $fecha="a.status = 15 ";
+        $otros="";
         if(null !== $request->query->get('error_toast')){
             $error_toast=$request->query->get('error_toast');
         }
