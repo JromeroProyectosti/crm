@@ -19,11 +19,14 @@
                             {% endfor %}
                         </select>
                     </div>
-                    <div class="col-sm-12 col-md-3">
-                        <input type="text" class="form-control" name="bFiltro" placeholder="Nombre/Email/Telefono" value="">
+                    <div class="col-sm-12 col-md-2">
+                        <input type="text" class="form-control bFolio" name="bFolio"  placeholder="Folio" value="{{bFolio}}">
                     </div>
                     <div class="col-sm-12 col-md-3">
-                        <input type="text" class="form-control" name="bFecha" id="bFecha"  value="">
+                        <input type="text" class="form-control bFiltro" name="bFiltro" placeholder="Nombre/Email/Telefono" value="">
+                    </div>
+                    <div class="col-sm-12 col-md-3">
+                        <input type="text" class="form-control bFecha" name="bFecha" id="bFecha"  value="">
                     </div>
                     <div class="col-sm-12 col-md-3">
                         <button class="btn btn-primary"><i class="fas fa-search"></i></button>
@@ -147,5 +150,15 @@
         console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
         
         });
+        $(".bFolio").change(function(){
+            $(".bFiltro").val('');
+        });
+        $(".bFiltro").change(function(){
+            $(".bFolio").val('');
+        });
+        $(".bFecha").change(function(){
+            $(".bFolio").val('');
+        });
+
     </script>
 {% endblock %}
