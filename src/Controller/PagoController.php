@@ -51,7 +51,7 @@ class PagoController extends AbstractController
         $fecha=null;
         if(null !== $request->query->get('bFolio') && $request->query->get('bFolio')!=''){
             $folio=$request->query->get('bFolio');
-            $otros=" co.id= $folio";
+            $otros=" co.folio= $folio";
 
             $dateInicio=date('Y-m-d',mktime(0,0,0,date('m'),date('d'),date('Y'))-60*60*24*30);
             $dateFin=date('Y-m-d');
