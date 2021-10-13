@@ -40,7 +40,7 @@
             <table class="table table-head-fixed text-nowrap table-striped table-sm">
                 <thead>
                     <tr>
-                        <th>{{ knp_pagination_sortable(cuotas, 'Folio', 'contrato.id') }} {% if cuotas.isSorted('contrato.id') %} <i class="fas fa-sort"></i>{% endif %}</th>
+                        <th>{{ knp_pagination_sortable(cuotas, 'Folio', 'contrato.folio') }} {% if cuotas.isSorted('contrato.folio') %} <i class="fas fa-sort"></i>{% endif %}</th>
                         <th>{{ knp_pagination_sortable(cuotas, 'Lote', 'contrato.lote') }} {% if cuotas.isSorted('contrato.lote') %} <i class="fas fa-sort"></i>{% endif %}</th>
                         <th>{{ knp_pagination_sortable(cuotas, 'Sucursal', 'contrato.sucursal') }} {% if cuotas.isSorted('contrato.sucursal') %} <i class="fas fa-sort"></i>{% endif %}</th>
                         <th>{{ knp_pagination_sortable(cuotas, 'Cliente', 'contrato.nombre') }} {% if cuotas.isSorted('contrato.nombre') %} <i class="fas fa-sort"></i>{% endif %}</th>
@@ -73,7 +73,7 @@
                 {% set contrato = cuota.contrato %}
                 {% set enmora = cuota.monto - cuota.pagado %}
                     <tr>
-                        <td>{{ contrato.id }}</td>
+                        <td>{{ contrato.folio }}</td>
                         <td align="center">{{ contrato.lote }}</td>
                         <td>{{ contrato.sucursal}}</td>
                         <td>{{ contrato.nombre }}</td>
