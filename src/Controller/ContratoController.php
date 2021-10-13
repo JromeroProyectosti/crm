@@ -57,6 +57,7 @@ class ContratoController extends AbstractController
         $error='';
         $error_toast="";
         $otros="";
+        $folio="";
         if(null !== $request->query->get('error_toast')){
             $error_toast=$request->query->get('error_toast');
         }
