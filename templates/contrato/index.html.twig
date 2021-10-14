@@ -22,7 +22,7 @@
                     <div class="col-sm-12 col-md-2">
                         <input type="text" class="form-control bFolio" name="bFolio"  placeholder="Folio" value="{{bFolio}}">
                     </div>
-                    <div class="col-sm-12 col-md-2">
+                    <div class="col-sm-12 col-md-3">
                         <input type="text" class="form-control bFiltro" name="bFiltro" placeholder="Nombre/Email/Telefono" value="">
                     </div>
                     <div class="col-sm-12 col-md-3">
@@ -91,7 +91,7 @@
                         {% else %}
                         <td>
                             {% if contrato.pdf is null %}
-                                <a href="{{ path('contrato_pdf', {'id': contrato.id}) }}" class="btn btn-success btn-sm"><i class="fas fa-file-pdf"></i></a>
+                                <button type="button" class="btn btn-secondary btn-sm"><i class="far fa-file-pdf"></i></button>
                             {% else %}
 
                                 <a href="{{url_web}}{{pdf_contrato}}{{contrato.pdf}}" class="btn btn-success btn-sm"><i class="fas fa-file-pdf"></i></a>
