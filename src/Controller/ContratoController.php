@@ -429,7 +429,7 @@ class ContratoController extends AbstractController
             'agenda'=>$contrato->getAgenda(),
             'form' => $form->createView(),
             'juzgados'=>$juzgados,
-            'pagina'=>$pagina->getNombre()." N° ".$contrato->getId(),
+            'pagina'=>$pagina->getNombre()." N° ".$contrato->getFolio(),
             'tramitadores'=>$usuarioRepository->findByCuenta($contrato->getAgenda()->getCuenta()->getId(),['usuarioTipo'=>7]),
             'diasPagos'=>$diasPagoRepository->findAll(),
             'sucursales'=>$sucursalRepository->findBy(['cuenta'=>$contrato->getAgenda()->getCuenta()->getId()]),
