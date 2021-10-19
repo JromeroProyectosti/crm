@@ -27,9 +27,7 @@
                         {% endfor %}
                     </select>
                 </div>
-                <div class="col-sm-12 col-md-3">
-                    <input type="text" class="form-control" name="bFiltro" placeholder="Nombre abogado" value="{{bFiltro}}">
-                </div>
+               
                 <div class="col-sm-12 col-md-2">
                     <select name="bTipofecha" class="form-control">
                         
@@ -111,7 +109,7 @@
                         <th>{{ suma_contrata|number_format(0,",",".")}}</th>
                         <th>{{ suma_desiste|number_format(0,",",".")}}</th>
                         <th>{{ suma_ratificatermino|number_format(0,",",".")}}</th>
-                        <th>{{ suma_total|number_format(0,",",".")}}</th>
+                        <th>${{ suma_total|number_format(0,",",".")}}</th>
                         <th></th>
                         <th></th>
                     </tr>
