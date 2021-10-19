@@ -423,7 +423,7 @@ class ReporteController extends AbstractController
         $statues='5';
         $statuesgroup='7,13,12,15';
         $status=null;
-        $tipo_fecha=1;
+        $tipo_fecha=2;
         if(null !== $request->query->get('bFiltro') && trim($request->query->get('bFiltro'))!=''){
             $filtro=$request->query->get('bFiltro');
         }
