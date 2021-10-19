@@ -421,7 +421,7 @@ class ReporteController extends AbstractController
         $compania=null;
         $fecha=null;
         $statues='5';
-        $statuesgroup='7,13,12,15';
+        $statuesgroup='7,14,13,12,15';
         $status=null;
         $tipo_fecha=2;
         if(null !== $request->query->get('bFiltro') && trim($request->query->get('bFiltro'))!=''){
@@ -485,7 +485,7 @@ class ReporteController extends AbstractController
             //$valor=$agenda.valor;
 
            
-            $contratan=$agendaRepository->findByContratoReporte(null,$user->getEmpresaActual(),$agenda->getCuenta()->getId(),'7',$filtro,1,$fecha);
+            $contratan=$agendaRepository->findByContratoReporte(null,$user->getEmpresaActual(),$agenda->getCuenta()->getId(),'7,14',$filtro,1,$fecha);
             foreach($contratan as $contrata){
                 $cantContrata=$contrata['valor'];
                 $monto+=$contrata['monto'];
