@@ -413,9 +413,9 @@ class ReporteController extends AbstractController
                             Request $request,
                             ModuloPerRepository $moduloPerRepository): Response
     {
-        $this->denyAccessUnlessGranted('view','reporte_abogado');
+        $this->denyAccessUnlessGranted('view','reporte_contratos');
         $user=$this->getUser();
-        $pagina=$moduloPerRepository->findOneByName('reporte_abogado',$user->getEmpresaActual());
+        $pagina=$moduloPerRepository->findOneByName('reporte_contratos',$user->getEmpresaActual());
 
         $filtro=null;
         $compania=null;
