@@ -242,7 +242,7 @@ class ReporteController extends AbstractController
                 $cantContrata=$contrata['valor'];
                 $monto=$contrata['monto'];
             }
-            $desisten=$agendaRepository->findByAgendReporte($agenda->getAbogado()->getId(),$user->getEmpresaActual(),$compania,'15',$filtro,1,$fecha);
+            $ratificantermino=$agendaRepository->findByAgendReporte($agenda->getAbogado()->getId(),$user->getEmpresaActual(),$compania,'15',$filtro,1,$fecha);
             foreach($ratificantermino as $ratificatermino){
                 $cantRatificaTermino=$ratificatermino['valor'];
             }
@@ -493,13 +493,11 @@ class ReporteController extends AbstractController
             $ratificantermino=$agendaRepository->findByContratoReporte(null,$user->getEmpresaActual(),$agenda->getCuenta()->getId(),'15',$filtro,1,$fecha);
             foreach($ratificantermino as $ratificatermino){
                 $cantRatificaTermino=$ratificatermino['valor'];
-                $monto+=$ratificatermino['monto'];
                 
             }
             $desisten=$agendaRepository->findByContratoReporte(null,$user->getEmpresaActual(),$agenda->getCuenta()->getId(),'12,13',$filtro,1,$fecha);
             foreach($desisten as $desiste){
                 $cantDesiste=$desiste['valor'];
-                $monto+=$desiste['monto'];
                 
             }
 
@@ -508,7 +506,6 @@ class ReporteController extends AbstractController
                 
                 
                 "cuenta"=>$agenda->getCuenta()->getNombre(),
-                
                 "contrata"=>$cantContrata,
                 "ratificatermino"=>$cantRatificaTermino,
                 "desiste"=>$cantDesiste,
