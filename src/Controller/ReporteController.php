@@ -476,9 +476,8 @@ class ReporteController extends AbstractController
         }
         $datos=array();
         foreach($query as $total){
-            $cantAgendado=0;
-            $cantNoCalifica=0;
-            $cantNoContrata=0;
+            
+            $cantDesiste=0;
             $cantContrata=0;
             $cantRatificaTermino=0;
             $monto=0;
@@ -486,19 +485,21 @@ class ReporteController extends AbstractController
             //$valor=$agenda.valor;
 
            
-            $contratan=$agendaRepository->findByContratoReporte(null,$user->getEmpresaActual(),$compania,'7',$filtro,1,$fecha);
+            $contratan=$agendaRepository->findByContratoReporte(null,$user->getEmpresaActual(),$agenda->getCuenta()->getId(),'7',$filtro,1,$fecha);
             foreach($contratan as $contrata){
                 $cantContrata=$contrata['valor'];
-                $monto=$contrata['monto'];
+                $monto+=$contrata['monto'];
             }
-            $ratificantermino=$agendaRepository->findByContratoReporte(null,$user->getEmpresaActual(),$compania,'15',$filtro,1,$fecha);
+            $ratificantermino=$agendaRepository->findByContratoReporte(null,$user->getEmpresaActual(),$agenda->getCuenta()->getId(),'15',$filtro,1,$fecha);
             foreach($ratificantermino as $ratificatermino){
                 $cantRatificaTermino=$ratificatermino['valor'];
+                $monto+=$ratificatermino['monto'];
                 
             }
-            $desisten=$agendaRepository->findByContratoReporte(null,$user->getEmpresaActual(),$compania,'12,13',$filtro,1,$fecha);
+            $desisten=$agendaRepository->findByContratoReporte(null,$user->getEmpresaActual(),$agenda->getCuenta()->getId(),'12,13',$filtro,1,$fecha);
             foreach($desisten as $desiste){
                 $cantDesiste=$desiste['valor'];
+                $monto+=$desiste['monto'];
                 
             }
 
@@ -507,11 +508,11 @@ class ReporteController extends AbstractController
                 
                 
                 "cuenta"=>$agenda->getCuenta()->getNombre(),
-                "total"=>$total['valor'],
+                
                 "contrata"=>$cantContrata,
                 "ratificatermino"=>$cantRatificaTermino,
                 "desiste"=>$cantDesiste,
-                'monto'=>$monto
+                'total'=>$monto
             );
 
         }
