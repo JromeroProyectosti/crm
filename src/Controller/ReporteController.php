@@ -242,7 +242,7 @@ class ReporteController extends AbstractController
                 $cantContrata=$contrata['valor'];
                 $monto=$contrata['monto'];
             }
-            $ratificantermino=$agendaRepository->findByAgendReporte($agenda->getAbogado()->getId(),$user->getEmpresaActual(),$compania,'15',$filtro,1,$fecha);
+            $desisten=$agendaRepository->findByAgendReporte($agenda->getAbogado()->getId(),$user->getEmpresaActual(),$compania,'15',$filtro,1,$fecha);
             foreach($ratificantermino as $ratificatermino){
                 $cantRatificaTermino=$ratificatermino['valor'];
             }
@@ -403,5 +403,132 @@ class ReporteController extends AbstractController
 
         ]);
     }
+
+    /**
+     * @Route("/contratos", name="reporte_contratos", methods={"GET"})
+     */
+    public function contratos(AgendaRepository $agendaRepository,
+                            CuentaRepository $cuentaRepository,
+                            PaginatorInterface $paginator,
+                            Request $request,
+                            ModuloPerRepository $moduloPerRepository): Response
+    {
+        $this->denyAccessUnlessGranted('view','reporte_abogado');
+        $user=$this->getUser();
+        $pagina=$moduloPerRepository->findOneByName('reporte_abogado',$user->getEmpresaActual());
+
+        $filtro=null;
+        $compania=null;
+        $fecha=null;
+        $statues='5';
+        $statuesgroup='7,13,12,15';
+        $status=null;
+        $tipo_fecha=1;
+        if(null !== $request->query->get('bFiltro') && trim($request->query->get('bFiltro'))!=''){
+            $filtro=$request->query->get('bFiltro');
+        }
+        if(null !== $request->query->get('bCompania')&&$request->query->get('bCompania')!=0){
+            $compania=$request->query->get('bCompania');
+        }
+
+        if(null !== $request->query->get('bFecha')){
+            $aux_fecha=explode(" - ",$request->query->get('bFecha'));
+            $dateInicio=$aux_fecha[0];
+            $dateFin=$aux_fecha[1];
+            $statues=$statuesgroup;
+        }else{
+            $dateInicio=date('Y-m-d',mktime(0,0,0,date('m'),date('d'),date('Y'))-60*60*24*30);
+            $dateFin=date('Y-m-d');
+
+        }
+        if(null !== $request->query->get('bTipofecha') ){
+            $tipo_fecha=$request->query->get('bTipofecha');
+        }
+        switch($tipo_fecha){
+            case 0:
+                $fecha="a.fechaCarga between '$dateInicio' and '$dateFin 23:59:59'" ;
+                break;
+            case 1:
+                $fecha="a.fechaAsignado between '$dateInicio' and '$dateFin 23:59:59'" ;
+                break;
+            case 2:
+                $fecha="a.fechaContrato between '$dateInicio' and '$dateFin 23:59:59'" ;
+                break;
+            default:
+                $fecha="a.fechaCarga between '$dateInicio' and '$dateFin 23:59:59'" ;
+                break;
+        }
+       // $fecha="a.fechaAsignado between '$dateInicio' and '$dateFin 23:59:59'" ;
+        
+        
+        //$queryresumen=$agendaRepository->findByAgendGroup(null,$user->getEmpresaActual(),$compania,$statuesgroup,$filtro,null,$fecha);   
+        switch($user->getUsuarioTipo()->getId()){
+            case 3:
+            case 1:
+            case 4:
+                $query=$agendaRepository->findByContratoReporte(null,$user->getEmpresaActual(),$compania,$statuesgroup,$filtro,1,$fecha);   
+                $companias=$cuentaRepository->findByPers(null,$user->getEmpresaActual());
+            break;
+            default:
+                $query=$agendaRepository->findByContratoReporte($user->getId(),$user->getEmpresaActual(),$compania,$statuesgroup,$filtro,1,$fecha);   
+                $companias=$cuentaRepository->findByPers($user->getId());
+            break;
+        }
+        $datos=array();
+        foreach($query as $total){
+            $cantAgendado=0;
+            $cantNoCalifica=0;
+            $cantNoContrata=0;
+            $cantContrata=0;
+            $cantRatificaTermino=0;
+            $monto=0;
+            $agenda=$total[0];
+            //$valor=$agenda.valor;
+
+           
+            $contratan=$agendaRepository->findByContratoReporte(null,$user->getEmpresaActual(),$compania,'7',$filtro,1,$fecha);
+            foreach($contratan as $contrata){
+                $cantContrata=$contrata['valor'];
+                $monto=$contrata['monto'];
+            }
+            $ratificantermino=$agendaRepository->findByContratoReporte(null,$user->getEmpresaActual(),$compania,'15',$filtro,1,$fecha);
+            foreach($ratificantermino as $ratificatermino){
+                $cantRatificaTermino=$ratificatermino['valor'];
+                
+            }
+            $desisten=$agendaRepository->findByContratoReporte(null,$user->getEmpresaActual(),$compania,'12,13',$filtro,1,$fecha);
+            foreach($desisten as $desiste){
+                $cantDesiste=$desiste['valor'];
+                
+            }
+
+          
+            $datos[]=array(
+                
+                
+                "cuenta"=>$agenda->getCuenta()->getNombre(),
+                "total"=>$total['valor'],
+                "contrata"=>$cantContrata,
+                "ratificatermino"=>$cantRatificaTermino,
+                "desiste"=>$cantDesiste,
+                'monto'=>$monto
+            );
+
+        }
+        
+        return $this->render('reporte/reporte_contrato.html.twig', [
+            'controller_name' => 'ReporteController',
+            'pagina'=>$pagina->getNombre(),
+            'reportes'=>$datos,
+            'bFiltro'=>$filtro,
+            'companias'=>$companias,
+            'bCompania'=>$compania,
+            'dateInicio'=>$dateInicio,
+            'dateFin'=>$dateFin,
+            'tipoFecha'=>$tipo_fecha,
+
+        ]);
+    }
+
 
 }

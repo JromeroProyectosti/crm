@@ -492,6 +492,45 @@ class AgendaRepository extends ServiceEntityRepository
             ->getResult();
 
     }
+
+    public function findByContratoReporte($usuario=null,$empresa=null,$compania=null,$status=null, $filtro=null,$esAbogado=null, $otros=null)
+    {
+
+
+        $query=$this->createQueryBuilder('a');
+        $query->select(array('a','count(con.id) as valor','sum(con.MontoContrato) as monto'));
+
+        
+        $query->join('a.contrato','con');
+
+        if(!is_null($status)){
+            $query->andWhere('a.status in ('.$status.')');
+        }
+        if(!is_null($empresa)){
+            $query->join('a.cuenta','c');
+            $query->andWhere('c.empresa = '.$empresa);
+        }
+        
+
+        if(!is_null($compania)){
+            $query->andWhere('a.cuenta = '.$compania);
+        }
+        if(!is_null($filtro)){ 
+            $query->andWhere("(a.nombreCliente like '%$filtro%' or a.telefonoCliente like '%$filtro%' or a.emailCliente like '%$filtro%')")
+         ;
+
+        }
+        if(!is_null($otros)){ 
+            $query->andWhere($otros)
+         ;
+
+        }
+        $query->addGroupBy('a.cuenta');
+
+        return $query->getQuery()
+            ->getResult();
+
+    }
     // /**
     //  * @return Agenda[] Returns an array of Agenda objects
     //  */
