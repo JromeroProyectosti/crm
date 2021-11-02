@@ -302,6 +302,11 @@ class Contrato
      */
     private $sexo;
 
+    /**
+     * @ORM\OneToMany(targetEntity=ContratoMee::class, mappedBy="contrato")
+     */
+    private $contratoMees;
+
     
     public function __construct()
     {
@@ -309,6 +314,7 @@ class Contrato
         $this->detalleCuotas = new ArrayCollection();
         $this->contratoAnexos = new ArrayCollection();
         $this->cobranzas = new ArrayCollection();
+        $this->contratoMees = new ArrayCollection();
         
     }
 
@@ -1060,6 +1066,36 @@ class Contrato
     public function setSexo(?string $sexo): self
     {
         $this->sexo = $sexo;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ContratoMee[]
+     */
+    public function getContratoMees(): Collection
+    {
+        return $this->contratoMees;
+    }
+
+    public function addContratoMee(ContratoMee $contratoMee): self
+    {
+        if (!$this->contratoMees->contains($contratoMee)) {
+            $this->contratoMees[] = $contratoMee;
+            $contratoMee->setContrato($this);
+        }
+
+        return $this;
+    }
+
+    public function removeContratoMee(ContratoMee $contratoMee): self
+    {
+        if ($this->contratoMees->removeElement($contratoMee)) {
+            // set the owning side to null (unless already changed)
+            if ($contratoMee->getContrato() === $this) {
+                $contratoMee->setContrato(null);
+            }
+        }
 
         return $this;
     }

@@ -75,6 +75,11 @@ class Cuenta
      */
     private $vigenciaContratos;
 
+    /**
+     * @ORM\OneToMany(targetEntity=CuentaMateria::class, mappedBy="cuenta")
+     */
+    private $cuentaMaterias;
+
   
 
     public function __construct()
@@ -84,6 +89,7 @@ class Cuenta
         $this->sucursals = new ArrayCollection();
         $this->usuarioUsuariocategorias = new ArrayCollection();
         $this->importacions = new ArrayCollection();
+        $this->cuentaMaterias = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -313,6 +319,36 @@ class Cuenta
     public function setVigenciaContratos(?int $vigenciaContratos): self
     {
         $this->vigenciaContratos = $vigenciaContratos;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CuentaMateria[]
+     */
+    public function getCuentaMaterias(): Collection
+    {
+        return $this->cuentaMaterias;
+    }
+
+    public function addCuentaMateria(CuentaMateria $cuentaMateria): self
+    {
+        if (!$this->cuentaMaterias->contains($cuentaMateria)) {
+            $this->cuentaMaterias[] = $cuentaMateria;
+            $cuentaMateria->setCuenta($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCuentaMateria(CuentaMateria $cuentaMateria): self
+    {
+        if ($this->cuentaMaterias->removeElement($cuentaMateria)) {
+            // set the owning side to null (unless already changed)
+            if ($cuentaMateria->getCuenta() === $this) {
+                $cuentaMateria->setCuenta(null);
+            }
+        }
 
         return $this;
     }

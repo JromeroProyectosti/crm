@@ -2,15 +2,15 @@
 
 namespace App\Entity;
 
-use App\Repository\EstrategiaJuridicaRepository;
+use App\Repository\MateriaRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=EstrategiaJuridicaRepository::class)
+ * @ORM\Entity(repositoryClass=MateriaRepository::class)
  */
-class EstrategiaJuridica
+class Materia
 {
     /**
      * @ORM\Id
@@ -20,29 +20,31 @@ class EstrategiaJuridica
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=50)
      */
-    private $Nombre;
+    private $nombre;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Empresa::class, inversedBy="estrategiaJuridicas")
+     * @ORM\ManyToOne(targetEntity=Empresa::class)
+     * @ORM\JoinColumn(nullable=false)
      */
     private $empresa;
 
     /**
-     * @ORM\OneToMany(targetEntity=Contrato::class, mappedBy="estrategiaJuridica")
+     * @ORM\OneToMany(targetEntity=CuentaMateria::class, mappedBy="materia")
      */
-    private $contratos;
+    private $cuentaMaterias;
 
     /**
-     * @ORM\OneToMany(targetEntity=MateriaEstrategia::class, mappedBy="estrategiaJuridica")
+     * @ORM\OneToMany(targetEntity=MateriaEstrategia::class, mappedBy="materia")
      */
     private $materiaEstrategias;
 
     public function __construct()
     {
-        $this->contratos = new ArrayCollection();
+        $this->cuentaMaterias = new ArrayCollection();
         $this->materiaEstrategias = new ArrayCollection();
+        
     }
 
     public function getId(): ?int
@@ -52,12 +54,12 @@ class EstrategiaJuridica
 
     public function getNombre(): ?string
     {
-        return $this->Nombre;
+        return $this->nombre;
     }
 
-    public function setNombre(string $Nombre): self
+    public function setNombre(string $nombre): self
     {
-        $this->Nombre = $Nombre;
+        $this->nombre = $nombre;
 
         return $this;
     }
@@ -75,36 +77,33 @@ class EstrategiaJuridica
     }
 
     /**
-     * @return Collection|Contrato[]
+     * @return Collection|CuentaMateria[]
      */
-    public function getContratos(): Collection
+    public function getCuentaMaterias(): Collection
     {
-        return $this->contratos;
+        return $this->cuentaMaterias;
     }
 
-    public function addContrato(Contrato $contrato): self
+    public function addCuentaMateria(CuentaMateria $cuentaMateria): self
     {
-        if (!$this->contratos->contains($contrato)) {
-            $this->contratos[] = $contrato;
-            $contrato->setEstrategiaJuridica($this);
+        if (!$this->cuentaMaterias->contains($cuentaMateria)) {
+            $this->cuentaMaterias[] = $cuentaMateria;
+            $cuentaMateria->setMateria($this);
         }
 
         return $this;
     }
 
-    public function removeContrato(Contrato $contrato): self
+    public function removeCuentaMateria(CuentaMateria $cuentaMateria): self
     {
-        if ($this->contratos->removeElement($contrato)) {
+        if ($this->cuentaMaterias->removeElement($cuentaMateria)) {
             // set the owning side to null (unless already changed)
-            if ($contrato->getEstrategiaJuridica() === $this) {
-                $contrato->setEstrategiaJuridica(null);
+            if ($cuentaMateria->getMateria() === $this) {
+                $cuentaMateria->setMateria(null);
             }
         }
 
         return $this;
-    }
-    public function __toString(){
-        return $this->getNombre();
     }
 
     /**
@@ -119,7 +118,7 @@ class EstrategiaJuridica
     {
         if (!$this->materiaEstrategias->contains($materiaEstrategia)) {
             $this->materiaEstrategias[] = $materiaEstrategia;
-            $materiaEstrategia->setEstrategiaJuridica($this);
+            $materiaEstrategia->setMateria($this);
         }
 
         return $this;
@@ -129,11 +128,15 @@ class EstrategiaJuridica
     {
         if ($this->materiaEstrategias->removeElement($materiaEstrategia)) {
             // set the owning side to null (unless already changed)
-            if ($materiaEstrategia->getEstrategiaJuridica() === $this) {
-                $materiaEstrategia->setEstrategiaJuridica(null);
+            if ($materiaEstrategia->getMateria() === $this) {
+                $materiaEstrategia->setMateria(null);
             }
         }
 
         return $this;
+    }
+    public function __toString()
+    {
+        return $this->getNombre();
     }
 }
