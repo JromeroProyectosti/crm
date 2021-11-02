@@ -13,3 +13,7 @@ ALTER TABLE materia_estrategia ADD CONSTRAINT FK_8A1D519E62144410 FOREIGN KEY (e
 ALTER TABLE mee ADD CONSTRAINT FK_9A1C8B54516A508C FOREIGN KEY (materia_estrategia_id) REFERENCES materia_estrategia (id);
 ALTER TABLE mee ADD CONSTRAINT FK_9A1C8B545D855194 FOREIGN KEY (escritura_id) REFERENCES escritura (id);
 ALTER TABLE materia_estrategia ADD estado TINYINT(1) NOT NULL;
+
+INSERT INTO `modulo` (`id`, `nombre`, `ruta`, `nombre_alt`, `descripcion`) VALUES (NULL, 'materia_index', 'materia_index', 'Materia', 'Materia');
+INSERT INTO `modulo` (`id`, `nombre`, `ruta`, `nombre_alt`, `descripcion`) VALUES (NULL, 'estrategia_juridica_index', 'estrategia_juridica_index', 'Sub Materia', 'Sub Materias');
+INSERT INTO `modulo` (`id`, `nombre`, `ruta`, `nombre_alt`, `descripcion`) VALUES (NULL, 'escritura', 'escritura_index', 'Escrituras', 'Escrituras');
