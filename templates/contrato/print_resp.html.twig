@@ -25,6 +25,7 @@ un contrato de prestaci&oacute;n de servicios jur&iacute;dicos, desglosando su c
 <p>{{contratoMee.mee.materiaEstrategia.estrategiaJuridica.nombre|special_chars|raw}}</p>
 {% endfor %}
 
+
 <strong>Acreedores:</strong>
 <ul style="list-style: none;">
 {% if contrato.contratoRols is not null %}
@@ -137,26 +138,12 @@ un contrato de prestaci&oacute;n de servicios jur&iacute;dicos, desglosando su c
 <p align="justify"><strong>D&Eacute;CIMO PRIMERO:</strong> Para efectos de ser atendido e informado sobre el estado de su(s) causa(s), 
     el cliente deber&aacute; agendar previamente una reuni&oacute;n, a fin de otorgar una atenci&oacute;n expedita y ofrecer a usted un servicio de calidad. </p>
 
-{% if contrato.agenda.cuenta.id==7 %}
-
 <p align="justify"><strong>D&Eacute;CIMO SEGUNDO:</strong> Se informan los medios de contacto del abogado a cargo de su causa, sin perjucio de la facultad 
     del estudio jur&iacute;dico de asignar un nuevo abogado por motivos de fuerza mayor o redistribuci&oacute;n de cartera,
     <strong>abogado.familia@alfaromadariaga.cl</strong>, tel&eacute;fono: <strong>(+56 9) 6526 0962</strong>. 
     Tambi&eacute;n puede contactarnos a nuestra unidad <strong>SAC</strong> (Servicio de Atenci&oacute;n al Cliente) <strong>(+56 9) 3665 3829.</strong>
     Ser&aacute; obligaci&oacute;n del cliente informar cualquier modificaci&oacute;n en sus datos de contacto; tales como n&uacute;mero telef&oacute;nico, 
     direcci&oacute;n o correo electr&oacute;nico.</p>
-
-    {% else %}
-
-<p align="justify"><strong>D&Eacute;CIMO SEGUNDO:</strong> Se deja constancia que el abogado encargado de la tramitaci&oacute;n de la 
-    causa ser&aacute; <strong>{{contrato.tramitador.nombre|default('')}}</strong>, <strong>{{contrato.tramitador.correo|default('')}}</strong>, tel&eacute;fono oficina: 
-    <strong>{{contrato.tramitador.telefono|default('')}}</strong>, </strong> celular: <strong>{{contrato.tramitador.whatsapp|default('')}}</strong>, 
-    sin perjuicio de la facultad del estudio jur&iacute;dico de asignar un nuevo abogado por motivos de fuerza mayor o 
-    redistribuci&oacute;n de cartera. Tambi&eacute;n puede contactarnos a nuestra unidad <strong>SAC</strong> (Servicio de Atenci&oacute;n al Cliente) <strong>(+56 9) 3665 3829.</strong>
-    Asimismo, ser&aacute; obligaci&oacute;n del cliente informar cualquier modificaci&oacute;n en sus datos de contacto; tales como n&uacute;mero telef&oacute;nico, 
-    direcci&oacute;n o correo electr&oacute;nico, informando al &aacute;rea de recaudaci&oacute;n cualquier modificaci&oacute;n.</p>
-
-    {% endif %}
 
 <p align="justify"><strong>D&Eacute;CIMO TERCERO: Cl&aacute;usula de Consentimiento:</strong> Con la firma o aceptaci&oacute;n del presente contrato, 
     el cliente otorga su consentimiento expl&iacute;cito e informado al Estudio Jur&iacute;dico para que realice el 
