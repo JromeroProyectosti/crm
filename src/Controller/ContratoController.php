@@ -11,6 +11,7 @@ use App\Entity\Ciudad;
 use App\Entity\Comuna;
 use App\Form\ContratoType;
 use App\Entity\AgendaObservacion;
+use App\Entity\ContratoMee;
 use App\Form\ContratoRolType;
 use App\Repository\ContratoRepository;
 use App\Repository\ContratoRolRepository;
@@ -28,6 +29,7 @@ use App\Repository\LotesRepository;
 use App\Repository\RegionRepository;
 use App\Repository\CiudadRepository;
 use App\Repository\ComunaRepository;
+use App\Repository\MeeRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -297,8 +299,9 @@ class ContratoController extends AbstractController
                     ModuloPerRepository $moduloPerRepository,
                     CuotaRepository $cuotaRepository,
                     RegionRepository $regionRepository,
-                            ComunaRepository $comunaRepository,
-                            CiudadRepository $ciudadRepository,
+                    ComunaRepository $comunaRepository,
+                    CiudadRepository $ciudadRepository,
+                    MeeRepository $meeRepository,
                     \Knp\Snappy\Pdf $snappy): Response
     {
         $this->denyAccessUnlessGranted('edit','contrato');
@@ -346,6 +349,26 @@ class ContratoController extends AbstractController
             $agenda->setCuenta($cuentaRepository->find($compania));
             $entityManager->persist($agenda);
             $entityManager->flush();
+
+
+            $contratoMees=$contrato->getContratoMees();
+
+            foreach($contratoMees as $contratoMee){
+                $entityManager->remove($contratoMee);
+                $entityManager->flush();
+            }
+            
+            $mees=$_POST['mee'];
+            foreach($mees as $mee ){
+                
+                $contratoMee = new ContratoMee();
+                $contratoMee->setContrato($contrato);
+                $contratoMee->setMee($meeRepository->find($mee));
+                $entityManager->persist($contratoMee);
+                $entityManager->flush();
+            }
+
+
             if(!$tienePago){
                 $detalleCuotas=$contrato->getDetalleCuotas();
                 foreach($detalleCuotas as $detalleCuota){
@@ -433,6 +456,8 @@ class ContratoController extends AbstractController
             'diasPagos'=>$diasPagoRepository->findAll(),
             'sucursales'=>$sucursalRepository->findBy(['cuenta'=>$contrato->getAgenda()->getCuenta()->getId()]),
             'regiones'=>$regionRepository->findAll(),
+            'cuenta_materias'=>$contrato->getAgenda()->getCuenta()->getCuentaMaterias(),
+            'contratoMees'=>$contrato->getContratoMees(),
         ]);
     }
 
@@ -454,7 +479,8 @@ class ContratoController extends AbstractController
                             LotesRepository $lotesRepository,
                             RegionRepository $regionRepository,
                             ComunaRepository $comunaRepository,
-                            CiudadRepository $ciudadRepository
+                            CiudadRepository $ciudadRepository,
+                            MeeRepository $meeRepository
                             ): Response
     {
         $this->denyAccessUnlessGranted('create','panel_abogado');
@@ -478,6 +504,25 @@ class ContratoController extends AbstractController
             $contrato->setCciudad($ciudadRepository->find($request->request->get('cboCiudad')));
             $contrato->setCcomuna($comunaRepository->find($request->request->get('cboComuna')));
             $contrato->setSexo($request->request->get('cboSexo'));
+
+            
+            $contratoMees=$contrato->getContratoMees();
+
+            foreach($contratoMees as $contratoMee){
+                $entityManager->remove($contratoMee);
+                $entityManager->flush();
+            }
+            
+            $mees=$_POST['mee'];
+            foreach($mees as $mee ){
+                
+                $contratoMee = new ContratoMee();
+                $contratoMee->setContrato($contrato);
+                $contratoMee->setMee($meeRepository->find($mee));
+                $entityManager->persist($contratoMee);
+                $entityManager->flush();
+            }
+
 
             //configuramos el Lote al cual caera::
             //$ult_contrato=$contratoRepository->findLoteMax($user->getEmpresaActual());
@@ -553,7 +598,8 @@ class ContratoController extends AbstractController
                 $entityManager->flush();
                 $numeroCuota++;
             }
-           
+            
+
             $primerPago=date("Y-m-".$diaPago,strtotime($fechaPrimerPago->format('Y-m-d')));
             if(date("n",strtotime($fechaPrimerPago->format('Y-m-d')))==2){
                 if($diaPago==30)
@@ -606,6 +652,8 @@ class ContratoController extends AbstractController
             'diasPagos'=>$diasPagoRepository->findAll(),
             'sucursales'=>$sucursalRepository->findBy(['cuenta'=>$contrato->getAgenda()->getCuenta()->getId()]),
             'regiones'=>$regionRepository->findAll(),
+            'cuenta_materias'=>$contrato->getAgenda()->getCuenta()->getCuentaMaterias(),
+            'contratoMees'=>$contrato->getContratoMees(),
         ]);
     }
 

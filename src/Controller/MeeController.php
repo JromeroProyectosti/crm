@@ -89,6 +89,16 @@ class MeeController extends AbstractController
     }
 
     /**
+     * @Route("/{id}/list", name="mee_list", methods={"GET","POST"})
+     */
+    public function combo(Mee $mee): Response
+    {
+        return $this->render('mee/list.html.twig', [
+            'mee' => $mee,
+            
+        ]);
+    }
+    /**
      * @Route("/{id}", name="mee_delete", methods={"DELETE"})
      */
     public function delete(Request $request, Mee $mee): Response

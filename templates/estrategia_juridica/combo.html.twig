@@ -1,0 +1,6 @@
+<select name="cboSubMateria" class="form-control" onchange="javascript:cambiaSubmateria(this.value)" >
+<option disabled selected>Sub Materias</option>
+{% for materia_estrategia in materia_estrategias %}
+<option value="{{ materia_estrategia.id }}">{{ materia_estrategia.estrategiaJuridica.nombre }}</option>
+{% endfor %}
+</select>

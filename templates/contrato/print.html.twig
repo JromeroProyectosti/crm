@@ -20,7 +20,11 @@ un contrato de prestaci&oacute;n de servicios jur&iacute;dicos, desglosando su c
     que sean procedentes, en atenci&oacute;n al estado procesal en que se encuentre la(s) causa(s) contratada(s).</p>
 
 <strong>Estrategia Juridica</strong>
-<p>{{contrato.estrategiaJuridica|special_chars|raw}}</p>
+{% for contratoMee in contrato.contratoMees %}
+    
+<p>{{contratoMee.mee.materiaEstrategia.estrategiaJuridica.nombre|special_chars|raw}}</p>
+{% endfor %}
+
 
 <strong>Acreedores:</strong>
 <ul style="list-style: none;">

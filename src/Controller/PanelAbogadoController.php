@@ -8,6 +8,7 @@ use App\Entity\Usuario;
 use App\Entity\ContratoRol;
 use App\Entity\AgendaObservacion;
 use App\Entity\Contrato;
+use App\Entity\ContratoMee;
 use App\Entity\Cuenta;
 use App\Form\ContratoType;
 use App\Repository\AgendaRepository;
@@ -24,6 +25,8 @@ use App\Repository\CuentaRepository;
 use App\Repository\ModuloRepository;
 use App\Repository\ModuloPerRepository;
 use App\Repository\DiasPagoRepository;
+use App\Repository\MateriaRepository;
+use App\Repository\MeeRepository;
 use App\Repository\ReunionRepository;
 use App\Repository\RegionRepository;
 use Symfony\Component\HttpFoundation\Request;
@@ -202,7 +205,8 @@ class PanelAbogadoController extends AbstractController
                         UsuarioRepository $usuarioRepository,
                         ReunionRepository $reunionRepository,
                         Request $request,
-                        ModuloPerRepository $moduloPerRepository): Response
+                        ModuloPerRepository $moduloPerRepository,
+                        MateriaRepository $materiaRepository): Response
     {
         $this->denyAccessUnlessGranted('create','panel_abogado');
 
@@ -249,6 +253,7 @@ class PanelAbogadoController extends AbstractController
             'pagina'=>$pagina->getNombre().' | Gestionar',
             'companias'=>$companias,
             'statues'=>$agendaStatusRepository->findBy(['id'=>$agenda->getAbogado()->getUsuarioTipo()->getStatues()],['orden'=>'asc']),
+           
         ]);
 
     }
@@ -288,7 +293,9 @@ class PanelAbogadoController extends AbstractController
                             ContratoRepository $contratoRepository,
                             RegionRepository $regionRepository,
                             ComunaRepository $comunaRepository,
-                            CiudadRepository $ciudadRepository
+                            CiudadRepository $ciudadRepository,
+                            ReunionRepository $reunionRepository,
+                            MeeRepository $meeRepository
                             ):Response
     {
         $this->denyAccessUnlessGranted('create','panel_abogado');
@@ -366,11 +373,24 @@ class PanelAbogadoController extends AbstractController
             $contrato->setCciudad($ciudadRepository->find($request->request->get('cboCiudad')));
             $contrato->setCcomuna($comunaRepository->find($request->request->get('cboComuna')));
             $contrato->setSexo($request->request->get('cboSexo'));
+
+            $mees=$_POST['mee'];
+
+
             $entityManager = $this->getDoctrine()->getManager();
 
             
             $entityManager->persist($contrato);
             $entityManager->flush();
+
+            foreach($mees as $mee ){
+                
+                $contratoMee = new ContratoMee();
+                $contratoMee->setContrato($contrato);
+                $contratoMee->setMee($meeRepository->find($mee));
+                $entityManager->persist($contratoMee);
+                $entityManager->flush();
+            }
 
             $agenda->setNombreCliente($contrato->getNombre());
             $agenda->setTelefonoCliente($contrato->getTelefono());
@@ -414,6 +434,7 @@ class PanelAbogadoController extends AbstractController
             'diasPagos'=>$diasPagoRepository->findAll(),
             'sucursales'=>$sucursalRepository->findBy(['cuenta'=>$agenda->getCuenta()->getId()]),
             'regiones'=>$regionRepository->findAll(),
+            'cuenta_materias'=>$agenda->getCuenta()->getCuentaMaterias(),
         ] );
     }
     /**

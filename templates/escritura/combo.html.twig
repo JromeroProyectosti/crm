@@ -1,0 +1,6 @@
+<select name="cboEscritos" class="form-control cboEscritos" onchange="javascript:cambiaEscritos(this.value)">
+<option disabled selected>Escritos</option>
+{% for mee in mees %}
+<option value="{{ mee.id }}">{{ mee.escritura.nombre }}</option>
+{% endfor %}
+</select>

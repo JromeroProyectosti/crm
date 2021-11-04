@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\EstrategiaJuridica;
+use App\Entity\Materia;
 use App\Form\EstrategiaJuridicaType;
 use App\Repository\EstrategiaJuridicaRepository;
+use App\Repository\MateriaEstrategiaRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -75,6 +77,17 @@ class EstrategiaJuridicaController extends AbstractController
         return $this->render('estrategia_juridica/edit.html.twig', [
             'estrategia_juridica' => $estrategiaJuridica,
             'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/combo", name="estrategia_juridica_combo", methods={"GET","POST"})
+     */
+    public function combo(Materia $materia,MateriaEstrategiaRepository $materiaEstrategiaRepository): Response
+    {
+        return $this->render('estrategia_juridica/combo.html.twig', [
+            'materia_estrategias' => $materiaEstrategiaRepository->findBy(['materia'=>$materia->getId(),'estado'=>1]) 
+            
         ]);
     }
 

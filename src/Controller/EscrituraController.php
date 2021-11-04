@@ -3,8 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Escritura;
+use App\Entity\EstrategiaJuridica;
+use App\Entity\MateriaEstrategia;
 use App\Form\EscrituraType;
 use App\Repository\EscrituraRepository;
+use App\Repository\MeeRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -77,6 +80,18 @@ class EscrituraController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
+    /**
+     * @Route("/{id}/combo", name="escritura_combo", methods={"GET","POST"})
+     */
+    public function combo(MateriaEstrategia $materiaEstrategia, MeeRepository $meeRepository): Response
+    {
+        return $this->render('escritura/combo.html.twig', [
+            'mees' => $meeRepository->findBy(['materiaEstrategia'=>$materiaEstrategia->getId()]) 
+            
+        ]);
+    }
+
 
     /**
      * @Route("/{id}", name="escritura_delete", methods={"DELETE"})

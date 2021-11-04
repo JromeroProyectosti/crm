@@ -301,44 +301,101 @@
             </div>
             {% endif %}
         </div>
-        <hr>
-        <div class="card">
-            <div class="card-header">
-                
-                <div class="row">
-                    
-                    <div class="col-sm-12 col-md-3">
-                        <input type="text" name="nombreRol" class="form-control nombre-rol" placeholder="Nombre de rol">
-                    </div>    
-                    <div class="col-sm-12 col-md-3">
-                        <input type="text" name="institucionAcreedora" class="form-control institucion" placeholder="Institucion Acreedora" >
-                    </div>   
-                    <div class="col-sm-12 col-md-3">
-                        
-                        <select name="juzgado" class="form-control juzgado">
-                            <option value="">  </option>
-                            {% for juzgado in juzgados %}
-                                <option value="{{juzgado.id}}">{{juzgado.nombre}}</option>
-                            {% endfor %}
-                        </select>
-                    </div>   
-                    <div class="col-sm-12 col-md-1">
 
-                        <button type="button" class="btn btn-primary btn-agregar" onclick="javascript:agregarRol()"><i class="fas fa-plus"></i></button>
-                    </div>
-                    
-            
-                </div>
-         
+        <hr>
+
+<h4>Estrategia Juridica</h4>
+        <div class="row">
+            <div class="col-sm-12 col-md-1">*
+            </Div>
+            <div class="col-sm-12 col-md-3">
+                <select name="cboMateria" class="form-control cbomateria" placeholder="Materias">
+                    <option disabled selected>Materias</option>
+                    {% for cuenta_materia in cuenta_materias %}
+                    <option value="{{ cuenta_materia.materia.id }}">{{ cuenta_materia.materia.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>    
+            <div class="col-sm-12 col-md-3 submateria">
+                <select name="cboSubMateria" class="form-control" >
+                    <option></option>
+                </select>
+            </div>   
+            <div class="col-sm-12 col-md-3 escritos">
+               <select name="cboEscritos" class="form-control cboescritos" >
+                    <option></option>
+                </select>
+            </div>   
+            <div class="col-sm-12 col-md-1">
+                <button type="button" class="btn btn-primary btn-agregar" onclick="javascript:agregarEstrategiaJuridica()"><i class="fas fa-plus"></i></button>
+
             </div>
-            <div class="card-body" id="contratoRoles">
+            
+    
+        </div>
+        <div class="card-body" >
+            {% set x=0 %}
+            {% for contratoMee in contratoMees %}
+            
+
+            <div class="row div1{{x}}"><div class="col-sm-12 col-md-1"><input type="hidden" value="{{contratoMee.mee.id}}" name="mee[]"></Div>
+                <div class="col-sm-12 col-md-3">{{contratoMee.mee.materiaEstrategia.materia.nombre}}</div>
+                <div class="col-sm-12 col-md-3"> {{ contratoMee.mee.materiaEstrategia.estrategiaJuridica.nombre }} </div>
+                <div class="col-sm-12 col-md-3"> {{ contratoMee.mee.escritura.nombre}}</div>
+        
+                <div class="col-sm-12 col-md-1"><button type="button" class="btn btn-danger remove_button" onclick="javascript:borrarItem('1{{x}}')" ><i class="fas fa-trash"></i></button> </div> 
+                
+                <div class="col-sm-12"><hr></div>
+            
+            </div>
+             
+            {% set x= x+1 %}
+            {% endfor %}
+            <div id="estrategiasJuridicas">
+             
+            </div>
+            <div class="loading"></div>
+        </div>  
+
+        <hr>
+
+        <h4>Acreedores</h4>
+            <div class="row">
+                <div class="col-sm-12 col-md-1">*
+                </Div>
+                
+                <div class="col-sm-12 col-md-3">
+                    <input type="text" name="nombreRol" class="form-control nombre-rol" placeholder="Nombre de rol">
+                </div>    
+                <div class="col-sm-12 col-md-3">
+                    <input type="text" name="institucionAcreedora" class="form-control institucion" placeholder="Institucion Acreedora" >
+                </div>   
+                <div class="col-sm-12 col-md-3">
+                    
+                    <select name="juzgado" class="form-control juzgado">
+                        <option value="">  </option>
+                        {% for juzgado in juzgados %}
+                            <option value="{{juzgado.id}}">{{juzgado.nombre}}</option>
+                        {% endfor %}
+                    </select>
+                </div>   
+                <div class="col-sm-12 col-md-1">
+
+                    <button type="button" class="btn btn-primary btn-agregar" onclick="javascript:agregarRol()"><i class="fas fa-plus"></i></button>
+                </div>
+                
         
             </div>
-            <div class="col-sm-12 col-md-12">
-                <small class="text-muted">Observación</small><br>
-                {{form_row(form.observacion,{'label':false,'attr':{'class':'form-control','required':true}})}}
-            </div>
+        
+   
+        <div class="card-body" id="contratoRoles">
+    
         </div>
+        <div class="col-sm-12 col-md-12">
+            <small class="text-muted">Observación</small><br>
+            {{form_row(form.observacion,{'label':false,'attr':{'class':'form-control','required':true}})}}
+        </div>
+       
         
         <button class="btn btn-primary">{{ button_label|default('Guardar') }}</button>
     </div>
@@ -460,6 +517,25 @@
                 $("#ccomuna").html(data);
             }
 
+        });
+        $('.cbomateria').on('change',function(){
+            $.ajax({
+                url:"/estrategia_juridica/"+$(this).val()+"/combo",
+                type: "post",
+                dataType: "html",
+                cache: false,
+                contentType: false,
+                processData: false,
+                async: true,
+                beforeSend: function(){
+                    $(".submateria").html(' <div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i><div class="text-bold pt-2">Loading...</div></div>');
+                    
+                },
+                success:function(data){
+                    $(".submateria").html(data);
+                }
+
+            });
         });
     });
     function agregarRol(){
@@ -671,6 +747,70 @@
             },
             success:function(data){
                 $("#ccomuna").html(data);
+            }
+
+        });
+    }
+
+    var mee_val;
+    var x=0;
+    function cambiaEscritos(valor){
+        mee_val=valor;
+    }
+    function agregarEstrategiaJuridica(){
+        
+        
+        
+        $.ajax({
+            url:"/mee/"+mee_val+"/list",
+            type: "post",
+            dataType: "html",
+            cache: false,
+            contentType: false,
+            processData: false,
+            async: true,
+            beforeSend: function(){
+                $(".loading").html(' <div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i><div class="text-bold pt-2">Loading...</div></div>');
+                
+            },
+            success:function(data){
+                x++;
+                var fieldHTML = '<div class="row div'+x+'"><div class="col-sm-12 col-md-1"><input type="hidden" value="'+mee_val+'" name="mee[]"></Div>';
+                fieldHTML+=data;
+                fieldHTML+='<div class="col-sm-12 col-md-1"><button type="button" class="btn btn-danger remove_button" onclick="javascript:borrarItem('+x+')" ><i class="fas fa-trash"></i></button> </div> <hr></div>';
+                fieldHTML+='<div class="col-12"><hr></div>';
+
+                $("#estrategiasJuridicas").append(fieldHTML); // Add field html
+                $(".loading").html(' ');
+                 
+            }
+
+        });
+        
+        
+    
+    }
+    function borrarItem(x){
+     
+        $('.div'+x).remove(); //Remove field html
+        
+    }
+     function cambiaSubmateria(valor){
+        
+        $.ajax({
+            url:"/escritura/"+valor+"/combo",
+            type: "post",
+            dataType: "html",
+            cache: false,
+            contentType: false,
+            processData: false,
+            async: true,
+            beforeSend: function(){
+                $(".escritos").html(' <div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i><div class="text-bold pt-2">Loading...</div></div>');
+                
+            },
+            success:function(data){
+                $(".escritos").html(data);
             }
 
         });
