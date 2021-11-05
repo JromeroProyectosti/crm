@@ -18,7 +18,26 @@ class ContratoMeeRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, ContratoMee::class);
     }
+    /**
+    * @return ContratoMee[] Returns an array of ContratoMee objects
+    */
+    
+    public function findByContrato($id_contrato)
+    {
+        $query=$this->createQueryBuilder('c');
+        $query->join('c.mee','m');
+        $query->join('m.materiaEstrategia','me');
+        $query->join('me.estrategiaJuridica','ej');
 
+        $query->andWhere('c.contrato = '.$id_contrato);
+        $query->groupBy('m.estrategiaJuridica');
+
+        
+        return $query
+            ->getQuery()
+            ->getResult()
+        ;
+    }
     // /**
     //  * @return ContratoMee[] Returns an array of ContratoMee objects
     //  */

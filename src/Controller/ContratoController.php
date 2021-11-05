@@ -29,6 +29,7 @@ use App\Repository\LotesRepository;
 use App\Repository\RegionRepository;
 use App\Repository\CiudadRepository;
 use App\Repository\ComunaRepository;
+use App\Repository\ContratoMeeRepository;
 use App\Repository\MeeRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -661,14 +662,15 @@ class ContratoController extends AbstractController
     /**
      * @Route("/{id}/pdf", name="contrato_pdf", methods={"GET","POST"})
      */
-    public function pdf(Contrato $contrato)
+    public function pdf(Contrato $contrato,ContratoMeeRepository $contratoMeeRepository)
     {
         $this->denyAccessUnlessGranted('view','contrato');
         $filename = sprintf('Contrato-'.$contrato->getId().'-%s.pdf',rand(0,9000));
        
         $html = $this->renderView('contrato/print.html.twig', array(
             'contrato' => $contrato,
-            'Titulo'=>"Contrato"
+            'Titulo'=>"Contrato",
+            'mees'=>$contratoMeeRepository->findByContrato($contrato->getId()),
         ));
 
         $entityManager = $this->getDoctrine()->getManager();

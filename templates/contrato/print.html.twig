@@ -21,7 +21,7 @@ un contrato de prestaci&oacute;n de servicios jur&iacute;dicos, desglosando su c
 
 <strong>Estrategia Juridica</strong>
 <p>
-{% for contratoMee in contrato.contratoMees %}
+{% for contratoMee in mees %}
     
 {{contratoMee.mee.materiaEstrategia.estrategiaJuridica.nombre|special_chars|raw}}<br>
 {% endfor %}
