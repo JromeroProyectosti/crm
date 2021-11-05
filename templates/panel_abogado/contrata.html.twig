@@ -179,19 +179,19 @@
             </Div>
             <div class="col-sm-12 col-md-3">
                 <select name="cboMateria" class="form-control cbomateria" placeholder="Materias">
-                    <option disabled selected>Materias</option>
+                    <option disabled selected>Selecciona Materias</option>
                     {% for cuenta_materia in cuenta_materias %}
                     <option value="{{ cuenta_materia.materia.id }}">{{ cuenta_materia.materia.nombre }}</option>
                     {% endfor %}
                 </select>
             </div>    
             <div class="col-sm-12 col-md-3 submateria">
-                <select name="cboSubMateria" class="form-control" >
+                <select name="cboSubMateria" class="form-control cbosubmateria" onchange="javascript:cambiaSubmateria(this.value)" >
                     <option></option>
                 </select>
             </div>   
             <div class="col-sm-12 col-md-3 escritos">
-               <select name="cboEscritos" class="form-control cboescritos" >
+               <select name="cboEscritos" class="form-control cboescritos select2"  multiple="multiple" data-placeholder="Selecciona Escritos" style="width: 100%;">
                     <option></option>
                 </select>
             </div>   
@@ -307,6 +307,11 @@
 <button class="btn btn-primary">Preparar Contrato</button>
 {% endif %}
 <script>
+    $(function () {
+			//Initialize Select2 Elements
+			$('.select2').select2();
+			
+		});
     $('.primera-cuota').css("visibility", "hidden");
     $('.cuotas').change(function(){
         recalcula();
@@ -341,6 +346,9 @@
         $("#m-valor-cuota").html($.number( $('.valor-cuota').val(), 0, ',', '.' ));
     }
     $(document).ready(function(){
+        const $escritos = $(".cboescritos");
+
+
         $('.monto-contrato').val('0');
         $('.cuotas').val('1');
         $('.primera-cuota').val(0);
@@ -377,11 +385,12 @@
                 processData: false,
                 async: true,
                 beforeSend: function(){
-                    $(".submateria").html(' <div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i><div class="text-bold pt-2">Loading...</div></div>');
+                    $(".loading").html(' <div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i><div class="text-bold pt-2">Loading...</div></div>');
                     
                 },
                 success:function(data){
-                    $(".submateria").html(data);
+                    $(".cbosubmateria").html(data);
+                    $(".loading").html('');
                 }
 
             });
@@ -394,35 +403,45 @@
     var x=0;
     function cambiaEscritos(valor){
         mee_val=valor;
+       
     }
     function agregarEstrategiaJuridica(){
         
         
-        
-        $.ajax({
-            url:"/mee/"+mee_val+"/list",
-            type: "post",
-            dataType: "html",
-            cache: false,
-            contentType: false,
-            processData: false,
-            async: true,
-            beforeSend: function(){
-                $(".loading").html(' <div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i><div class="text-bold pt-2">Loading...</div></div>');
+        $(".cboescritos option:selected").each(function() {			
+            $.ajax({
+                url:"/mee/"+$(this).attr('value')+"/list",
+                type: "post",
+                dataType: "html",
+                cache: false,
+                contentType: false,
+                processData: false,
+                async: true,
+                beforeSend: function(){
+                    $(".loading").html(' <div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i><div class="text-bold pt-2">Loading...</div></div>');
+                    
+                },
+                success:function(data){
+                    
+
+                    
                 
-            },
-            success:function(data){
-                x++;
-                var fieldHTML = '<div class="row div'+x+'"><div class="col-sm-12 col-md-1"><input type="hidden" value="'+mee_val+'" name="mee[]"></Div>';
-                fieldHTML+=data;
-                fieldHTML+='<div class="col-sm-12 col-md-1"><button type="button" class="btn btn-danger remove_button" onclick="javascript:borrarItem('+x+')" ><i class="fas fa-trash"></i></button> </div> <hr></div>';
-                fieldHTML+='<div class="col-12"><hr></div>';
+                        x++;
+                        var fieldHTML = '<div class="row div'+x+'"><div class="col-sm-12 col-md-1"><input type="hidden" value="'+mee_val+'" name="mee[]"></Div>';
+                        fieldHTML+=data;
+                        fieldHTML+='<div class="col-sm-12 col-md-1"><button type="button" class="btn btn-danger remove_button" onclick="javascript:borrarItem('+x+')" ><i class="fas fa-trash"></i></button> </div> <hr></div>';
+                        fieldHTML+='<div class="col-12"><hr></div>';
 
-                $("#estrategiasJuridicas").append(fieldHTML); // Add field html
-                $(".loading").html(' ');
-                 
-            }
-
+                        $("#estrategiasJuridicas").append(fieldHTML); // Add field html
+                        
+                    $(".loading").html(' ');
+                    
+                }
+            });
+            $(".cbosubmateria").empty();
+            $(".cboescritos").empty();
+            $('.cbomateria').val(0);
+                    
         });
         
         
@@ -444,11 +463,13 @@
             processData: false,
             async: true,
             beforeSend: function(){
-                $(".escritos").html(' <div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i><div class="text-bold pt-2">Loading...</div></div>');
+                $(".loading").html(' <div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i><div class="text-bold pt-2">Loading...</div></div>');
                 
             },
             success:function(data){
-                $(".escritos").html(data);
+                $(".cboescritos").empty()
+                $(".cboescritos").append(data);
+                $(".loading").html('');
             }
 
         });

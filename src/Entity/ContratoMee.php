@@ -25,9 +25,14 @@ class ContratoMee
 
     /**
      * @ORM\ManyToOne(targetEntity=Mee::class, inversedBy="contratoMees")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $mee;
+
+    /**
+     * @ORM\Column(type="array", nullable=true)
+     */
+    private $mees = [];
 
     public function getId(): ?int
     {
@@ -54,6 +59,18 @@ class ContratoMee
     public function setMee(?Mee $mee): self
     {
         $this->mee = $mee;
+
+        return $this;
+    }
+
+    public function getMees(): ?array
+    {
+        return $this->mees;
+    }
+
+    public function setMees(?array $mees): self
+    {
+        $this->mees = $mees;
 
         return $this;
     }
