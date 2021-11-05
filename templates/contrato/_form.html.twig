@@ -772,9 +772,11 @@
      function agregarEstrategiaJuridica(){
         
         
-        $(".cboescritos option:selected").each(function() {			
+        $(".cboescritos option:selected").each(function() {	
+             mee_val	=$(this).attr('value');
+		
             $.ajax({
-                url:"/mee/"+$(this).attr('value')+"/list",
+                url:"/mee/"+mee_val+"/list",
                 type: "post",
                 dataType: "html",
                 cache: false,
@@ -791,7 +793,7 @@
                     
                 
                         x++;
-                        var fieldHTML = '<div class="row div'+x+'"><div class="col-sm-12 col-md-1"><input type="hidden" value="'+$(this).attr('value')+'" name="mee[]"></Div>';
+                        var fieldHTML = '<div class="row div'+x+'"><div class="col-sm-12 col-md-1"><input type="hidden" value="'+mee_val+'" name="mee[]"></Div>';
                         fieldHTML+=data;
                         fieldHTML+='<div class="col-sm-12 col-md-1"><button type="button" class="btn btn-danger remove_button" onclick="javascript:borrarItem('+x+')" ><i class="fas fa-trash"></i></button> </div> <hr></div>';
                         fieldHTML+='<div class="col-12"><hr></div>';
