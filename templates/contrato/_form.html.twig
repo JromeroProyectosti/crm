@@ -310,12 +310,12 @@
                 </select>
             </div>    
             <div class="col-sm-12 col-md-3 submateria">
-                <select name="cboSubMateria" class="form-control" >
+                <select name="cboSubMateria" class="form-control cbosubmateria" onchange="javascript:cambiaSubmateria(this.value)">
                     <option></option>
                 </select>
             </div>   
             <div class="col-sm-12 col-md-3 escritos">
-               <select name="cboEscritos" class="form-control cboescritos" >
+               <select name="cboEscritos" class="form-control cboescritos  select2"  multiple="multiple" data-placeholder="Selecciona Escritos" style="width: 100%;" >
                     <option></option>
                 </select>
             </div>   
@@ -351,7 +351,8 @@
         </div>  
 
         <hr>
-
+{% if condition %}
+    
         <h4>Acreedores</h4>
             <div class="row">
                 <div class="col-sm-12 col-md-1">*
@@ -384,6 +385,12 @@
         <div class="card-body" id="contratoRoles">
     
         </div>
+
+    {% else %}
+    
+    <input type="hidden" id="Institucion" value="1">
+
+    {% endif %}
         <div class="col-sm-12 col-md-12">
             <small class="text-muted">Observación</small><br>
             {{form_row(form.observacion,{'label':false,'attr':{'class':'form-control','required':true}})}}
@@ -402,7 +409,11 @@
  
 
 <script>
-
+     $(function () {
+			//Initialize Select2 Elements
+			$('.select2').select2();
+			
+		});
     $('.cuotas').change(function(){
         recalcula();
     });
@@ -521,11 +532,12 @@
                 processData: false,
                 async: true,
                 beforeSend: function(){
-                    $(".submateria").html(' <div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i><div class="text-bold pt-2">Loading...</div></div>');
+                    $(".loading").html(' <div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i><div class="text-bold pt-2">Loading...</div></div>');
                     
                 },
                 success:function(data){
-                    $(".submateria").html(data);
+                    $(".cbosubmateria").html(data);
+                    $(".loading").html('');
                 }
 
             });
@@ -750,34 +762,43 @@
     function cambiaEscritos(valor){
         mee_val=valor;
     }
-    function agregarEstrategiaJuridica(){
+     function agregarEstrategiaJuridica(){
         
         
-        
-        $.ajax({
-            url:"/mee/"+mee_val+"/list",
-            type: "post",
-            dataType: "html",
-            cache: false,
-            contentType: false,
-            processData: false,
-            async: true,
-            beforeSend: function(){
-                $(".loading").html(' <div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i><div class="text-bold pt-2">Loading...</div></div>');
+        $(".cboescritos option:selected").each(function() {			
+            $.ajax({
+                url:"/mee/"+$(this).attr('value')+"/list",
+                type: "post",
+                dataType: "html",
+                cache: false,
+                contentType: false,
+                processData: false,
+                async: true,
+                beforeSend: function(){
+                    $(".loading").html(' <div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i><div class="text-bold pt-2">Loading...</div></div>');
+                    
+                },
+                success:function(data){
+                    
+
+                    
                 
-            },
-            success:function(data){
-                x++;
-                var fieldHTML = '<div class="row div'+x+'"><div class="col-sm-12 col-md-1"><input type="hidden" value="'+mee_val+'" name="mee[]"></Div>';
-                fieldHTML+=data;
-                fieldHTML+='<div class="col-sm-12 col-md-1"><button type="button" class="btn btn-danger remove_button" onclick="javascript:borrarItem('+x+')" ><i class="fas fa-trash"></i></button> </div> <hr></div>';
-                fieldHTML+='<div class="col-12"><hr></div>';
+                        x++;
+                        var fieldHTML = '<div class="row div'+x+'"><div class="col-sm-12 col-md-1"><input type="hidden" value="'+mee_val+'" name="mee[]"></Div>';
+                        fieldHTML+=data;
+                        fieldHTML+='<div class="col-sm-12 col-md-1"><button type="button" class="btn btn-danger remove_button" onclick="javascript:borrarItem('+x+')" ><i class="fas fa-trash"></i></button> </div> <hr></div>';
+                        fieldHTML+='<div class="col-12"><hr></div>';
 
-                $("#estrategiasJuridicas").append(fieldHTML); // Add field html
-                $(".loading").html(' ');
-                 
-            }
-
+                        $("#estrategiasJuridicas").append(fieldHTML); // Add field html
+                        
+                    $(".loading").html(' ');
+                    
+                }
+            });
+            $(".cbosubmateria").empty();
+            $(".cboescritos").empty();
+            $('.cbomateria').val(0);
+                    
         });
         
         
@@ -799,11 +820,13 @@
             processData: false,
             async: true,
             beforeSend: function(){
-                $(".escritos").html(' <div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i><div class="text-bold pt-2">Loading...</div></div>');
+                $(".loading").html(' <div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i><div class="text-bold pt-2">Loading...</div></div>');
                 
             },
             success:function(data){
-                $(".escritos").html(data);
+                $(".cboescritos").empty()
+                $(".cboescritos").append(data);
+                $(".loading").html('');
             }
 
         });

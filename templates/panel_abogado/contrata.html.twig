@@ -223,6 +223,8 @@
         </div>  
 
 <hr>
+{% if condition %}
+    
 
 
 <h4>Acreedores</h4>
@@ -295,6 +297,12 @@
     <div class="card-body" id="contratoRoles">
        
     </div>
+{% else %}
+    
+<input type="hidden" id="Institucion" value="1">
+
+{% endif %}
+
 
     <div class="col-sm-12 col-md-12">
         <small class="text-muted">Observación</small><br>
