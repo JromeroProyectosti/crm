@@ -19,7 +19,6 @@ class ContratoType extends AbstractType
             ->add('telefono')
             ->add('rut')
             ->add('direccion')
-
             ->add('montoNivelDeuda')
             ->add('MontoContrato')
             ->add('primeraCuota')
@@ -28,8 +27,6 @@ class ContratoType extends AbstractType
             ->add('valorCuota')
             ->add('estadoCivil')
             ->add('situacionLaboral')
-            ->add('estrategiaJuridica')
-            ->add('escritura')
             ->add('claveUnica')
             ->add('pais')
             ->add('telefonoRecado')
