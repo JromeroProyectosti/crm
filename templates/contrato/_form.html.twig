@@ -594,6 +594,12 @@
             $('button').attr("disabled", false);
             return false;
         }
+        if(x==0){
+            alert("Debe ingresar almenos una Estrategia");
+            $(".materia").focus();
+            $('button').attr("disabled", false);
+            return false;
+        }
         if($(".monto-contrato").val()<=0){
             alert("Debe ingresar un monto");
             $(".monto-contrato").focus();
@@ -784,7 +790,7 @@
                     
                 
                         x++;
-                        var fieldHTML = '<div class="row div'+x+'"><div class="col-sm-12 col-md-1"><input type="hidden" value="'+mee_val+'" name="mee[]"></Div>';
+                        var fieldHTML = '<div class="row div'+x+'"><div class="col-sm-12 col-md-1"><input type="hidden" value="'+$(this).attr('value')+'" name="mee[]"></Div>';
                         fieldHTML+=data;
                         fieldHTML+='<div class="col-sm-12 col-md-1"><button type="button" class="btn btn-danger remove_button" onclick="javascript:borrarItem('+x+')" ><i class="fas fa-trash"></i></button> </div> <hr></div>';
                         fieldHTML+='<div class="col-12"><hr></div>';
