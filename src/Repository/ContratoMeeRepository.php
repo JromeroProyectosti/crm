@@ -30,7 +30,7 @@ class ContratoMeeRepository extends ServiceEntityRepository
         $query->join('me.estrategiaJuridica','ej');
 
         $query->andWhere('c.contrato = '.$id_contrato);
-        $query->groupBy('m.estrategiaJuridica');
+        $query->groupBy('me.estrategiaJuridica');
 
         
         return $query
