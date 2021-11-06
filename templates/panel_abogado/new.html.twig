@@ -339,6 +339,8 @@
         
     }
     function cambiaCompania(status){
+
+        cambiamateria(status);
         $.ajax({
             url:"{{path('panel_abogado_compania',{'id':agenda.id})}}",
             type: "get",

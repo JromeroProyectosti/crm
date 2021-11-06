@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Agenda;
 use App\Entity\Materia;
 use App\Entity\Cuenta;
 use App\Entity\CuentaMateria;
@@ -106,6 +107,16 @@ class MateriaController extends AbstractController
             'form' => $form->createView(),
             'cuentas'=>$cuentas,
             'cuentas_sel'=>$materium->getCuentaMaterias(),
+        ]);
+    }
+    /**
+     * @Route("/{id}/combo", name="materia_combo", methods={"GET","POST"})
+     */
+    public function combo(Cuenta $cuenta): Response
+    {
+        return $this->render('materia/combo.html.twig', [
+            'cuenta_materias' => $cuenta->getCuentaMaterias(),
+            
         ]);
     }
 

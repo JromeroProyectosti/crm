@@ -27,6 +27,7 @@ un contrato de prestaci&oacute;n de servicios jur&iacute;dicos, desglosando su c
 {% endfor %}
 </p>
 
+{% if contrato.agenda.cuenta.id != 7 %}
 <strong>Acreedores:</strong>
 <ul style="list-style: none;">
 {% if contrato.contratoRols is not null %}
@@ -48,6 +49,7 @@ un contrato de prestaci&oacute;n de servicios jur&iacute;dicos, desglosando su c
 <li>- SIN ROL
 {% endif %}
 </ul>
+{% endif %}
 <ul style="list-style: none;">
 <li> 
 *	Monitoreo diario de causas a trav&eacute;s de sistema interno del estudio.

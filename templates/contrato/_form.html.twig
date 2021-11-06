@@ -326,7 +326,8 @@
             
     
         </div>
-        <div class="card-body" >
+        <div  class="card-body" >
+            <div id="estrategiasJuridicas2">
             {% set x=0 %}
             {% for contratoMee in contratoMees %}
             
@@ -344,7 +345,7 @@
              
             {% set x= x+1 %}
             {% endfor %}
-
+            </div>
             <div id="estrategiasJuridicas">
              
             </div>
@@ -623,6 +624,7 @@
         recalcula();
     });
     function cambiaCompania(status){
+        cambiamateria(status);
         $.ajax({
             url:"{{path('panel_abogado_compania',{'id':agenda.id})}}",
             type: "get",
@@ -771,10 +773,13 @@
     }
      function agregarEstrategiaJuridica(){
         
+
         
+
+         var hayEstrategias=false;
         $(".cboescritos option:selected").each(function() {	
              mee_val=$(this).attr('value');
-		
+            hayEstrategias=true;
             $.ajax({
                 url:"/mee/"+mee_val+"/list",
                 type: "post",
@@ -809,7 +814,10 @@
             $('.cbomateria').val(0);
                     
         });
-        
+        if(!hayEstrategias){
+            alert("Debe seleccionar al menos un escrito");
+            $(".cbosubmateria").focus();
+        }
         
     
     }
@@ -837,6 +845,33 @@
                 $(".cboescritos").append(data);
                 $(".loading").html('');
             }
+
+        });
+    }
+    function cambiamateria(valor){
+        
+        $.ajax({
+            url:"/materia/"+valor+"/combo",
+            type: "post",
+            dataType: "html",
+            cache: false,
+            contentType: false,
+            processData: false,
+            async: true,
+            beforeSend: function(){
+                $(".loading").html(' <div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i><div class="text-bold pt-2">Loading...</div></div>');
+                
+            },
+            success:function(data){
+                $(".cbomateria").empty()
+                $(".cbomateria").append(data);
+                $(".loading").html('');
+                $(".cbosubmateria").empty();
+                $(".cboescritos").empty();
+                $("#estrategiasJuridicas").empty();
+                 $("#estrategiasJuridicas2").empty();
+            }
+
 
         });
     }

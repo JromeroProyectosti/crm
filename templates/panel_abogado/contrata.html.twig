@@ -415,8 +415,12 @@
     }
     function agregarEstrategiaJuridica(){
         
-        
+        var hayEstrategias=false;
+
         $(".cboescritos option:selected").each(function() {	
+
+            hayEstrategias=true;
+            
             mee_val	=$(this).attr('value');
             $.ajax({
                 url:"/mee/"+mee_val+"/list",
@@ -447,10 +451,13 @@
             $(".cbosubmateria").empty();
             $(".cboescritos").empty();
             $('.cbomateria').val(0);
-                    
+            
         });
         
-        
+        if(!hayEstrategias){
+            alert("Debe seleccionar al menos un escrito");
+            $(".cbosubmateria").focus();
+        }
     
     }
     function borrarItem(x){
@@ -653,7 +660,32 @@
         });
     }
 
-  
+  function cambiamateria(valor){
+        
+        $.ajax({
+            url:"/materia/"+valor+"/combo",
+            type: "post",
+            dataType: "html",
+            cache: false,
+            contentType: false,
+            processData: false,
+            async: true,
+            beforeSend: function(){
+                $(".loading").html(' <div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i><div class="text-bold pt-2">Loading...</div></div>');
+                
+            },
+            success:function(data){
+                $(".cbomateria").empty()
+                $(".cbomateria").append(data);
+                $(".loading").html('');
+                $(".cbosubmateria").empty();
+                $(".cboescritos").empty();
+                $("#estrategiasJuridicas").empty();
+            }
+
+
+        });
+    }
 
     
 </script>
