@@ -372,7 +372,7 @@ class PagoController extends AbstractController
     public function generaCuotas(CuotaRepository $cuotaRepository,ContratoRepository $contratoRepository): Response
     {
 
-        $contratos=$contratoRepository->findRange(1,5092);
+        $contratos=$contratoRepository->findBy([],[],'limit 5092');
 
 
         foreach($contratos as $contrato){
