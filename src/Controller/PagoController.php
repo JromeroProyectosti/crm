@@ -449,7 +449,7 @@ class PagoController extends AbstractController
                 }
             }
         }
-        exit;
+        
         return $this->redirectToRoute('pago_index');
     }
     /**
