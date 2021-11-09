@@ -22,7 +22,7 @@ class ContratoRepository extends ServiceEntityRepository
     public function findRange($inicio, $fin): ?Contrato
     {
         $query=$this->createQueryBuilder('c');
-        $query->where("id betwen  ".$inicio. " and ".$fin);
+        $query->where("id between  ".$inicio. " and ".$fin);
         
         return $query->getQuery()
         ->getResult();
