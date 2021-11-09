@@ -17,6 +17,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Twig\Environment;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+ini_set('memory_limit', '-1');
 
 class CargacuotasCommand extends Command
 {
