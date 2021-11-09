@@ -19,7 +19,7 @@ class ContratoRepository extends ServiceEntityRepository
         parent::__construct($registry, Contrato::class);
     }
 
-    public function findRange($inicio, $fin): ?Contrato
+    public function findRange($inicio, $fin)
     {
         $query=$this->createQueryBuilder('c');
         $query->where("id between  ".$inicio. " and ".$fin);
