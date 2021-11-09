@@ -18,6 +18,16 @@ class ContratoRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Contrato::class);
     }
+
+    public function findRange($inicio, $fin): ?Contrato
+    {
+        $query=$this->createQueryBuilder('c');
+        $query->where("id betwen  ".$inicio. " and ".$fin);
+        
+        return $query->getQuery()
+        ->getResult();
+
+    }
     public function findLoteMax($empresa=null): ?Contrato
     {
         $query=$this->createQueryBuilder('c')

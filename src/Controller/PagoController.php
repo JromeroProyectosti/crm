@@ -367,12 +367,12 @@ class PagoController extends AbstractController
         return $this->redirectToRoute('pago_index');
     }
     /**
-     * @Route("/genera_cuotas", name="pago_generacuotas", methods={"GET","POST"})
+     * @Route("/s", name="pago_generacuotas", methods={"GET","POST"})
      */
     public function generaCuotas(CuotaRepository $cuotaRepository,ContratoRepository $contratoRepository): Response
     {
 
-        $contratos=$contratoRepository->findAll();
+        $contratos=$contratoRepository->findRange(1, 5092);
 
 
         foreach($contratos as $contrato){
