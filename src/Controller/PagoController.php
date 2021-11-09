@@ -375,7 +375,7 @@ class PagoController extends AbstractController
         $contratos=$contratoRepository->findRange(1, 5092);
 
 
-
+        
         foreach($contratos as $contrato){
             $cuota=$cuotaRepository->findOneByUltimaPagada($contrato->getId());
            
@@ -449,6 +449,7 @@ class PagoController extends AbstractController
                 }
             }
         }
+        exit;
         return $this->redirectToRoute('pago_index');
     }
     /**
