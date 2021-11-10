@@ -353,18 +353,17 @@
         </div>  
 
         <hr>
-{% if agenda.cuenta.id != 7 %}
-    
-        <h4>Acreedores</h4>
+
+        <h4>Servicios</h4>
             <div class="row">
                 <div class="col-sm-12 col-md-1">*
                 </Div>
                 
                 <div class="col-sm-12 col-md-3">
-                    <input type="text" name="nombreRol" class="form-control nombre-rol" placeholder="Nombre de rol">
+                    <input type="text" name="nombreRol" class="form-control nombre-rol" placeholder="Rol">
                 </div>    
                 <div class="col-sm-12 col-md-3">
-                    <input type="text" name="institucionAcreedora" class="form-control institucion" placeholder="Institucion Acreedora" >
+                    <input type="text" name="institucionAcreedora" class="form-control institucion" placeholder="Acreedor o Parte" >
                 </div>   
                 <div class="col-sm-12 col-md-3">
                     
@@ -382,17 +381,15 @@
                 
         
             </div>
-        
+            <div class="card-body" id="acreedorVacio">
+       
+    </div>
    
         <div class="card-body" id="contratoRoles">
     
         </div>
 
-    {% else %}
     
-    <input type="hidden" id="Institucion" value="1">
-
-    {% endif %}
         <div class="col-sm-12 col-md-12">
             <small class="text-muted">Observación</small><br>
             {{form_row(form.observacion,{'label':false,'attr':{'class':'form-control','required':true}})}}
@@ -414,7 +411,7 @@
      $(function () {
 			//Initialize Select2 Elements
 			$('.select2').select2();
-			
+			cambiaAcreedores({{contrato.agenda.cuenta.id}});
 		});
     $('.cuotas').change(function(){
         recalcula();
@@ -591,7 +588,7 @@
     function validarut(){
         $('button').attr("disabled", true);
         if($("#Institucion").val()==0){
-            alert("Debe ingresar almenos una Insitution Acreedora");
+            alert("Debe ingresar almenos un Servicio");
             $(".nombre-rol").focus();
             $('button').attr("disabled", false);
             return false;
@@ -625,6 +622,7 @@
     });
     function cambiaCompania(status){
         cambiamateria(status);
+        cambiaAcreedores(status);
         $.ajax({
             url:"{{path('panel_abogado_compania',{'id':agenda.id})}}",
             type: "get",
@@ -874,6 +872,33 @@
 
 
         });
+    }
+    function cambiaAcreedores(cuenta){
+
+        if(cuenta == 7){
+            $("#acreedorVacio").html('<input type="hidden" id="Institucion" value="1">');
+        }else{
+             $("#acreedorVacio").html('');
+        }
+        $.ajax({
+                url:"/juzgado_cuenta/"+cuenta+"/combo",
+                type: "post",
+                dataType: "html",
+                cache: false,
+                contentType: false,
+                processData: false,
+                async: true,
+                beforeSend: function(){
+                    //$(".loading").html(' <div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i><div class="text-bold pt-2">Loading...</div></div>');
+                    
+                },
+                success:function(data){
+                    $(".juzgado").html(data);
+                    //$(".loading").html('');
+                }
+
+            });
+
     }
 </script>
 

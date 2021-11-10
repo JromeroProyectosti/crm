@@ -18,3 +18,9 @@ ALTER TABLE contrato_mee ADD mees LONGTEXT DEFAULT NULL COMMENT \'(DC2Type:array
 INSERT INTO `modulo` (`id`, `nombre`, `ruta`, `nombre_alt`, `descripcion`) VALUES (NULL, 'materia_index', 'materia_index', 'Materia', 'Materia');
 INSERT INTO `modulo` (`id`, `nombre`, `ruta`, `nombre_alt`, `descripcion`) VALUES (NULL, 'estrategia_juridica_index', 'estrategia_juridica_index', 'Sub Materia', 'Sub Materias');
 INSERT INTO `modulo` (`id`, `nombre`, `ruta`, `nombre_alt`, `descripcion`) VALUES (NULL, 'escritura', 'escritura_index', 'Escrituras', 'Escrituras');
+
+
+CREATE TABLE juzgado_cuenta (id INT AUTO_INCREMENT NOT NULL, cuenta_id INT NOT NULL, juzgado_id INT NOT NULL, INDEX IDX_FCE1830F9AEFF118 (cuenta_id), INDEX IDX_FCE1830FB9A57363 (juzgado_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
+ALTER TABLE juzgado_cuenta ADD CONSTRAINT FK_FCE1830F9AEFF118 FOREIGN KEY (cuenta_id) REFERENCES cuenta (id);
+ALTER TABLE juzgado_cuenta ADD CONSTRAINT FK_FCE1830FB9A57363 FOREIGN KEY (juzgado_id) REFERENCES juzgado (id);
+        

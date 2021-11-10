@@ -80,6 +80,11 @@ class Cuenta
      */
     private $cuentaMaterias;
 
+    /**
+     * @ORM\OneToMany(targetEntity=JuzgadoCuenta::class, mappedBy="cuenta")
+     */
+    private $juzgadoCuentas;
+
   
 
     public function __construct()
@@ -90,6 +95,7 @@ class Cuenta
         $this->usuarioUsuariocategorias = new ArrayCollection();
         $this->importacions = new ArrayCollection();
         $this->cuentaMaterias = new ArrayCollection();
+        $this->juzgadoCuentas = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -347,6 +353,36 @@ class Cuenta
             // set the owning side to null (unless already changed)
             if ($cuentaMateria->getCuenta() === $this) {
                 $cuentaMateria->setCuenta(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|JuzgadoCuenta[]
+     */
+    public function getJuzgadoCuentas(): Collection
+    {
+        return $this->juzgadoCuentas;
+    }
+
+    public function addJuzgadoCuenta(JuzgadoCuenta $juzgadoCuenta): self
+    {
+        if (!$this->juzgadoCuentas->contains($juzgadoCuenta)) {
+            $this->juzgadoCuentas[] = $juzgadoCuenta;
+            $juzgadoCuenta->setCuenta($this);
+        }
+
+        return $this;
+    }
+
+    public function removeJuzgadoCuenta(JuzgadoCuenta $juzgadoCuenta): self
+    {
+        if ($this->juzgadoCuentas->removeElement($juzgadoCuenta)) {
+            // set the owning side to null (unless already changed)
+            if ($juzgadoCuenta->getCuenta() === $this) {
+                $juzgadoCuenta->setCuenta(null);
             }
         }
 

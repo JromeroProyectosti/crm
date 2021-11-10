@@ -34,11 +34,17 @@ class Juzgado
      */
     private $contratoRols;
 
+    /**
+     * @ORM\OneToMany(targetEntity=JuzgadoCuenta::class, mappedBy="juzgado")
+     */
+    private $juzgadoCuentas;
+
 
 
     public function __construct()
     {
         $this->contratoRols = new ArrayCollection();
+        $this->juzgadoCuentas = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -102,6 +108,36 @@ class Juzgado
     
     public function __toString(){
         return $this->getNombre();
+    }
+
+    /**
+     * @return Collection|JuzgadoCuenta[]
+     */
+    public function getJuzgadoCuentas(): Collection
+    {
+        return $this->juzgadoCuentas;
+    }
+
+    public function addJuzgadoCuenta(JuzgadoCuenta $juzgadoCuenta): self
+    {
+        if (!$this->juzgadoCuentas->contains($juzgadoCuenta)) {
+            $this->juzgadoCuentas[] = $juzgadoCuenta;
+            $juzgadoCuenta->setJuzgado($this);
+        }
+
+        return $this;
+    }
+
+    public function removeJuzgadoCuenta(JuzgadoCuenta $juzgadoCuenta): self
+    {
+        if ($this->juzgadoCuentas->removeElement($juzgadoCuenta)) {
+            // set the owning side to null (unless already changed)
+            if ($juzgadoCuenta->getJuzgado() === $this) {
+                $juzgadoCuenta->setJuzgado(null);
+            }
+        }
+
+        return $this;
     }
     
 }
