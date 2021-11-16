@@ -25,7 +25,9 @@ use App\Repository\CuentaCorrienteRepository;
 use App\Repository\PagoCuotasRepository;
 use App\Repository\UsuarioRepository;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -498,7 +500,7 @@ class PagoController extends AbstractController
                     $entityManager = $this->getDoctrine()->getManager();
                     $entityManager->persist($importacion);
                     $entityManager->flush();
-                    $fp = fopen($importacion->getUrl(), "r");
+                    /*$fp = fopen($importacion->getUrl(), "r");
                     $i=0;
                     $paso=true;
                     $mensajeError="";
@@ -535,7 +537,21 @@ class PagoController extends AbstractController
                         $entityManager->flush();
 
                         $pagoCuotasRepository->asociarPagos($contratoRepository->findOneBy(['folio'=>$datos[0]]),$cuotaRepository,$pagoCuotasRepository,$pago);
-                    }
+                    }*/
+                    $kernel = $this->get('kernel');
+                    $application = new Application($kernel);
+                    $application->setAutoExit(false);
+
+                    $input = new ArrayInput(array(
+                        'command' => 'app:cargar-pagos',
+                        '--url' =>  $importacion->getUrl()
+                    ));
+                    
+                    // Use the NullOutput class instead of BufferedOutput.
+                    $output = new NullOutput();
+
+                    $application->run($input, $output);
+
                 } catch (FileException $e) {
                 }
             }
