@@ -18,6 +18,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+
+ini_set('memory_limit', '-1');
+
 class CargarPagosCommand extends Command
 {
     protected static $defaultName = 'app:cargar-pagos';
