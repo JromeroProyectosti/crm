@@ -28,10 +28,12 @@ use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * @Route("/pago")
@@ -465,7 +467,8 @@ class PagoController extends AbstractController
                                 CuotaRepository $cuotaRepository,
                                 PagoCuotasRepository $pagoCuotasRepository,
                                 ContratoRepository $contratoRepository,
-                                UsuarioRepository $usuarioRepository):Response
+                                UsuarioRepository $usuarioRepository,
+                                KernelInterface $kernel):Response
     {
         set_time_limit(0);
         $user=$this->getUser();
@@ -538,7 +541,7 @@ class PagoController extends AbstractController
 
                         $pagoCuotasRepository->asociarPagos($contratoRepository->findOneBy(['folio'=>$datos[0]]),$cuotaRepository,$pagoCuotasRepository,$pago);
                     }*/
-                    $kernel = $this->get('kernel');
+                   
                     $application = new Application($kernel);
                     $application->setAutoExit(false);
 
