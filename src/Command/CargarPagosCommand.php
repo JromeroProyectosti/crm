@@ -35,7 +35,7 @@ class CargarPagosCommand extends Command
         $this
             ->setDescription('Carga pagos asociando a las cuotas')
             
-            ->addOption('url', null, InputOption::REQUIRED, 'Fichero que contiene los pagos')
+            ->addArgument('url', InputOption::REQUIRED, 'Fichero que contiene los pagos')
         ;
     }
 
@@ -46,8 +46,8 @@ class CargarPagosCommand extends Command
         $em=$this->container->get('doctrine');
 
 
-        if ($input->getOption('url')) {
-            $fp = fopen($input->getOption('url'), "r");
+        if ($input->getArgument('url')) {
+            $fp = fopen($input->getArgument('url'), "r");
             $i=0;
             $paso=true;
             $mensajeError="";
