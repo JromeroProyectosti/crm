@@ -35,7 +35,7 @@ class CargarPagosCommand extends Command
         $this
             ->setDescription('Carga pagos asociando a las cuotas')
             
-            ->addOption('url', null, InputOption::VALUE_NONE, 'Fichero que contiene los pagos')
+            ->addOption('url', null, InputOption::REQUIRED, 'Fichero que contiene los pagos')
         ;
     }
 
