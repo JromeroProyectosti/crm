@@ -62,26 +62,28 @@ class CargarPagosCommand extends Command
                 
                 if($datos[0]=="") break;
 
-                $fechaPago=str_replace(" : ","00:00", $datos[6]);
-                $fechaRegistro=str_replace(" : ","00:00", $datos[8]);
-                $pago=new Pago();
-                $pago->setPagoTipo($em->getRepository(PagoTipo::class)->find($datos[1]));
-                $pago->setPagoCanal($em->getRepository(PagoCanal::class)->find($datos[2]));
-                $pago->setMonto($datos[3]);
-                $pago->setBoleta($datos[4]);
-                $pago->setObservacion($datos[5]);
-                $pago->setFechaPago(new \DateTime(date('Y-m-d H:i',strtotime($fechaPago))));
-                $pago->setHoraPago(new \DateTime(date('H:i',strtotime($fechaPago))));
-                $pago->setFechaRegistro(new \DateTime(date('Y-m-d H:i',strtotime($fechaRegistro))));
-                $pago->setCuentaCorriente($em->getRepository(CuentaCorriente::class)->find($datos[9]));
-                $pago->setNcomprobante($datos[10]);
-                $pago->setComprobante($datos[11]);
-                $pago->setUsuarioRegistro($em->getRepository(Usuario::class)->find($datos[12]));
-                $entityManager->persist($pago);
-                $entityManager->flush();
+                $contrato=$em->getRepository(Contrato::class)->findOneBy(['folio'=>$datos[0]]);
+                if(null != $contrato){
+                    $fechaPago=str_replace(" : ","00:00", $datos[6]);
+                    $fechaRegistro=str_replace(" : ","00:00", $datos[8]);
+                    $pago=new Pago();
+                    $pago->setPagoTipo($em->getRepository(PagoTipo::class)->find($datos[1]));
+                    $pago->setPagoCanal($em->getRepository(PagoCanal::class)->find($datos[2]));
+                    $pago->setMonto($datos[3]);
+                    $pago->setBoleta($datos[4]);
+                    $pago->setObservacion($datos[5]);
+                    $pago->setFechaPago(new \DateTime(date('Y-m-d H:i',strtotime($fechaPago))));
+                    $pago->setHoraPago(new \DateTime(date('H:i',strtotime($fechaPago))));
+                    $pago->setFechaRegistro(new \DateTime(date('Y-m-d H:i',strtotime($fechaRegistro))));
+                    $pago->setCuentaCorriente($em->getRepository(CuentaCorriente::class)->find($datos[9]));
+                    $pago->setNcomprobante($datos[10]);
+                    $pago->setComprobante($datos[11]);
+                    $pago->setUsuarioRegistro($em->getRepository(Usuario::class)->find($datos[12]));
+                    $entityManager->persist($pago);
+                    $entityManager->flush();
 
-                $em->getRepository(PagoCuotas::class)->asociarPagos($em->getRepository(Contrato::class)->findOneBy(['folio'=>$datos[0]]),$em->getRepository(Cuota::class),$em->getRepository(PagoCuotas::class),$pago);
-
+                    $em->getRepository(PagoCuotas::class)->asociarPagos($em->getRepository(Contrato::class)->findOneBy(['folio'=>$datos[0]]),$em->getRepository(Cuota::class),$em->getRepository(PagoCuotas::class),$pago);
+                }
             }
         }
 
