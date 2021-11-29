@@ -412,7 +412,7 @@
 			//Initialize Select2 Elements
 			$('.select2').select2();
 			cambiaAcreedores({{contrato.agenda.cuenta.id}});
-             $.ajax({
+             /*$.ajax({
                 url:"/panel_abogado/"+{{contrato.agenda.cuenta.id}}+"/tramitadores",
                 type: "post",
                 dataType: "html",
@@ -430,7 +430,7 @@
                     $("#tramitador").append(data);
                     //$("#contrato").html("");
                 }
-            });
+            });*/
 
 		});
     $('.cuotas').change(function(){
