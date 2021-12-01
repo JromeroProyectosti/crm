@@ -58,7 +58,7 @@ class NocontestaController extends AbstractController
             $dateInicio=date('Y-m-d',mktime(0,0,0,date('m'),date('d'),date('Y'))-60*60*24*30);
             $dateFin=date('Y-m-d');
         }
-        $fecha="a.fechaCarga between '$dateInicio' and '$dateFin 23:59:59' and a.status in (7,14)" ;
+        $fecha="a.fechaCarga between '$dateInicio' and '$dateFin 23:59:59'" ;
      
 
 
