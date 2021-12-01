@@ -35,28 +35,45 @@ class NocontestaController extends AbstractController
         $user=$this->getUser();
         $pagina=$moduloPerRepository->findOneByName('nocontesta',$user->getEmpresaActual());
         $filtro=null;
-        $compania=null;
-        if(null !== $request->query->get('bFiltro')&& trim($request->query->get('bFiltro'))!=''){
+        $error='';
+        $error_toast="";
+        $otros="";
+        $folio="";
+        if(null !== $request->query->get('error_toast')){
+            $error_toast=$request->query->get('error_toast');
+        }
+        
+        if(null !== $request->query->get('bFiltro') && $request->query->get('bFiltro')!=''){
             $filtro=$request->query->get('bFiltro');
         }
-        if(null !== $request->query->get('bCompania')&&$request->query->get('bCompania')!=0){
+        if(null !== $request->query->get('bCompania') && $request->query->get('bCompania')!=0){
             $compania=$request->query->get('bCompania');
         }
+        if(null !== $request->query->get('bFecha')){
+            $aux_fecha=explode(" - ",$request->query->get('bFecha'));
+            $dateInicio=$aux_fecha[0];
+            $dateFin=$aux_fecha[1];
+        }else{
+            $dateInicio=date('Y-m-d',mktime(0,0,0,date('m'),date('d'),date('Y'))-60*60*24*30);
+            $dateFin=date('Y-m-d');
+        }
+        $fecha="a.fechaCarga between '$dateInicio' and '$dateFin 23:59:59' and a.status in (7,14)" ;
+     
 
 
         switch($user->getUsuarioTipo()->getId()){
             case 3:
             case 4:
             case 1:
-                $query=$agendaRepository->findByPers(null,$user->getEmpresaActual(),$compania,'10,4',$filtro,3);
+                $query=$agendaRepository->findByPers(null,$user->getEmpresaActual(),$compania,'10,4',$filtro,3,$fecha);
                 $companias=$cuentaRepository->findByPers(null,$user->getEmpresaActual());
             break;
             case 5:
-                $query=$agendaRepository->findByPers($user->getId(),null,$compania,'10,4',$filtro,3);
+                $query=$agendaRepository->findByPers($user->getId(),null,$compania,'10,4',$filtro,3,$fecha);
                 $companias=$cuentaRepository->findByPers($user->getId());
             break;
             default:
-                $query=$agendaRepository->findByPers($user->getId(),null,$compania,'10,4',$filtro,3);
+                $query=$agendaRepository->findByPers($user->getId(),null,$compania,'10,4',$filtro,3,$fecha);
                 $companias=$cuentaRepository->findByPers($user->getId());
             break;
         }
@@ -75,7 +92,11 @@ class NocontestaController extends AbstractController
             'pagina'=>$pagina->getNombre(),
             'bFiltro'=>$filtro,
             'companias'=>$companias,
-            'bCompania'=>$compania
+            'bCompania'=>$compania,
+            'dateInicio'=>$dateInicio,
+            'dateFin'=>$dateFin,
+            'error'=>$error,
+            'error_toast'=>$error_toast,
         ]);
         
     }
