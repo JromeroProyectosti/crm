@@ -68,7 +68,7 @@ class AgendaRepository extends ServiceEntityRepository
          ;
 
         }
-        $query->orderBy('id','desc');
+        $query->orderBy('a.id','desc');
         $query->setMaxResults(2000);
         return $query->getQuery()
             ->getResult()
