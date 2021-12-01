@@ -39,7 +39,7 @@ class NocontestaController extends AbstractController
         $error_toast="";
         $otros="";
         $folio="";
-        $compania="";
+        $compania=null;
         if(null !== $request->query->get('error_toast')){
             $error_toast=$request->query->get('error_toast');
         }
