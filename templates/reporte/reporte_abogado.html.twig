@@ -110,7 +110,7 @@
                     {% set suma_ratificatermino = suma_ratificatermino + reporte.ratificatermino %}
                     {% set suma_noresponde = suma_noresponde + reporte.noresponde %}
                     {% set suma_desconoceodesiste = suma_desconoceodesiste + reporte.desconoceodesiste %}
-                    {% set suma_efectividad = suma_efectividad + ((((reporte.contrata)*100)/((reporte.total-reporte.nocalifica)?(reporte.total-reporte.nocalifica)) %}
+                    {% set suma_efectividad = suma_efectividad + ((((reporte.contrata)*100)/((reporte.total-reporte.nocalifica)?(reporte.total-reporte.nocalifica)))) %}
                     {% set cant_efectividad  = cant_efectividad + 1 %}
                     {% else %}
                     <tr>
