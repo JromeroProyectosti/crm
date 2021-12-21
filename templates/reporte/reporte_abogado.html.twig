@@ -72,6 +72,8 @@
                         <th scope="col" style="text-align: right;">No Contrata</th>
                         <th scope="col" style="text-align: right;">Contrata</th>
                         <th scope="col" style="text-align: right;">Ratifica Termino</th>
+                        <th scope="col" style="text-align: right;">No Responde</th>
+                        <th scope="col" style="text-align: right;">Desconoce o Desiste</th>
                         <th scope="col" style="text-align: right;">Efectividad</th>
                         <th scope="col" style="text-align: right;">Honorarios</th>
                     </tr>
@@ -91,7 +93,9 @@
                         <td align="right">{{ reporte.nocontrata}}</td>
                         <td align="right">{{ reporte.contrata}}</td>
                         <td align="right">{{ reporte.ratificatermino}}</td>
-                        <td align="right">{{ (((reporte.contrata-reporte.ratificatermino)*100)/((reporte.total-reporte.nocalifica)?(reporte.total-reporte.nocalifica):1))|number_format(0,",",".")}}%</td>
+                        <td align="right">{{ reporte.noresponde}}</td>
+                        <td align="right">{{ reporte.desconoceodesiste}}</td>
+                        <td align="right">{{ (((reporte.contrata)*100)/((reporte.total-reporte.nocalifica)?(reporte.total-reporte.nocalifica):1))|number_format(0,",",".")}}%</td>
                         <td align="right">${{(reporte.monto/(reporte.contrata?reporte.contrata:1))|number_format(0,",",".")}}</td>
                     </tr>
                     {% set suma_total = suma_total + reporte.total %}
