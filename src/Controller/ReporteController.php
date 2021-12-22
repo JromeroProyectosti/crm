@@ -227,7 +227,7 @@ class ReporteController extends AbstractController
             $agenda=$total[0];
             //$valor=$agenda.valor;
 
-            $agendados=$agendaRepository->findByAgendReporte($agenda->getAbogado()->getId(),$user->getEmpresaActual(),$compania,'5,14',$filtro,1,$fecha);
+            $agendados=$agendaRepository->findByAgendReporte($agenda->getAbogado()->getId(),$user->getEmpresaActual(),$compania,'5',$filtro,1,$fecha);
             foreach($agendados as $agendado){
                 $cantAgendado=$agendado['valor'];
             }
@@ -239,7 +239,7 @@ class ReporteController extends AbstractController
             foreach($nocontratan as $nocontrata){
                 $cantNoContrata=$nocontrata['valor'];
             }
-            $contratan=$agendaRepository->findByAgendReporte($agenda->getAbogado()->getId(),$user->getEmpresaActual(),$compania,'7',$filtro,1,$fecha);
+            $contratan=$agendaRepository->findByAgendReporte($agenda->getAbogado()->getId(),$user->getEmpresaActual(),$compania,'7,14',$filtro,1,$fecha);
             foreach($contratan as $contrata){
                 $cantContrata=$contrata['valor'];
                 $monto=$contrata['monto'];
