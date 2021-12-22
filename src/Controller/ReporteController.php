@@ -248,7 +248,7 @@ class ReporteController extends AbstractController
             foreach($ratificantermino as $ratificatermino){
                 $cantRatificaTermino=$ratificatermino['valor'];
             }
-            $noresponden=$agendaRepository->findByAgendReporte($agenda->getAbogado()->getId(),$user->getEmpresaActual(),$compania,'10',$filtro,1,$fecha);
+            $noresponden=$agendaRepository->findByAgendReporte($agenda->getAbogado()->getId(),$user->getEmpresaActual(),$compania,'4',$filtro,1,$fecha);
             foreach($noresponden as $noresponde){
                 $cantNoResponde=$noresponde['valor'];
             }
