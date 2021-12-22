@@ -137,7 +137,7 @@
                         <th>{{ suma_noresponde|number_format(0,",",".")}}</th>
                         <th>{{ suma_desconoceodesiste|number_format(0,",",".")}}</th>
                         <th>{{ suma_ratificatermino|number_format(0,",",".")}}</th>
-                        <th>{{ (suma_efectividad / (cant_efectividad?cant_efectividad:1))|number_format(0,",",".")}}%</th>
+                        <th>{{ (((reporte.suma_contrata)*100)/((reporte.suma_total-reporte.suma_nocalifica)?(reporte.suma_total-reporte.suma_nocalifica):1))|number_format(0,",",".")}}%</th>
                         <th></th>
                     </tr>
 
