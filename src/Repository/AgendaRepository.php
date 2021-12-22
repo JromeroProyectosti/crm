@@ -326,7 +326,6 @@ class AgendaRepository extends ServiceEntityRepository
         
     
         if(!is_null($status)){
-            
                 $query->andWhere('a.status in ('.$status.')');
 
         }
