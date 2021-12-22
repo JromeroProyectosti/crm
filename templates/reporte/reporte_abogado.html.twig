@@ -91,6 +91,7 @@
                     {% set suma_desconoceodesiste=0 %}
                     {% set suma_efectividad = 0 %}
                     {% set cant_efectividad =0 %}
+                    {% set suma_monto =0 %}
                     {% for reporte in reportes %}
 
                     <tr>
@@ -116,8 +117,8 @@
                     {% set suma_ratificatermino = suma_ratificatermino + reporte.ratificatermino %}
                     {% set suma_noresponde = suma_noresponde + reporte.noresponde %}
                     {% set suma_desconoceodesiste = suma_desconoceodesiste + reporte.desconoceodesiste %}
-                    {% set suma_efectividad = suma_efectividad + ((((reporte.contrata)*100)/((reporte.total-reporte.nocalifica)?(reporte.total-reporte.nocalifica)))) %}
                     {% set cant_efectividad  = cant_efectividad + 1 %}
+                    {% set suma_monto = suma_monto + (reporte.monto/(reporte.contrata?reporte.contrata:1)) %}
                     {% else %}
                     <tr>
                         <td colspan="10">No hay registros</td>
@@ -138,7 +139,7 @@
                         <th>{{ suma_desconoceodesiste|number_format(0,",",".")}}</th>
                         <th>{{ suma_ratificatermino|number_format(0,",",".")}}</th>
                         <th>{{ (((suma_contrata)*100)/((suma_total-suma_nocalifica)?(suma_total-suma_nocalifica):1))|number_format(0,",",".")}}%</th>
-                        <th></th>
+                        <th>{{ suma_monto|number_format(0,",",".")}}</th>
                     </tr>
 
                 </tfoot>
