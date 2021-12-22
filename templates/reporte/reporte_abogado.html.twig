@@ -67,19 +67,22 @@
                 <thead>
                     <tr >
                         <th scope="col" align="right">Abogado</th>
+                        <th scope="col" style="text-align: right;">Asignados</th>
                         <th scope="col" style="text-align: right;">Agendados</th>
                         <th scope="col" style="text-align: right;">No Califica AB</th>
                         <th scope="col" style="text-align: right;">No Contrata</th>
                         <th scope="col" style="text-align: right;">Contrata</th>
-                        <th scope="col" style="text-align: right;">Ratifica Termino</th>
+                        
                         <th scope="col" style="text-align: right;">No Responde</th>
                         <th scope="col" style="text-align: right;">Desconoce o Desiste</th>
+                        <th scope="col" style="text-align: right;">Ratifica Termino</th>
                         <th scope="col" style="text-align: right;">Efectividad</th>
                         <th scope="col" style="text-align: right;">Honorarios</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% set suma_total=0 %}
+                    {% set suma_agendado=0 %}
                     {% set suma_nocalifica=0 %}
                     {% set suma_nocontrata=0 %}
                     {% set suma_contrata=0 %}
@@ -94,16 +97,20 @@
                     <tr>
                         <td>{{ reporte.abogado_nombre }}</td>
                         <td align="right">{{ reporte.total}}</td>
+                        <td align="right">{{ reporte.agendado}}</td>
+                        
                         <td  align="right">{{ reporte.nocalifica}}</td>
                         <td align="right">{{ reporte.nocontrata}}</td>
                         <td align="right">{{ reporte.contrata}}</td>
-                        <td align="right">{{ reporte.ratificatermino}}</td>
+                       
                         <td align="right">{{ reporte.noresponde}}</td>
                         <td align="right">{{ reporte.desconoceodesiste}}</td>
+                         <td align="right">{{ reporte.ratificatermino}}</td>
                         <td align="right">{{ (((reporte.contrata)*100)/((reporte.total-reporte.nocalifica)?(reporte.total-reporte.nocalifica):1))|number_format(0,",",".")}}%</td>
                         <td align="right">${{(reporte.monto/(reporte.contrata?reporte.contrata:1))|number_format(0,",",".")}}</td>
                     </tr>
                     {% set suma_total = suma_total + reporte.total %}
+                    {% set suma_agendado = suma_agendado + reporte.agendado %}
                     {% set suma_nocalifica = suma_nocalifica + reporte.nocalifica %}
                     {% set suma_nocontrata = suma_nocontrata + reporte.nocontrata %}
                     {% set suma_contrata = suma_contrata + reporte.contrata %}
@@ -123,12 +130,14 @@
                     <tr style="text-align: right;">
                         <th></th>
                         <th>{{ suma_total|number_format(0,",",".")}}</th>
+                        <th>{{ suma_agendado|number_format(0,",",".")}}</th>
                         <th>{{ suma_nocalifica|number_format(0,",",".")}}</th>
                         <th>{{ suma_nocontrata|number_format(0,",",".")}}</th>
                         <th>{{ suma_contrata|number_format(0,",",".")}}</th>
-                        <th>{{ suma_ratificatermino|number_format(0,",",".")}}</th>
+                        
                         <th>{{ suma_noresponde|number_format(0,",",".")}}</th>
                         <th>{{ suma_desconoceodesiste|number_format(0,",",".")}}</th>
+                        <th>{{ suma_ratificatermino|number_format(0,",",".")}}</th>
                         <th>{{ (suma_efectividad / (cant_efectividad?cant_efectividad:1))|number_format(0,",",".")}}%</th>
                         <th></th>
                     </tr>
