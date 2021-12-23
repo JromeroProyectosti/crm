@@ -310,7 +310,7 @@ class AgendaRepository extends ServiceEntityRepository
 
 
         $query=$this->createQueryBuilder('a');
-        if($status == '7'){
+        if($status == '7' or $status == '14' or $status == '7,14' ){
             $query->select(array('a','u','count(u.id) as valor','sum(con.MontoContrato) as monto'));
             $query->join('a.contrato','con');
         }else{
